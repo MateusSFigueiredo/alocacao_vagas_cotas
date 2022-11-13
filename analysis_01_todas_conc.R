@@ -142,6 +142,12 @@ analise_n1$geral<-c(max(aprovados$nota),
                     min(aprovados$nota))
 rownames(analise_n1)<-c('max1','mean1','min1') # pois modelo 1
 
+analise_n1$cotas<-c(
+  subset(aprovados.1,aprovados.1$mod_con!="A0")$nota%>%max(),
+  subset(aprovados.1,aprovados.1$mod_con!="A0")$nota%>%mean(),
+  subset(aprovados.1,aprovados.1$mod_con!="A0")$nota%>%min()
+) # cria coluna de todos os cotistas
+
 # remove variáveis desnecessárias
 rm("aprovados_A0","aprovados_L1","aprovados_L2","aprovados_L5","aprovados_L6",
    "aprovados_L9","aprovados_L10","aprovados_L13","aprovados_L14","aprovados")
@@ -254,6 +260,12 @@ analise_n2$geral<-c(max(aprovados$nota),
                     min(aprovados$nota))
 rownames(analise_n2)<-c('max2','mean2','min2')
 
+analise_n2$cotas<-c(
+  subset(aprovados.2,aprovados.2$mod_con!="A0")$nota%>%max(),
+  subset(aprovados.2,aprovados.2$mod_con!="A0")$nota%>%mean(),
+  subset(aprovados.2,aprovados.2$mod_con!="A0")$nota%>%min()
+) # cria coluna de todos os cotistas (convocados em modalidade de cotas)
+
 # } #fim do loop (?)
 
 # remove variáveis desnecessárias
@@ -276,7 +288,7 @@ analise_v2;analise_n2
 # View(candidatos)
 lista_todos <- candidatos
 
-# df vazia de aprovados por modalidade, e depois nome nas colunas
+# cria dfs vazia de aprovados por modalidade, e depois nome nas colunas
 belch3 ("aprovados_",mod,"<<-data.frame(matrix(ncol = ncol(candidatos), nrow = 0))")
 belch3 ("colnames(aprovados_",mod,")<<- colnames(candidatos)")
 
@@ -288,10 +300,10 @@ for (i in 1:length(nvagas)){
   belch5 ("nvagas_",mod[i],"<<-nvagas[",i,"]")
 }
 
-# preenche listas para cada mod
+# preenche listas para cada mod, de A0 até L14
 belch5 ("lista_",mod,"<<- candidatos %>% filter (mod_ins=='",mod,"')") #preenche
 
-# preenche dfs de aprovados para cada mod_cotas
+# preenche dfs de aprovados para cada mod_cotas, de L1 até L14
 {eval(parse(text=(paste(
   'for (i in 1:nvagas_', mod_cotas, ')',
   '{aprovados_',mod_cotas,'[i,]<- lista_',mod_cotas,' %>% slice(1);',
@@ -301,7 +313,7 @@ belch5 ("lista_",mod,"<<- candidatos %>% filter (mod_ins=='",mod,"')") #preenche
 
 # View(lista_todos)
 
-# cria lista_todos2 com todos os A0 e os cotistas nao aprovados ainda
+# cria lista_todos2 com todos os A0 + os cotistas nao aprovados ainda
 lista_todos2<-lista_A0
 for (i in length(mod_cotas)){
   belch3("lista_todos2<<-rbind(lista_todos2,lista_",mod_cotas,")")
@@ -315,9 +327,9 @@ lista_todos2<-lista_todos2[order(lista_todos2[,2],decreasing=T),]
 for (i in 1:nvagas_A0) #abre o loop
   #linha 1 de lista_todos2 vai para linha i de aprovados_A0
 {aprovados_A0[i,] <- lista_todos2 %>% slice(1)
-aprovados_A0[i,4]<-"A0"; #preenche mod_con
+aprovados_A0[i,4]<-"A0"; #preenche mod_con com "A0"
 # linha 1 de candidatos eh deletada, pois candidato selecionado retirado da lista
-lista_todos2<-lista_todos2[2:(nrow(lista_todos)),]
+lista_todos2<-lista_todos2[2:(nrow(lista_todos2)),]
 # print(i) #verificar se loop esta ok
 }
 
@@ -369,6 +381,12 @@ analise_n3$geral<-c(max(aprovados$nota),
                     mean(aprovados$nota),
                     min(aprovados$nota))
 rownames(analise_n3)<-c('max3','mean3','min3')
+
+analise_n3$cotas<-c(
+  subset(aprovados.3,aprovados.3$mod_con!="A0")$nota%>%max(),
+  subset(aprovados.3,aprovados.3$mod_con!="A0")$nota%>%mean(),
+  subset(aprovados.3,aprovados.3$mod_con!="A0")$nota%>%min()
+) # cria coluna de todos os cotistas (convocados em modalidade de cotas)
 
 # fim
 # remove variáveis desnecessárias
