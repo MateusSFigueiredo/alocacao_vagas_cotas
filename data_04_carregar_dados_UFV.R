@@ -51,6 +51,28 @@ select = colunas,
 # dados_ufv%>% summary()
 
 # ==============================================================================
+# Limpar dados_ufv
+
+# Sinonimizar cursos que mudaram de nome.
+
+# Mudanças de de 2013 para 2014: Letras, Pedagogia, Comunicação Social.
+dados_ufv[dados_ufv == "LETRAS - LICENCIATURA"] <- "LETRAS" 
+dados_ufv[dados_ufv == "PEDAGOGIA - LICENCIATURA"] <- "PEDAGOGIA"
+dados_ufv[dados_ufv == "COMUNICACAO SOCIAL - JORNALISMO"] <- "COMUNICACAO SOCIAL"
+dados_ufv[dados_ufv == "SUPERIOR TEC. EM GESTAO AMBIENTAL - FL"] <- "GESTAO AMBIENTAL - FL"
+# Mudança de 2013 para 2020:
+dados_ufv[dados_ufv == "LIC. EM CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
+# Mudança de 2017 para 2018:
+dados_ufv[dados_ufv == "CIENCIAS DE ALIMENTOS - RP"] <- "CIENCIA E TECNOLOGIA DE ALIMENTOS - RP"
+
+# excluir espaços dos cursos
+gsub(" ", "_", dados_ufv$Curso) -> dados_ufv$Curso
+gsub("_-_", "_", dados_ufv$Curso) -> dados_ufv$Curso
+
+# conferir nomes dos cursos
+# unique(dados_ufv$Curso)
+
+# ==============================================================================
 # Tornar dados compatíveis com código já escrito
 
 # ------------------------------------------------------------------------------
@@ -180,25 +202,17 @@ i<-i+1
 }
 
 rm(dados_ano)
+# Limpeza dos dados
+# rm(dados_2013,dados_2014,dados_2015,dados_2016,dados_2017,dados_2018,
+#    dados_2019,dados_2020,dados_2021,dados_2022)
 
 # ==============================================================================
 # Trabalhando com cursos
-
-# Sinonimizar cursos que mudaram de nome.
-# Mudanças de de 2013 para 2014: Letras, Pedagogia, Comunicação Social.
-dados_ufv[dados_ufv == "LETRAS - LICENCIATURA"] <- "LETRAS" 
-dados_ufv[dados_ufv == "PEDAGOGIA - LICENCIATURA"] <- "PEDAGOGIA"
-dados_ufv[dados_ufv == "COMUNICACAO SOCIAL - JORNALISMO"] <- "COMUNICACAO SOCIAL"
-dados_ufv[dados_ufv == "SUPERIOR TEC. EM GESTAO AMBIENTAL - FL"] <- "GESTAO AMBIENTAL - FL"
-# Mudança de 2013 para 2020:
-dados_ufv[dados_ufv == "LIC. EM CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
-# Mudança de 2017 para 2018:
-dados_ufv[dados_ufv == "CIENCIAS DE ALIMENTOS - RP"] <- "CIENCIA E TECNOLOGIA DE ALIMENTOS - RP"
-
+# Cursos já devem ter sido sinonimizados lá em cima na linha 54
 
 # Identificar lista de cursos.
 unique(dados_ufv$Curso) %>% sort() -> lista_cursos
- lista_cursos
+ lista_cursos # 75 cursos
 
 # ==============================================================================
 # Cursos que abriram, fecharam ou mudaram de nome
@@ -226,7 +240,6 @@ N=1:length(lista_cursos_mudou)
 
 rbindlist(
 lapply(N, function(i) {
-
 paste(unique(subset(
 dados_ufv,Curso==lista_cursos_mudou[i])$Processo_Seletivo),
 collapse=", ") -> anos_por_curso
@@ -241,11 +254,12 @@ df_cursos_mudou$anos<-gsub("SISU","",df_cursos_mudou$anos)
 # ------------------------------------------------------------------------------
 # Resumir anos. Não otimizado, mas funciona para estes dados.
 # Ordem das linhas não importa.
+{
 df_cursos_mudou[df_cursos_mudou == "2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022"] <- "2014:2022"
 df_cursos_mudou[df_cursos_mudou == "2017, 2018, 2019, 2020, 2021, 2022"] <- "2017:2022"
 df_cursos_mudou[df_cursos_mudou == "2018, 2019, 2020, 2021, 2022"] <- "2018:2022"
-df_cursos_mudou[df_cursos_mudou == "2020, 2021, 2022"] <- "2020:2022" # não funciona????
-df_cursos_mudou[df_cursos_mudou == "2021, 2022"] <- "2021:2022" # não funciona??? 
+# df_cursos_mudou[df_cursos_mudou == "2020, 2021, 2022"] <- "2020:2022" # não funciona????
+# [df_cursos_mudou == "2021, 2022"] <- "2021:2022" # não funciona??? 
 
 df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016, 2017, 2018"] <- "2013:2018"
 df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016, 2017"] <- "2013:2017"
@@ -257,7 +271,7 @@ df_cursos_mudou[df_cursos_mudou == "2014, 2015, 2016, 2017, 2018, 2019"] <- "201
 
 df_cursos_mudou[df_cursos_mudou == "2013, 2020, 2021, 2022"] <- "2013, 2020:2022"
 df_cursos_mudou[df_cursos_mudou == "2013, 2021, 2022"] <- "2013, 2021:2022"
-
+}
 df_cursos_mudou$anos
 
 # ------------------------------------------------------------------------------
@@ -265,7 +279,7 @@ df_cursos_mudou$anos
 # Cria lista_cursos_mudou para cursos que aparecem em exatos 10 anos
 lista_cursos_estavel <- character()
 
-# Preencher lista_cursos_mudou
+# Preencher lista_cursos_estavel
 for (i in 1:length(lista_cursos)) {
   
   if (
@@ -280,75 +294,36 @@ summary(lista_cursos_estavel) # length == 59
 # CIENCIA E TECNOLOGIA DE ALIMENTOS - RP
 
 
-# ------------------------------------------------------------------------------
-# Obtendo informações
-
-# Quantos cursos de cada campus?
-# Em todos os dados
-paste(length(lista_cursos),"cursos ao todo") # 75
-paste(sum(grepl("- RP",lista_cursos)), "cursos em Rio Paranaíba") # 12
-paste(sum(grepl("- FL",lista_cursos)), "cursos em Florestal") # 15
-paste(length(lista_cursos)
-      -sum(grepl("- RP",lista_cursos))
-      -sum(grepl("- FL",lista_cursos)),
-      "cursos em Viçosa") # 48
-
-# Apenas cursos que aparecem nos 10 anos de processo seletivo
-paste(length(lista_cursos_estavel),"cursos em todos os 10 anos") #59
-print(paste(sum(grepl("- RP",lista_cursos_estavel)), 
-      "cursos de Rio Paranaíba em todos os 10 anos.")) #12
-print(paste(sum(grepl("- FL",lista_cursos_estavel)), 
-            "cursos de Florestal em todos os 10 anos.")) #5
-
-print(paste(length(lista_cursos_estavel)-sum(grepl("- RP",lista_cursos_estavel))
-                                        -sum(grepl("- FL",lista_cursos_estavel)),
-            "cursos de Viçosa em todos os 10 anos.")) #42
 
 # ==============================================================================
 # Criando dados por curso # escrevendo
 length(lista_cursos_estavel)
+lista_cursos_estavel
+
+# ------------------------------------------------------------------------------
+
+# Começar a criar objetos dados_curso, e dados_ADMINISTRACAO até dados_ZOOTECNIA
 
 i<-1 # útil para lista_cursos_estavel[i], para pegar um curso de cada vez
-# ------------------------------------------------------------------------------
 
-lista_cursos_estavel[1]
+# loop para criar todos os objetos dados_curso
+for (i in 1:length(lista_cursos_estavel)){
+lista_cursos_estavel[i]
+dados_curso <- subset(dados_ufv,dados_ufv$Curso==lista_cursos_estavel[i])
+eval(parse(text=(paste0("dados_",
+                        lista_cursos_estavel[i],
+                        "<<-dados_curso"))))
+} # fim do loop
 
-dados_curso <- subset (dados_ufv,dados_ufv$Curso==lista_cursos_estavel[i])
-    
+# Limpeza
+rm(dados_curso)
 
+# Para apagar todos os objetos dados_ADMINISTRACAO até dados_ZOOTECNIA:
+# for (i in 1:length(lista_cursos_estavel)) {
+# eval(parse(text=(paste0("rm(dados_",
+#                         lista_cursos_estavel[i],
+#                         ")"))))}
 
-# ==============================================================================
-# Organizar df_cursos_mudou e exportar
-
-# Definir ordem das linhas
-ordem<-c(
-"LICENCIATURA EM CIENCIAS BIOLOGICAS - FL",
-"CIENCIAS BIOLOGICAS - FL",
-"LICENCIATURA EM FISICA - FL",
-"FISICA - FL",
-"LICENCIATURA EM MATEMATICA - FL",
-"MATEMATICA - FL",
-"LICENCIATURA EM EDUCACAO FISICA - FL",
-"EDUCACAO FISICA - FL",
-"LICENCIATURA EM QUIMICA - FL",
-"QUIMICA - FL",
-"LICENCIATURA EM FISICA",
-"ECONOMIA DOMESTICA",
-"SERVIÇO SOCIAL",
-"EDUCACAO FISICA",
-"EDUCACAO FISICA - BACHARELADO",
-"EDUCACAO FISICA - LICENCIATURA")
-
-# Reorganizar linhas seguindo ordem
-df_cursos_mudou %>%
-  slice(match(ordem, curso)) -> df_cursos_mudou
-
-# ------------------------------------------------------------------------------
-# Exportar df_cursos_mudou
-getwd()
-# write.csv(df_cursos_mudou,
-#           "C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas/privado/df_cursos_mudou.csv",
-#           row.names=FALSE)
 
 # ==============================================================================
 # Referências
@@ -359,7 +334,3 @@ getwd()
 # ==============================================================================
 # Fim do código
 
-# ==============================================================================
-# Testes
-
-lista_cursos
