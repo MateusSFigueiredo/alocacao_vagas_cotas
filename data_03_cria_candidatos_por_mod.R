@@ -126,6 +126,8 @@ gera_candidatos(mod=mod[i])
 candidatos<<-candidatos[order(candidatos[,2],decreasing=T),]
 }
 
+candidatos$id<-c(1:nrow(candidatos)) # gera id único para cada candidato
+
 # max(candidatos$nota) # confere nota máxima
 # min(candidatos$nota) # confere nota mínima
  

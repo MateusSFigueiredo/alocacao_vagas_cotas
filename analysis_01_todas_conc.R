@@ -13,8 +13,13 @@
 # Primeiro preenche as vagas das cotas
 # Depois preenche vagas de Ampla Concorrência com todos os candidatos
 #
-# Modificado em 2022-11-13.
+# Modificado em 2022-11-27.
 # Autor: Mateus Silva Figueiredo
+# ==============================================================================
+
+# Avisos.
+# Dá erro se tiver mais vaga do que candidato para alguma modalidade.
+
 # ==============================================================================
 #
 # Dicionário
@@ -40,27 +45,67 @@ belch5 <- function(x, y, z, a, b)
 {eval(parse(text=(paste(x, y, z, a, b,sep=""))))}
 #
 #
-# Utiliza função gera_candidatos() para gerar candidatos de todas as mod
+mod <- c("A0","L1","L2","L5","L6", "L9", "L10", "L13", "L14")
+mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 # 
-#set.seed(4)
-#set.seed(NULL)
 # ==============================================================================
+# Utiliza função gera_candidatos() para gerar candidatos de todas as mod
+#
+#set.seed(4) # caso queira ser determinístico. Qualquer número serve.
+#set.seed(NULL) # caso queira ser aleatório.
 # 
-# Criar candidatos
+# Criar candidatos aleatórios # apenas caso ainda não haja df candidatos
+# exige vetor mod e função gera_candidatos
 
-{ #criar data.frame candidatos em branco
-  candidatos <- data.frame()
-  
-  # roda função gera_candidatos com for loop
-  for (i in 1:length(mod)){gera_candidatos(mod=mod[i])}
-  
-  # colocar candidatos em ordem decrescente de nota
-  candidatos<<-candidatos[order(candidatos[,2],decreasing=T),]
-}
-# head(candidatos);tail(candidatos);summary(candidatos)
+# { #criar data.frame candidatos em branco
+#   candidatos <- data.frame()
+# 
+#   # roda função gera_candidatos com for loop
+#   for (i in 1:length(mod)){gera_candidatos(mod=mod[i])}
+# 
+#   # colocar candidatos em ordem decrescente de nota
+#   candidatos<<-candidatos[order(candidatos[,2],decreasing=T),]
+# }
+
+
+# ==============================================================================
+# # Criar candidatos a partir de dados_[ano] da UFV
+# # após rodar data_04_carregar_dados_UFV 
+#
+dados_ano <- dados_2022 # colocar ano que quiser
+dados_ano$Curso %>% unique() -> cursos; cursos
+ncurso<-66 # colocar número que quiser, até o número de crrsos
+cursos[ncurso] 
+subset(dados_ano,Curso==cursos[ncurso]
+       ,select=c(id,nota,mod_ins,mod_con)
+       ) -> candidatos
+
+# gerar nvagas a partir de dados_[ano]
+nvagas<-c(
+sum(candidatos$mod_con=="A0"),
+sum(candidatos$mod_con=="L1"),
+sum(candidatos$mod_con=="L2"),
+sum(candidatos$mod_con=="L5"),
+sum(candidatos$mod_con=="L6"),
+sum(candidatos$mod_con=="L9"),
+sum(candidatos$mod_con=="L10"),
+sum(candidatos$mod_con=="L13"),
+sum(candidatos$mod_con=="L14")
+)
+nvagas
+# para regularizar, fingir que nenhum candidato foi convocado ainda
+candidatos$mod_con <- 0
+cursos[ncurso]
+
+# ==============================================================================
+# Confere candidatos
+head(candidatos);tail(candidatos);summary(candidatos)
+candidatos %>% count(mod_ins)
+candidatos %>% count(mod_con)
 
 # ==============================================================================
 # Roda modelo 1
+print("Roda modelo 1")
 # Concorrencia simples para qualquer modalidade = sufixo 1
 # ==============================================================================
 
@@ -91,9 +136,14 @@ for (i in 1:length(nvagas)){
   #print(i)
 }
 
-# head(aprovados_A0);tail(aprovados_A0) #aprovados em A0
-# head(lista_A0) #lista de espera em A0
+# ERRO. Error in x[[jj]][iseq] <- vjj : replacement has length zero
 
+ head(aprovados_A0);tail(aprovados_A0) #aprovados em A0
+ head(lista_A0) #lista de espera em A0
+
+# Pode dar mensagem de erro. Acho que é caso tenha 0 vagas em alguma modalidade.
+# ERRO: Primeiro lugar da lista de espera está igual o último lugar dos aprovados
+ 
 # ------------------------------------------------------------------------------
 
 # Analise - candidatos aprovados
@@ -162,6 +212,7 @@ analise_v1;analise_n1
 
 # ==============================================================================
 # Roda modelo 2
+print("Roda modelo 2")
 # Concorrencia simultanea, preenche AC primeiro = sufixo 2
 # ==============================================================================
 
@@ -282,6 +333,7 @@ analise_v2;analise_n2
 
 # ==============================================================================
 # Roda modelo 3
+print("Roda modelo 3")
 # Concorrencia simultanea, preenche cotas primeiro = sufixo 3
 # ==============================================================================
 
@@ -413,11 +465,14 @@ meta_v<-rbind(analise_v1,analise_v2,analise_v3)
 
 # ==============================================================================
 # Limpeza
+print ("ATENÇÃO! LIMPEZA A SEGUIR. TEM CERTEZA QUE QUER APAGAR DADOS INTERMEDIÁRIOS?")
+print ("ATENÇÃO! LIMPEZA A SEGUIR. TEM CERTEZA QUE QUER APAGAR DADOS INTERMEDIÁRIOS?")
+print ("ATENÇÃO! LIMPEZA A SEGUIR. TEM CERTEZA QUE QUER APAGAR DADOS INTERMEDIÁRIOS?")
 
 # Remover dfs desnecessários
 rm("analise_n1","analise_n2","analise_n3",
-   "analise_v1","analise_v2","analise_v3")
-rm("aprovados.1","aprovados.2","aprovados.3","candidatos","grupos")
+   "analise_v1","analise_v2","analise_v3", "grupos")
+# rm("aprovados.1","aprovados.2","aprovados.3","candidatos")
 
 # Remover valores desnecessários
 rm(list = ls.str(mode = 'numeric'))
@@ -426,4 +481,5 @@ rm(list = ls.str(mode = 'character'))
 # Remover funções desnecessárias
 rm (gera_candidatos,gera_distr,gera_nvagas)
 
+print("Fim do arquivo")
 # Fim do arquivo
