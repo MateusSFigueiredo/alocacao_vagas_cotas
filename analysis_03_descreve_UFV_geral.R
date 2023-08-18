@@ -34,6 +34,7 @@ library(ggrepel) # gráficos
 # install.packages("scales")
 library(scales)
 
+
 belch2 <- function(x, y) { eval(parse(text=(paste0(x, y, sep=""))))}
 belch3 <- function(x, y, z) {eval(parse(text=(paste0(x, y, z,sep=""))))}
 
@@ -41,7 +42,7 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 
 anos<-c(2013:2022)
-sisu_anos<-paste0("SISU",anos)
+sisu_anos<-paste0("SISU",c(2013:2022))
 
 # ==============================================================================
 # Analisando por ano
@@ -50,18 +51,24 @@ sisu_anos<-paste0("SISU",anos)
 # dados_ufv[which (Processo_Seletivo==sisu_anos[i])] -> dados_ano
 
 # criar data.frame n_inscritos
-n_inscritos <- data.frame(anos=sisu_anos,
+n_inscritos <- data.frame(
+  sisu_anos=sisu_anos,
                           inscritos_UFV=NA,
-                          inscritos_ENEM_n_1=c(5380857, # ENEM 2011 = SISU 2012
-                                               5791332,8722290,
-                                               7792025,8627371,
-                                               6731136,5513662,
-                                               5095308,5783357,
-                                               4004764), # ENEM 2021 = SISU 2022
+                          inscritos_ENEM_n_1=c(5791332,  #ENEM 2012 = SISU 2013
+                                               7173574,  #ENEM 2013 = SISU 2014
+                                               8722290,  #ENEM 2014 = SISU 2015
+                                               7792025,  #ENEM 2015 = SISU 2016
+                                               8627371,  #ENEM 2016 = SISU 2017
+                                               6731136,  #ENEM 2017 = SISU 2018
+                                               5513662,  #ENEM 2018 = SISU 2019
+                                               5095308,  #ENEM 2019 = SISU 2020
+                                               5783357,  #ENEM 2020 = SISU 2021
+                                               4004764), #ENEM 2021 = SISU 2022
                           taxa_ENEM=c(35, # ENEM 2011 = SISU 2012
                                       35,35,63,68,82,
                                       82,85,85,
-                                      85)) # ENEM 2021 = SISU 2022
+                                      85),
+                                      anos=2013:2022) # ENEM 2021 = SISU 2022
 
 # Fonte: Wikipédia - "Exame Nacional do Ensino Médio". Consultado em 2022-12-18.
 # Dados de inscritos do ENEM de um ano anterior ao SISU da UFV.
@@ -71,6 +78,22 @@ n_inscritos <- data.frame(anos=sisu_anos,
 for (i in 1:10){
   dados_ufv[which (Processo_Seletivo==sisu_anos[i])] -> dados_ano
   dados_ano %>% nrow() -> n_inscritos[i,2]}
+# ==============================================================================
+# Qual modelo estatístico usar?
+
+# inscritos_UFV por ano
+plot(inscritos_UFV ~ anos, data = n_inscritos)
+
+# inscritos_ENEM por ano
+plot(inscritos_ENEM ~ anos, data = n_inscritos)
+
+# inscritos_UFV x inscritos_ENEM_n_1
+lm(inscritos_UFV ~ inscritos_ENEM_n_1, data = n_inscritos)
+lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% summary()
+plot(inscritos_UFV ~ inscritos_ENEM_n_1, data = n_inscritos)
+lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% 
+  abline(col="red",lty=2)
+
 
 # ==============================================================================
 # Gráficos
@@ -89,6 +112,11 @@ ggplot(mapping = aes(anos,n_inscritos$inscritos_UFV)) +
   scale_y_continuous(breaks=seq(10000,25000,2500),
                      labels = scales::label_comma(big.mark=".",decimal.mark=","))
 
+#-----------
+for(i in 1:10){
+  (n_inscritos$inscritos_UFV[i]/n_inscritos$inscritos_UFV[i-1]) %>% print()
+}
+# a cada ano que passa, a UFV tem cerca de 90% dos inscritos do ano anterior
 
 #-------------------------------------------------------------------------------
 #Inscritos na UFV x inscritos no ENEM
@@ -96,7 +124,7 @@ plot(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM)
 
 {
   plot(y=n_inscritos$inscritos_UFV,
-       x=n_inscritos$inscritos_ENEM,
+       x=n_inscritos$inscritos_ENEM_n_1,
        xlim=range((2.8*10^6):(10*10^6)),
        ylim=range((8000):(23000)),
        xlab="Inscritos no ENEM anterior",
@@ -105,11 +133,11 @@ plot(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM)
   )
   
   text(y=n_inscritos$inscritos_UFV,
-       x=n_inscritos$inscritos_ENEM,
+       x=n_inscritos$inscritos_ENEM_n_1,
        pos=4, # 4 = direita.
        labels=n_inscritos$anos)
 }
-lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM) %>% 
+lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% 
   abline(col="red",lty=2)
 
 # summary com R quadrado e significância
@@ -128,19 +156,59 @@ n_inscritos$inscritos_UFV -> inscritos_UFV
 p.valor 
 paste("p valor =",p.valor) -> p.valor
 
-# Plot melhor até agora
+# ------------------------------------------------------------------------------
+
+# Plot melhor até agora - usando geom_text_repel
 ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") + 
   annotate("text", x = 8, y = 10700, label = "Curva: LM", colour = "blue") +
-  annotate("text", x = 8, y = 9700, label = p.valor, colour = "blue") +
+  annotate("text", x = 8, y = 9600, label = p.valor, colour = "blue") +
   # geom_smooth(method = "gam", se=T) + annotate("text", x = 8, y = 10700, label = "Curva: GAM", colour = "blue") +
-  geom_text(label = n_inscritos$anos, vjust=1.5) +
-  xlim(3.9,8.8) +
+  xlim(4.0,8.9) +
   #  ylim(5000,25000) +
   scale_y_continuous(labels = scales::label_comma(big.mark=".",decimal.mark=",")) +
+
+    # Add geom_text = ano de cada ponto
+  # ajuste simples, meio ruim:
+#  geom_text(label = n_inscritos$anos, vjust=1.2) +
+
+    # O mesmo bom ajuste para todos, com geom_text_repel:
+  geom_text_repel(label = n_inscritos$anos) + 
+  
+  # xlab e ylab
   xlab("Inscritos no ENEM anterior (milhões)") +
-  ylab("Inscritos na UFV")
+  ylab("Inscritos na UFV") 
+
+# ------------------------------------------------------------------------------
+
+# Plot melhor até agora - testando posição do geom_text
+ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  annotate("text", x = 8, y = 10700, label = "Curva: LM", colour = "blue") +
+  annotate("text", x = 8, y = 9600, label = p.valor, colour = "blue") +
+  # geom_smooth(method = "gam", se=T) + annotate("text", x = 8, y = 10700, label = "Curva: GAM", colour = "blue") +
+  xlim(4.0,8.9) +
+  #  ylim(5000,25000) +
+  scale_y_continuous(labels = scales::label_comma(big.mark=".",decimal.mark=",")) +
+  
+  # Add geom_text = ano de cada ponto
+  geom_text(label = n_inscritos$anos=="SISU2013", vjust=1.2) +
+
+  # # Adjust specific text labels
+  # geom_text(data = n_inscritos[which(n_inscritos$anos == "SISU2020"), ],
+  #           aes(x = n_inscritos$inscritos_ENEM / 1e+6, y = n_inscritos$inscritos_UFV),
+  #           label = n_inscritos$anos, vjust = 1.5, hjust = 0, color = "black") +
+  
+  geom_text(data = n_inscritos[which(n_inscritos$anos == "SISU2020"), ],
+            vjust = 1.5, hjust = -0.2, color = "black")
+  
+  # xlab e ylab
+  xlab("Inscritos no ENEM anterior (milhões)") +
+  ylab("Inscritos na UFV") 
+
+# ------------------------------------------------------------------------------
 
 # Plot com escala de 4.000.000 até 8.000.000. xlim ignorado por scale_x
 ggplot(mapping = aes((n_inscritos$inscritos_ENEM),n_inscritos$inscritos_UFV)) +
@@ -190,7 +258,8 @@ ggplot(mapping = aes((n_inscritos$inscritos_ENEM),n_inscritos$inscritos_UFV)) +
 # Inscritos no ENEM no eixo y 2
 
 plot(n_inscritos$inscritos_UFV~c(2013:2022),
-     col="blue",pch=20,cex=1)
+     col="blue",pch=20,cex=1,
+     xlab="não recomendado")
 points(n_inscritos$inscritos_ENEM_n_1/400~c(2013:2022),
        col="red",pch=15)
 
@@ -201,6 +270,43 @@ points(n_inscritos$inscritos_ENEM_n_1/400~c(2013:2022),
 
 legend(2020, 20000, legend=c("UFV", "ENEM"),
        col=c("blue", "red"), pch=c(20,15))
+
+# -------------------------------------------------
+# ENEM no eixo y da direita
+# UFV no eixo y da esquerda
+
+
+library(ggplot2)
+
+n_inscritos$anos<-2013:2022
+
+# Create the plot
+plot <- ggplot(n_inscritos, aes(x = anos)) +
+  geom_line(aes(y = inscritos_UFV, color = "UFV"), size = 1.5) +
+  geom_line(aes(y = inscritos_ENEM_n_1/400, color = "ENEM -1"), size = 1.5) +
+  scale_x_continuous(
+    breaks = seq(2, max(n_inscritos$anos), by = 2),
+    labels = seq(2, max(n_inscritos$anos), by = 2)
+  ) +
+  scale_y_continuous(
+    sec.axis = sec_axis(~ . / 1000000*400, name = "Inscritos no ENEM (milhões)"),
+    name = "Inscritos na UFV"
+  ) +
+  labs(x = "Years") +
+  theme_minimal() +
+  theme(
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+# Display the plot
+plot
+
 
 
 #===============================================================================

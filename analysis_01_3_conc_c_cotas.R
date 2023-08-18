@@ -10,17 +10,28 @@
 # Autor: Mateus Silva Figueiredo
 #
 # ==============================================================================
+# Preparação
+# Deve ser feito pelo analysis_01_todas_conc, usando source()
+
+# Escolher um curso
+# cu <- "MEDICINA" # pelo nome
+# cu <- lista_cursos[59]; # pelo número na lista
+
+# Escolher uma edição do SISU
+# edicao <- "SISU2022" # pelo nome
+
+# ==============================================================================
 #
 # Carregar lista_todos
 
 # lista_todos # lista de todos os candidatos para determinado curso e ano
 
 # opção 1: dados simulados
-lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
+# lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
 
 # # opção 2: dados observados
 # # carregado a partir de data_04_carregar_dados_UFV.R
-# lista_todos <- dados_MEDICINA %>% subset(Processo_Seletivo=="SISU2022")
+lista_todos <- get(paste0("dados_",cu)) %>% subset(Processo_Seletivo==edicao)
 
 lista_todos %>% head()
 
@@ -304,6 +315,6 @@ convocados_c3 <- aprovados_c3
 
 rm(list=ls(pattern="^aprovados")) # objetos que começam com "aprovados"
 rm(list=ls(pattern="^preenche")) # objetos que começam com "preenche"
-rm(lista_todos)
+# rm(lista_todos)
 
 # manter analise e candidatos. manter aprovados_c3

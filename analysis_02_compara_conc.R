@@ -5,14 +5,14 @@
 # 2 = concorrencia concomitante, AC primeiro
 # 3 = concorrencia concomitante, cotas primeiro
 # 4 = concorrencia segundo Bó e Senkevics, 2023
+# 5 = concorrencia adaptado de Bó e Senkevics, 2023
 
-# Modificado em 2023-02-11.
+# Modificado em 2023-05-11.
 # Autor: Mateus Silva Figueiredo
 
 # ==============================================================================
 # Rodar após analysis_01_1, analysis_01_2, analysis_01_3, 
 # analysis_01_4, analysis_01_5
-
 
 # ==============================================================================
 

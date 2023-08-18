@@ -14,7 +14,20 @@
 # Pacotes
 # install.packages("esquisse")
 library(esquisse)
+library(ggplot2)
+library(ggridges)
+library(RColorBrewer)
 
+# ==============================================================================
+
+# Preparação
+# ------------------------------------------------------------------------------
+# Carregar dados com data_04_carregar_dados_UFV.R
+por_curso <- T   # deseja separar candidatos por curso? obrigatório
+por_ano   <- F   # deseja separar candidatos por ano? opcional
+source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
+# data_04 faz setwd da pasta /privado
+# 
 # ==============================================================================
 
 dados_ufv %>% head(1)
@@ -64,9 +77,9 @@ dados_convocados$pub<- gsub("FALSE","AC",dados_convocados$pub)
 
 
 # ==============================================================================
+# =========================== Gráficos==========================================
 # ==============================================================================
-# ==============================================================================
-# Gráficos
+
 
 # ------------------------------------------------------------------------------
 # Necessário para ambas ridgelines
@@ -119,7 +132,7 @@ ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
 # ------------------------------------------------------------------------------
 # Ridgeline com cálculo de densidade, sem linha horizontal até o fim dos eixos
 
-i <- 25 # caso não for usar o loop
+i <- 6 # caso não for usar o loop
 # for loop para gerar todos os gráficos de uma vez
 # for (i in 1:length(cursos_ufv))
 {
@@ -193,7 +206,8 @@ par(mfrow=c(1,1)) # retornar para apenas 1 gráfico por imagem
 # Boxplot
 
 # Selecionar curso
-dados_convocados[Curso == "MEDICINA"] -> dados_curso
+dados_curso <- dados_convocados[Curso == "MEDICINA"]
+dados_curso <- dados_convocados[Curso == lista_cursos[25]]
 
 
 # ------------------------------------------------------------------------------
@@ -233,6 +247,19 @@ ggplot(dados_curso, aes(x = group, y = nota, fill = pub)) +
   theme_classic() +
   coord_cartesian(ylim = range(dados_curso$nota))
 
+# ------------------------------------------------------------------------------
+
+# boxplot horizontal
+ggplot(dados_curso, aes(x = nota, y = group, fill = pub)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(title = gsub("_", " ", dados_curso$Curso[1]), x = "Nota", y = "Escola pública?") +
+  stat_summary(fun = "mean", color = "white", shape = 16, size = 0.1) +
+  theme_classic() +
+  coord_cartesian(xlim = range(dados_curso$nota))
+
+# ------------------------------------------------------------------------------
+
 # violin vertical
 ggplot(dados_curso, aes(x = group, y = nota, fill = pub)) +
 #  geom_boxplot() + # escolher ou boxplot
@@ -255,7 +282,9 @@ dados_convocados[Curso == cursos_ufv[6]] -> dados_curso
 
 # boxplot horizontal funcionando ok
 ggplot(dados_curso, aes(y = fct_rev(group), x = nota, fill = pub)) +
-  geom_boxplot() + # escolher ou boxplot
+  geom_violin(
+    coef = Inf # coef = Inf faz com que whisker vá até max e min
+    ) + # escolher ou boxplot
 #  geom_violin() +  # ou violino
   scale_fill_manual(values = c("red", "blue")) +
   labs(
@@ -268,6 +297,19 @@ ggplot(dados_curso, aes(y = fct_rev(group), x = nota, fill = pub)) +
   coord_flip() +
   coord_cartesian(xlim = range(dados_curso$nota))
 
+# ---------
+
+library(stringr)
+
+grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fill = pub)) +
+  geom_boxplot() + 
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(
+    title = gsub("_", " ", dados_curso$Curso[1]),
+    x = "Nota", y = "Ano") +
+#  scale_y_discrete(labels = str_remove(dados_curso$Processo_Seletivo, "SISU")) +
+  coord_cartesian(xlim = range(dados_curso$nota)) +
+  labs(fill = "Escola pública?");print(grafico)
 
 
 
@@ -356,7 +398,7 @@ ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
 
 ggplot(dados_convocados) +
   aes(x = Processo_Seletivo, y = nota) +
-  geom_boxplot(fill = "#112446") +
+  geom_boxplot(fill = "blue") +
   theme_minimal()
 
 # ==============================================================================
@@ -365,7 +407,7 @@ set.seed(8642)                                               # Create random dat
 x <- rnorm(1000)
 boxplot(x,col="red")
 
-which(cursos_ufv=="ECONOMIA_DOMESTICA")
+which(lista_cursos=="ECONOMIA_DOMESTICA")
 
 # ==============================================================================
 # Referências

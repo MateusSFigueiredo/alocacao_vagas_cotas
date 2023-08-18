@@ -2,7 +2,7 @@
 # Arquivo: data_04_carregar_dados_UFV.R
 
 #
-# Modificado em: 2023-04-13.
+# Modificado em: 2023-05-11
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
@@ -25,6 +25,7 @@
 # dados_2013 até dados_2022 com todos os cursos em cada
 # dados_2013 em diante tem colunas id, nota, mod_ins, mod_con,
 # Processo_Seletivo e Curso
+# lista_cursos, lista_cursos_estavel, lista_cursos_mudou, lista_cursos_18_22
 #
 # ==============================================================================
 # Preparação
@@ -225,87 +226,45 @@ paste("dados_ufv tem",ncol(dados_ufv),"colunas")
 # ==============================================================================
 # ==============================================================================
 # ==============================================================================
-# Trabalhando com dados por ano
 
-# Deseja carregar dados por ano?
-por_ano <- FALSE
+# Deseja carregar dados por ano? 
+# por_ano <- T # T = sim, F = não
 
 if (por_ano){
-# Criar dados por ano
-# Criar dados_2013 até dados_2022
 
-anos<-c(2013:2022) # definir anos
-i<-1 # útil para anos[i], para pegar um ano de cada vez
-# ------------------------------------------------------------------------------
- for (j in 1:length(anos)){ # rodar loop 10 vezes para criar dados_2013 a 2022
-    { # abre loop
-  
-# Criar dados_ano a partir de anos 2013:2022, um de cada vez
-
-eval(parse(text=(paste(
-'dados_ano <- subset (dados_ufv,dados_ufv$Processo_Seletivo=="SISU',
-                     anos[i],
-                     '")'
-,
-sep="")))) # cria dados_ano com inscritos de um ano específico
-dados_ano$Processo_Seletivo[1] # qual processo seletivo
-
-# ------------------------------------------------------------------------------
-
-# Criar colunas id, nota, mod_ins, mod_con, e ao final limpar dados_ano
-# {
-# Criar coluna id
-dados_ano$id <- (anos[i]*10000000+1:nrow(dados_ano))
-# summary(dados_ano$id) # Criar id único para cada inscrição, diferente do Identificacao
-
-# Criar coluna nota
-dados_ano$nota <- dados_ano$ENEM
-# summary(dados_ano$nota)
-
-# ------------------------------------------------------------------------------
-# Limpa dados_ano. Mantém apenas colunas de interesse
-
-subset(dados_ano,Identificacao>1,
-       select=c(Processo_Seletivo,Curso,id,nota,mod_ins,mod_con)
-       ) -> dados_ano
-
-# } # finaliza procedimentos com dados_ano
-# ------------------------------------------------------------------------------
-
-# salva dados_ano para variável dados_2013 até dados_2022
-    eval(parse(text=(paste(
-      'dados_ano ->> dados_',
-      anos[i]
-      ,
-      sep=""))))
-
-print(anos[i])
-i<-i+1
-  
-} # fim do for loop
+for (ano in 2013:2022) {
+  processo_seletivo <- paste0("SISU", ano)
+  filtro <- dados_ufv[Processo_Seletivo == processo_seletivo]
+  assign(paste0("dados_", ano), filtro)
 }
+  
+rm(processo_seletivo,filtro) # remove desnecessários
 
-rm(dados_ano)
-# Limpeza dos dados
-# rm(dados_2013,dados_2014,dados_2015,dados_2016,dados_2017,dados_2018,
-#    dados_2019,dados_2020,dados_2021,dados_2022)
-print ("Dados por ano estão carregados")
-}; rm(por_ano) # encerra carregamento por ano
+print("Dados por ano estão carregados")
+} # fim do if (por_ano) # obrigado Chat GPT 
 
 # ==============================================================================
-# ==============================================================================
-# ==============================================================================
-# Trabalhando com cursos
+# Trabalhando por curso
 # Cursos já devem ter sido sinonimizados lá em cima na linha 54
 
-# Deseja trabalhar com dados por curso?
-por_curso <- TRUE
+# Deseja carregar dados por curso? 
+# por_curso <- T # T = sim, F = não
 
-if(por_curso){
-
-# Identificar lista de cursos.
-unique(dados_ufv$Curso) %>% sort() -> lista_cursos
- lista_cursos # 70 cursos
+if (por_curso){
+  
+  # Identificar lista de cursos.
+  lista_cursos <- unique(dados_ufv$Curso) %>% sort()
+  # lista_cursos # 70 cursos
+  
+  for (cu in lista_cursos) {
+    filtro <- dados_ufv[Curso == cu]
+    assign(paste0("dados_", cu), filtro)
+  }
+  
+ rm(cu,filtro) # remove desnecessários
+  
+print("Dados por curso estão carregados")
+} # fim do if (por_curso) # obrigado Chat GPT 
 
 # ==============================================================================
 # Cursos que abriram, fecharam ou mudaram de nome
@@ -315,7 +274,7 @@ unique(dados_ufv$Curso) %>% sort() -> lista_cursos
 # unique(subset(dados_ufv,Curso=="ECONOMIA DOMESTICA")$Processo_Seletivo)
  
 # Criar df_cursos_mudou para cursos que mudaram de nome
- # Cria lista_cursos_mudou para cursos que aparecem em menos de 10 anos
+# Cria lista_cursos_mudou para cursos que aparecem em menos de 10 anos
 lista_cursos_mudou <- character()
 
 # Preencher lista_cursos_mudou
@@ -327,6 +286,8 @@ for (i in 1:length(lista_cursos)) {
 }
 
 lista_cursos_mudou
+
+# ------------------------------------------------------------------------------
 
 # Gerar data.frame df_cursos_mudou com cursos que mudaram e quais anos eles existiram
 N=1:length(lista_cursos_mudou)
@@ -376,37 +337,24 @@ summary(lista_cursos_estavel) # length == 64
 # CIENCIA E TECNOLOGIA DE ALIMENTOS - RP
 # Licenciaturas de Florestal
 
+# ------------------------------------------------------------------------------
+# Cursos que existem em 2018 e em 2022, para diminuir escopo da pesquisa
+dados_ufv[Processo_Seletivo=="SISU2018"]$Curso %>% unique() -> lista_cursos_18
+dados_ufv[Processo_Seletivo=="SISU2022"]$Curso %>% unique() -> lista_cursos_22
 
-# ==============================================================================
-# Criando dados por curso # escrevendo
-length(lista_cursos_estavel)
-lista_cursos_estavel
+intersect(lista_cursos_18,lista_cursos_22) %>% sort() -> lista_cursos_18_22
+rm(lista_cursos_18,lista_cursos_22)
 
 # ------------------------------------------------------------------------------
 
-# Começar a criar objetos dados_curso, e dados_ADMINISTRACAO até dados_ZOOTECNIA
-
-i<-1 # útil para lista_cursos_estavel[i], para pegar um curso de cada vez
-
-# loop para criar todos os objetos dados_curso
-#for (i in 1:length(lista_cursos_estavel)){ # criar todos os cursos
-for (i in c(59,63)){ # criar apenas poucos cursos
-
-lista_cursos[i]
-dados_curso <- subset(dados_ufv,dados_ufv$Curso==lista_cursos[i])
-eval(parse(text=(paste0("dados_",
-                        lista_cursos[i],
-                        "<<-dados_curso"))))
-} # fim do loop
-
 # como descobrir numero a partir do curso
-which(lista_cursos=="MEDICINA")
-which(lista_cursos=="PEDAGOGIA")
-which(lista_cursos_estavel=="MEDICINA")
+# which(lista_cursos=="MEDICINA")
+# which(lista_cursos=="PEDAGOGIA")
+# which(lista_cursos_estavel=="MEDICINA")
 
 # como descobrir curso a partir do número
-lista_cursos[59]
-lista_cursos_estavel[54]
+# lista_cursos[59]
+# lista_cursos_estavel[54]
 
 # ==============================================================================
 # exportar dados de poucos cursos
@@ -426,10 +374,17 @@ lista_cursos_estavel[54]
 # eval(parse(text=(paste0("rm(dados_",
 #                         lista_cursos_estavel[i],
 #                         ")"))))}
-print("Dados por curso estão carregados")
-rm(por_curso)
-} # termina carregamento de dados por curso
 
+#rm(por_curso)
+
+# limpeza caso não for trabalhar com cursos
+if (!por_curso){
+  rm(cursos_cca,cursos_ccb,cursos_cce,cursos_cch,cursos_crp,cursos_caf)
+  rm(lista_cursos,lista_cursos_18_22,lista_cursos_estavel,lista_cursos_mudou)
+}
+
+# setwd para facilitar uso de outros scripts
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 # ==============================================================================
 # Referências
 

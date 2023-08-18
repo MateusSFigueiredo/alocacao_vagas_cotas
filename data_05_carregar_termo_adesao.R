@@ -23,6 +23,8 @@ library(data.table)
 belch2 <- function(x, y) { eval(parse(text=(paste0(x, y, sep=""))))}
 belch3 <- function(x, y, z) { eval(parse(text=(paste0(x, y, z, sep=""))))}
 
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
+
 # ==============================================================================
 # Carregar dados
 

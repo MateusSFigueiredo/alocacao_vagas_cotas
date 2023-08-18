@@ -5,9 +5,20 @@
 # Só preenche vagas da modalidade X candidatos inscritos na modalidade X
 # Gera análise de notas e de preenchimento de vagas ao final
 #
-# Modificado em 2023-02-11
+# Modificado em 2023-05-12
 # Autor: Mateus Silva Figueiredo
 #
+# ==============================================================================
+# Preparação
+# Deve ser feito pelo analysis_01_todas_conc, usando source()
+
+# Escolher um curso
+# cu <- "MEDICINA" # pelo nome
+# cu <- lista_cursos[59]; # pelo número na lista
+
+# Escolher uma edição do SISU
+# edicao <- "SISU2022" # pelo nome
+
 # ==============================================================================
 #
 # Carregar lista_todos
@@ -15,13 +26,13 @@
 # lista_todos # lista de todos os candidatos para determinado curso e ano
 
 # opção 1: dados simulados
-lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
+# lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
 
 # # opção 2: dados observados
 # # carregado a partir de data_04_carregar_dados_UFV.R
-# lista_todos <- dados_MEDICINA %>% subset(Processo_Seletivo=="SISU2022")
+lista_todos <- get(paste0("dados_",cu)) %>% subset(Processo_Seletivo==edicao)
 
-lista_todos %>% head(1)
+# lista_todos %>% head(1)
 
 # ------------------------------------------------------------------------------
 
@@ -38,12 +49,15 @@ paste(lista_todos %>% nrow(), "candidatos em",
 # gera_nvagas (0.5366,0.0843,tot) # mg = (0.5366,0.0843,tot). output = nvagas
 
 # opção 2: vagas arbitrárias. Preferencialmente copiando de termo de adesão
-nvagas <- c(25,5,6,4,6,1,1,1,1) # Medicina UFV
-nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
+# nvagas <- c(25,5,6,4,6,1,1,1,1) # Medicina UFV
+# nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
+
+# opção 3: usar nvagas_CURSO, gerado por data_05
+# nvagas <- get(paste0("nvagas_",cu))
 
 nvagas %>% length == 9
 
-# é preciso existir nvagas_A0 até nvagas_L14
+# Criar existir nvagas_A0 até nvagas_L14
 {nvagas[1]->nvagas_A0
 nvagas[2]->nvagas_L01
 nvagas[3]->nvagas_L02
