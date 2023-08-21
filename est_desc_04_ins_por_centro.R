@@ -2,9 +2,13 @@
 # Arquivo: est_desc_04_ins_por_centro.R
 #
 # Quantos inscritos tem por ano, por centro e campus?
-#
+# Gera gráfico de barras empilhadas
+
 # Modificado em: 2023-05-23.
 # Autor: Mateus Silva Figueiredo
+
+# Ideia: excluir Medicina e Med Vet.
+
 # ==============================================================================
 # Preparação
 library(ggplot2)# gráficos
@@ -100,17 +104,16 @@ library(RColorBrewer)
 # colors <- brewer.pal(7, "Set1")  # Change the number to match the number of Centro categories
 # colors <- brewer.pal(7, "Accent")  # Change the number to match the number of Centro categories
 
-colors <- c("#E41A1C","#377EB8","#4DAF4A","#984EA3","#FF7F00","#A65628",
-            "#FFFF33","#F781BF","#999999") #Set1
-
-colors <- c("#7FC97F","#BEAED4","#FDC086","#FFFF99","#386CB0","#F0027F",
-            "#BF5B17","#666666") # Accent
+# colors <- c("#E41A1C","#377EB8","#4DAF4A","#984EA3","#FF7F00","#A65628",
+#             "#FFFF33","#F781BF","#999999") #Set1
+# 
+# colors <- c("#7FC97F","#BEAED4","#FDC086","#FFFF99","#386CB0","#F0027F",
+#             "#BF5B17","#666666") # Accent
 
 # Minhas escolhas
-colors <- c("#876137","#BE8ED4","#E41A1C","#377EB8","#65bb64","#ff9a00")
+# colors <- c("#876137","#BE8ED4","#E41A1C","#377EB8","#65bb64","#ff9a00")
 
 colors <- c("#B66638","#BBBBAA","#E41A1C","#377EB8","#65bb64","#ff9a00")
-
 
 # Create the stacked bar graph
 ggplot(data_long, aes(x = as.factor(anos), y = Count, fill = factor(Centro, levels = c("CAF","CRP","CCH","CCE","CCB","CCA")))) +
@@ -125,7 +128,7 @@ ggplot(data_long, aes(x = as.factor(anos), y = Count, fill = factor(Centro, leve
 # R Color Brewer's palettes https://r-graph-gallery.com/38-rcolorbrewers-palettes.html
 
 
-# ---
+# ==============================================================================
 
 # Rascunho
 # Preenche para um centro, todos os anos

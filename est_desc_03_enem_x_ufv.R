@@ -127,3 +127,5 @@ ggplot(mapping = aes(n_inscritos$inscritos_ENEM_n_1/1e+6,n_inscritos$inscritos_U
   xlab("Inscritos no ENEM anterior (milhões)") +
   ylab("Inscritos na UFV") 
 
+
+# Fim do script
