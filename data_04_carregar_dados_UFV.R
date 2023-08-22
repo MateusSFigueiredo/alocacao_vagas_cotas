@@ -43,16 +43,16 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas/privado")
 # list.files()
 
 colunas<-c("Identificacao","Processo_Seletivo",
-#         "Sexo", "Idade_Ingresso","UF","Cidade",                     
-          "ENEM",
-          "Modalidade_Inscrita","Numero_Chamada_Convocacao","Modalidade_Convocada",
-         "Codigo_Modalidade_Inscrita","Codigo_Modalidade_Convocada",
-"Curso") # apenas colunas de interesse
+           #         "Sexo", "Idade_Ingresso","UF","Cidade",                     
+           "ENEM",
+           "Modalidade_Inscrita","Numero_Chamada_Convocacao","Modalidade_Convocada",
+           "Codigo_Modalidade_Inscrita","Codigo_Modalidade_Convocada",
+           "Curso") # apenas colunas de interesse
 
 dados_ufv<-fread("Wania SISU 2012 a 2022 - 2022-11-17 - original.csv",
-#                   nrow=10, # caso queira carregar poucos dados
-select = colunas,
-                   dec=",")
+                 #                   nrow=10, # caso queira carregar poucos dados
+                 select = colunas,
+                 dec=",")
 
 # View(dados_ufv) # 170199 obs.
 # dados_ufv%>% summary()
@@ -65,21 +65,21 @@ select = colunas,
 
 # Sinonimizar cursos que mudaram de nome.
 {
-# Mudanças de de 2013 para 2014: Letras, Pedagogia, Comunicação Social.
-dados_ufv[dados_ufv == "LETRAS - LICENCIATURA"] <- "LETRAS" 
-dados_ufv[dados_ufv == "PEDAGOGIA - LICENCIATURA"] <- "PEDAGOGIA"
-dados_ufv[dados_ufv == "COMUNICACAO SOCIAL - JORNALISMO"] <- "COMUNICACAO SOCIAL"
-dados_ufv[dados_ufv == "SUPERIOR TEC. EM GESTAO AMBIENTAL - FL"] <- "GESTAO AMBIENTAL - FL"
-# Mudança de 2017 para 2018:
-dados_ufv[dados_ufv == "CIENCIAS DE ALIMENTOS - RP"] <- "CIENCIA E TECNOLOGIA DE ALIMENTOS - RP"
-
-# Licenciaturas de Florestal:
-dados_ufv[dados_ufv == "LIC. EM CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
-dados_ufv[dados_ufv == "CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
-dados_ufv[dados_ufv == "QUIMICA - FL"] <- "LICENCIATURA EM QUIMICA - FL"
-dados_ufv[dados_ufv == "FISICA - FL"] <- "LICENCIATURA EM FISICA - FL"
-dados_ufv[dados_ufv == "MATEMATICA - FL"] <- "LICENCIATURA EM MATEMATICA - FL"
-dados_ufv[dados_ufv == "EDUCACAO FISICA - FL"] <- "LICENCIATURA EM EDUCACAO FISICA - FL"
+  # Mudanças de de 2013 para 2014: Letras, Pedagogia, Comunicação Social.
+  dados_ufv[dados_ufv == "LETRAS - LICENCIATURA"] <- "LETRAS" 
+  dados_ufv[dados_ufv == "PEDAGOGIA - LICENCIATURA"] <- "PEDAGOGIA"
+  dados_ufv[dados_ufv == "COMUNICACAO SOCIAL - JORNALISMO"] <- "COMUNICACAO SOCIAL"
+  dados_ufv[dados_ufv == "SUPERIOR TEC. EM GESTAO AMBIENTAL - FL"] <- "GESTAO AMBIENTAL - FL"
+  # Mudança de 2017 para 2018:
+  dados_ufv[dados_ufv == "CIENCIAS DE ALIMENTOS - RP"] <- "CIENCIA E TECNOLOGIA DE ALIMENTOS - RP"
+  
+  # Licenciaturas de Florestal:
+  dados_ufv[dados_ufv == "LIC. EM CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
+  dados_ufv[dados_ufv == "CIENCIAS BIOLOGICAS - FL"] <- "LICENCIATURA EM CIENCIAS BIOLOGICAS - FL"
+  dados_ufv[dados_ufv == "QUIMICA - FL"] <- "LICENCIATURA EM QUIMICA - FL"
+  dados_ufv[dados_ufv == "FISICA - FL"] <- "LICENCIATURA EM FISICA - FL"
+  dados_ufv[dados_ufv == "MATEMATICA - FL"] <- "LICENCIATURA EM MATEMATICA - FL"
+  dados_ufv[dados_ufv == "EDUCACAO FISICA - FL"] <- "LICENCIATURA EM EDUCACAO FISICA - FL"
 }
 # excluir espaços dos cursos
 gsub(" ", "_", dados_ufv$Curso) -> dados_ufv$Curso
@@ -103,10 +103,10 @@ colnames(dados_ufv)[colnames(dados_ufv) == "Identificacao"] <- "id"
 # ------------------------------------------------------------------------------
 # Criar id único composto por ano, 0, id original
 dados_ufv$id <-
-paste0(
-  gsub("SISU","",dados_ufv$Processo_Seletivo), # remover escrito "SISU"
-  sprintf("%06d", dados_ufv$id) # print number with leading zeroes
-)
+  paste0(
+    gsub("SISU","",dados_ufv$Processo_Seletivo), # remover escrito "SISU"
+    sprintf("%06d", dados_ufv$id) # print number with leading zeroes
+  )
 
 # ------------------------------------------------------------------------------
 # Criar colunas mod_ins e mod_con.
@@ -125,7 +125,7 @@ dados_ufv %>% count(Modalidade_Inscrita) == dados_ufv %>% count(mod_ins)
 # coluna n deve dar tudo TRUE
 
 # Substitui modalidade UFV por modalidade INEP.
- 
+
 # Regra para SISU 2013 a 2017. 
 subset(dados_ufv,Processo_Seletivo %in% c("SISU2013","SISU2014",
                                           "SISU2015","SISU2016",
@@ -141,8 +141,8 @@ subset(dados_ufv,Processo_Seletivo %in% c("SISU2013","SISU2014",
 
 # Regra para SISU 2018 a 2022
 subset (dados_ufv,Processo_Seletivo %in% c("SISU2018",
-                                          "SISU2019","SISU2020",
-                                          "SISU2021","SISU2022")) -> regra2
+                                           "SISU2019","SISU2020",
+                                           "SISU2021","SISU2022")) -> regra2
 {
   regra2[regra2 == "UFV1"] <- "L02" # UFV1 == L2. pub + bxa + ppi
   regra2[regra2 == "UFV3"] <- "L01" # UFV2 == L1. pub + bxa
@@ -201,24 +201,24 @@ dados_ufv$Centro <- 0
 
 # Criar listas de cursos cursos_cca até cursos_crp e cursos_caf
 {
-cursos_cca <- c("AGRONEGOCIO","AGRONOMIA","COOPERATIVISMO","ENGENHARIA_AGRICOLA_E_AMBIENTAL","ENGENHARIA_FLORESTAL", "ZOOTECNIA")
-cursos_ccb <- c("BIOQUIMICA","CIENCIAS_BIOLOGICAS","EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO", "EDUCACAO_FISICA_LICENCIATURA","ENFERMAGEM", "LICENCIATURA_EM_CIENCIAS_BIOLOGICAS","MEDICINA", "MEDICINA_VETERINARIA","NUTRICAO")
-cursos_cce <- c("ARQUITETURA_E_URBANISMO","CIENCIA_DA_COMPUTACAO","CIENCIA_E_TECNOLOGIA_DE_LATICINIOS","ENGENHARIA_AMBIENTAL","ENGENHARIA_CIVIL","ENG._DE_AGRIMENSURA_E_CARTOGRAFICA","ENGENHARIA_DE_ALIMENTOS","ENGENHARIA_DE_PRODUCAO", "ENGENHARIA_ELETRICA","ENGENHARIA_MECANICA","ENGENHARIA_QUIMICA","FISICA","LICENCIATURA_EM_FISICA", "LICENCIATURA_EM_MATEMATICA", "LICENCIATURA_EM_QUIMICA","MATEMATICA","QUIMICA")
-cursos_cch <- c("ADMINISTRACAO","CIENCIAS_CONTABEIS", "CIENCIAS_ECONOMICAS","CIENCIAS_SOCIAIS","COMUNICACAO_SOCIAL", "DANCA","DIREITO","ECONOMIA_DOMESTICA","EDUCACAO_INFANTIL","GEOGRAFIA", "HISTORIA", "LETRAS", "PEDAGOGIA", "SECRETARIADO_EXECUTIVO_TRILINGUE","SERVICO_SOCIAL")
-# EDUCACAO_DO_CAMPO está ausente dos dados pois não utiliza SISU
-cursos_crp <- c("ADMINISTRACAO_DIURNO_RP","ADMINISTRACAO_NOTURNO_RP","AGRONOMIA_RP", "CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP","CIENCIAS_BIOLOGICAS_RP","CIENCIAS_CONTABEIS_RP","ENGENHARIA_CIVIL_RP", "ENGENHARIA_DE_PRODUCAO_RP", "NUTRICAO_RP","QUIMICA_RP", "SISTEMAS_DE_INFORMACAO_DIURNO_RP","SISTEMAS_DE_INFORMACAO_NOTURNO_RP")
-cursos_caf <- c("ADMINISTRACAO_FL","AGRONOMIA_FL","CIENCIA_DA_COMPUTACAO_FL","ENGENHARIA_DE_ALIMENTOS_FL", "GESTAO_AMBIENTAL_FL","LICENCIATURA_EM_CIENCIAS_BIOLOGICAS_FL","LICENCIATURA_EM_EDUCACAO_FISICA_FL", "LICENCIATURA_EM_FISICA_FL","LICENCIATURA_EM_MATEMATICA_FL", "LICENCIATURA_EM_QUIMICA_FL")
-# length(cursos_cca)+length(cursos_ccb)+length(cursos_cce)+length(cursos_cch)+length(cursos_caf)+length(cursos_crp) == length(lista_cursos)
+  cursos_cca <- c("AGRONEGOCIO","AGRONOMIA","COOPERATIVISMO","ENGENHARIA_AGRICOLA_E_AMBIENTAL","ENGENHARIA_FLORESTAL", "ZOOTECNIA")
+  cursos_ccb <- c("BIOQUIMICA","CIENCIAS_BIOLOGICAS","EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO", "EDUCACAO_FISICA_LICENCIATURA","ENFERMAGEM", "LICENCIATURA_EM_CIENCIAS_BIOLOGICAS","MEDICINA", "MEDICINA_VETERINARIA","NUTRICAO")
+  cursos_cce <- c("ARQUITETURA_E_URBANISMO","CIENCIA_DA_COMPUTACAO","CIENCIA_E_TECNOLOGIA_DE_LATICINIOS","ENGENHARIA_AMBIENTAL","ENGENHARIA_CIVIL","ENG._DE_AGRIMENSURA_E_CARTOGRAFICA","ENGENHARIA_DE_ALIMENTOS","ENGENHARIA_DE_PRODUCAO", "ENGENHARIA_ELETRICA","ENGENHARIA_MECANICA","ENGENHARIA_QUIMICA","FISICA","LICENCIATURA_EM_FISICA", "LICENCIATURA_EM_MATEMATICA", "LICENCIATURA_EM_QUIMICA","MATEMATICA","QUIMICA")
+  cursos_cch <- c("ADMINISTRACAO","CIENCIAS_CONTABEIS", "CIENCIAS_ECONOMICAS","CIENCIAS_SOCIAIS","COMUNICACAO_SOCIAL", "DANCA","DIREITO","ECONOMIA_DOMESTICA","EDUCACAO_INFANTIL","GEOGRAFIA", "HISTORIA", "LETRAS", "PEDAGOGIA", "SECRETARIADO_EXECUTIVO_TRILINGUE","SERVICO_SOCIAL")
+  # EDUCACAO_DO_CAMPO está ausente dos dados pois não utiliza SISU
+  cursos_crp <- c("ADMINISTRACAO_DIURNO_RP","ADMINISTRACAO_NOTURNO_RP","AGRONOMIA_RP", "CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP","CIENCIAS_BIOLOGICAS_RP","CIENCIAS_CONTABEIS_RP","ENGENHARIA_CIVIL_RP", "ENGENHARIA_DE_PRODUCAO_RP", "NUTRICAO_RP","QUIMICA_RP", "SISTEMAS_DE_INFORMACAO_DIURNO_RP","SISTEMAS_DE_INFORMACAO_NOTURNO_RP")
+  cursos_caf <- c("ADMINISTRACAO_FL","AGRONOMIA_FL","CIENCIA_DA_COMPUTACAO_FL","ENGENHARIA_DE_ALIMENTOS_FL", "GESTAO_AMBIENTAL_FL","LICENCIATURA_EM_CIENCIAS_BIOLOGICAS_FL","LICENCIATURA_EM_EDUCACAO_FISICA_FL", "LICENCIATURA_EM_FISICA_FL","LICENCIATURA_EM_MATEMATICA_FL", "LICENCIATURA_EM_QUIMICA_FL")
+  # length(cursos_cca)+length(cursos_ccb)+length(cursos_cce)+length(cursos_cch)+length(cursos_caf)+length(cursos_crp) == length(lista_cursos)
 }
 
 # preencher coluna Centro
 {
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_cca] <- "CCA"
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_ccb] <- "CCB"
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_cce] <- "CCE"
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_cch] <- "CCH"
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_crp] <- "CRP"
-dados_ufv$Centro[dados_ufv$Curso %in% cursos_caf] <- "CAF"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_cca] <- "CCA"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_ccb] <- "CCB"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_cce] <- "CCE"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_cch] <- "CCH"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_crp] <- "CRP"
+  dados_ufv$Centro[dados_ufv$Curso %in% cursos_caf] <- "CAF"
 }
 
 paste("dados_ufv tem",ncol(dados_ufv),"colunas")
@@ -231,16 +231,16 @@ paste("dados_ufv tem",ncol(dados_ufv),"colunas")
 # por_ano <- F # T = sim, F = não
 
 if (por_ano){
-
-for (ano in 2013:2022) {
-  processo_seletivo <- paste0("SISU", ano)
-  filtro <- dados_ufv[Processo_Seletivo == processo_seletivo]
-  assign(paste0("dados_", ano), filtro)
-}
   
-rm(processo_seletivo,filtro) # remove desnecessários
-
-print("Dados por ano estão carregados")
+  for (ano in 2013:2022) {
+    processo_seletivo <- paste0("SISU", ano)
+    filtro <- dados_ufv[Processo_Seletivo == processo_seletivo]
+    assign(paste0("dados_", ano), filtro)
+  }
+  
+  rm(processo_seletivo,filtro) # remove desnecessários
+  
+  print("Dados por ano estão carregados")
 } # fim do if (por_ano) # obrigado Chat GPT 
 
 # ==============================================================================
@@ -261,25 +261,25 @@ if (por_curso){
     assign(paste0("dados_", cu), filtro)
   }
   
- rm(cu,filtro) # remove desnecessários
+  rm(cu,filtro) # remove desnecessários
   
-print("Dados por curso estão carregados")
+  print("Dados por curso estão carregados")
 } # fim do if (por_curso) # obrigado Chat GPT 
 
 # ==============================================================================
 # Cursos que abriram, fecharam ou mudaram de nome
- 
+
 # # Alguns cursos abriram, fecharam, ou mudaram de nome. Ver um exemplo:
 # # "ECONOMIA DOMESTICA" aparece nos anos 2013 até 2015.
 # unique(subset(dados_ufv,Curso=="ECONOMIA DOMESTICA")$Processo_Seletivo)
- 
+
 # Criar df_cursos_mudou para cursos que mudaram de nome
 # Cria lista_cursos_mudou para cursos que aparecem em menos de 10 anos
 lista_cursos_mudou <- character()
 
 # Preencher lista_cursos_mudou
 for (i in 1:length(lista_cursos)) {
-
+  
   if (
     unique(subset(dados_ufv,Curso==lista_cursos[i])$Processo_Seletivo) %>% length() != 10
   ) append(lista_cursos_mudou,lista_cursos[i]) ->> lista_cursos_mudou
@@ -293,12 +293,12 @@ lista_cursos_mudou
 N=1:length(lista_cursos_mudou)
 
 rbindlist(
-lapply(N, function(i) {
-paste(unique(subset(
-dados_ufv,Curso==lista_cursos_mudou[i])$Processo_Seletivo),
-collapse=", ") -> anos_por_curso
-data.table(curso = lista_cursos_mudou[i], anos = anos_por_curso)
-}))  ->> df_cursos_mudou
+  lapply(N, function(i) {
+    paste(unique(subset(
+      dados_ufv,Curso==lista_cursos_mudou[i])$Processo_Seletivo),
+      collapse=", ") -> anos_por_curso
+    data.table(curso = lista_cursos_mudou[i], anos = anos_por_curso)
+  }))  ->> df_cursos_mudou
 
 # Limpar df_cursos_mudou
 # Remover palavra "SISU"
@@ -308,10 +308,10 @@ df_cursos_mudou$anos<-gsub("SISU","",df_cursos_mudou$anos)
 # Resumir anos. Não otimizado, mas funciona para estes dados.
 # Ordem das linhas não importa.
 {
-df_cursos_mudou[df_cursos_mudou == "2017, 2018, 2019, 2020, 2021, 2022"] <- "2017 até 2022"
-df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016, 2017, 2018"] <- "2013 até 2018"
-df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016"] <- "2013 até 2016"
-df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015"] <- "2013 até 2015"
+  df_cursos_mudou[df_cursos_mudou == "2017, 2018, 2019, 2020, 2021, 2022"] <- "2017 até 2022"
+  df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016, 2017, 2018"] <- "2013 até 2018"
+  df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015, 2016"] <- "2013 até 2016"
+  df_cursos_mudou[df_cursos_mudou == "2013, 2014, 2015"] <- "2013 até 2015"
 }
 
 # Conferir
@@ -394,4 +394,3 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # ==============================================================================
 # Fim do código
-

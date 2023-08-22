@@ -84,20 +84,28 @@ dados_convocados$pub<- gsub("FALSE","Ampla Concorrência",dados_convocados$pub)
 
 # ==============================================================================
 # Boxplot
+# conferir se vai salvar imagens
 
-# Selecionar um curso - opção 1
-# dados_curso <- dados_convocados[Curso == "FISICA"]
+# Opção 1 - Selecionar um curso
+# dados_curso <- dados_convocados[Curso == "EDUCACAO_FISICA"] # com _ no nome
 # dados_curso <- dados_convocados[Curso == lista_cursos[8]]
 # i <- 25
 # {
   
-# # fazer loop com todos os cursos, gerar imagem e salvar - opção 2
- for (i in 1:length(lista_cursos)){
-# # a cada loop, pegar um curso diferente
- dados_curso <- dados_convocados[Curso == lista_cursos[i]]
+# # Opção 2 - fazer loop com todos os cursos, gerar imagem e salvar
+#  for (i in 1:length(lista_cursos)){
+# # # a cada loop, pegar um curso diferente
+#  dados_curso <- dados_convocados[Curso == lista_cursos[i]]
 
+# # Opção 3 - fazer loop com cursos listados, gerar imagem e salvar
+lista_cursos2 <- c("EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO","EDUCACAO_FISICA_LICENCIATURA")
+for (i in 1:length(lista_cursos2)){
+# # # a cada loop, pegar um curso diferente
+dados_curso <- dados_convocados[Curso == lista_cursos2[i]]
+   
+   
 # --------------------------------------------------------------------
-# após escolher opção 1 ou 2, rodar tudo:
+# após escolher opção 1 ou 2 ou 3, rodar tudo:
 # remover escrito SISU do Processo_Seletivo e deixar apenas ano
 dados_curso$Processo_Seletivo <- gsub("SISU", " ", dados_curso$Processo_Seletivo)
 
@@ -118,7 +126,8 @@ grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fi
 #  scale_y_discrete(labels = year_labels_skip) +
   #  stat_summary(fun="mean", color="white", shape=16,size=0.1)+ # ponto branco = média
   theme_classic() + # fundo cinza com grade, ou fundo branco
-  coord_cartesian(xlim = range(dados_curso$nota)) +
+  coord_cartesian(xlim = range(dados_curso$nota)) + # automático
+#  coord_cartesian(xlim = c(397, 733)) +  # arbitrário, para Educação Física
   theme(axis.ticks.y = element_blank()) +
   labs(fill = "Escola pública?"); print(grafico)
 
@@ -128,9 +137,9 @@ grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fi
 # ------------------------------------------------------------------------------
 # salvar grafico boxplot como imagem png
 
-if(T){ # deseja salvar imagens? T = sim. F = não.
+if(F){ # deseja salvar imagens? T = sim. F = não.
 # criar pasta para gráficos
-pasta_imagens <- "imagens_boxplot_notas_curso_ano" #nome da pasta
+pasta_imagens <- "imagens_est_desc_01_notas_curso_ano" #nome da pasta
 if (!dir.exists(pasta_imagens)) {
   dir.create(pasta_imagens)
 } # cria pasta
@@ -162,6 +171,3 @@ ggsave(file.path(pasta_imagens, image_filename), plot = grafico, width = 8, heig
 
 # Boxplot in Base R # Boxplot no base R
 # https://statisticsglobe.com/boxplot-in-r
-
-# Introduction to ggridges # Ridgelines
-# https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html
