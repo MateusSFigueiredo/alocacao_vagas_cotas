@@ -1,52 +1,52 @@
 # ==============================================================================
 # Arquivo: data_02_cria_candidatos.R
 #
-# Cria candidatos fictícios
+# Cria candidatos fictÃ­cios
 #
-# Gera variável distr, da distribuição de candidatos em cada modalidade
-# Utiliza porcentagens de modalidade na população em geral
+# Gera variÃ¡vel distr, da distribuiÃ§Ã£o de candidatos em cada modalidade
+# Utiliza porcentagens de modalidade na populaÃ§Ã£o em geral
 #
-# Cria data frame com candidatos com nota e modalidade de inscrição
-# Permite usar média e desvio padrão diferente para cada modalidade
+# Cria data frame com candidatos com nota e modalidade de inscriÃ§Ã£o
+# Permite usar mÃ©dia e desvio padrÃ£o diferente para cada modalidade
 # 
 # Modificado em 2023-02-11.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
-# Dicionário
+# DicionÃ¡rio
 # 
 # Inputs:
 # 
-# pub (% de egressos de escola pública)
+# pub (% de egressos de escola pÃºblica)
 # bxa (% de baixa renda)
-# ppi (% de pretos pardos indígenas)
-# pcd (% de pessoas com deficiência)
+# ppi (% de pretos pardos indÃ­genas)
+# pcd (% de pessoas com deficiÃªncia)
 #
-# n (número de estudantes)
-# tot (número de vagas)
-# função gera_nvagas()
-# função gera_distr()
+# n (nÃºmero de estudantes)
+# tot (nÃºmero de vagas)
+# funÃ§Ã£o gera_nvagas()
+# funÃ§Ã£o gera_distr()
 #
 #
 # Outputs:
 #
-# função gera_candidatos()
-# data frame candidatos com nota e modalidade de inscrição
+# funÃ§Ã£o gera_candidatos()
+# data frame candidatos com nota e modalidade de inscriÃ§Ã£o
 #
-# função gera_distr
+# funÃ§Ã£o gera_distr
 # vetor distr
-# se n=1, vetor distr é porcentagem de candidatos em cada modalidade
-# se n=no total de candidatos, distr é número de candidatos em cada modalidade
+# se n=1, vetor distr Ã© porcentagem de candidatos em cada modalidade
+# se n=no total de candidatos, distr Ã© nÃºmero de candidatos em cada modalidade
 
 # ==============================================================================
-# Cria função gera_distr
+# Cria funÃ§Ã£o gera_distr
 # Cria distr
 
-# dados da população em geral
-# pub<-0.7    # proporção de egresso de escola pública no estado. 0.7 arbitrario.
-# bxa<-0.6    # proporção de baixa renda no estado. 0.6 arbitrario.
-# ppi<-0.5366 # proporção de ppi no estado. mg = 0.5366
-# pcd<-0.0843 # proporção de pcd no estado. mg = 0.0843
+# dados da populaÃ§Ã£o em geral
+# pub<-0.7    # proporÃ§Ã£o de egresso de escola pÃºblica no estado. 0.7 arbitrario.
+# bxa<-0.6    # proporÃ§Ã£o de baixa renda no estado. 0.6 arbitrario.
+# ppi<-0.5366 # proporÃ§Ã£o de ppi no estado. mg = 0.5366
+# pcd<-0.0843 # proporÃ§Ã£o de pcd no estado. mg = 0.0843
 
 gera_distr<-function(pub=0.7,bxa=0.6,ppi=0.5366,pcd=0.0843,n=1){
   distr<-c(
@@ -65,14 +65,14 @@ gera_distr(pub=0.7,bxa=0.6,ppi=0.5366,pcd=0.0843,n=1)
 distr
 # rm(distr)
 # valor default de n = 1
-# n pode ser diferente de 1 para calcular número de candidatos por modalidade
+# n pode ser diferente de 1 para calcular nÃºmero de candidatos por modalidade
 
 # ==============================================================================
 
 # Criando dados simulados de candidatos #
 
-# não rodar caso usar dados observados
-# permite colocar médias (mean) e desvios padrões (sd) diferentes para cada modalidade
+# nÃ£o rodar caso usar dados observados
+# permite colocar mÃ©dias (mean) e desvios padrÃµes (sd) diferentes para cada modalidade
 
 # definir n de estudantes
 n <- 1000
@@ -80,17 +80,17 @@ n <- 1000
 # definir total de vagas
 tot <- 100
 
-# opcional. define seed para resultado ser reproduzível
+# opcional. define seed para resultado ser reproduzÃ­vel
 set.seed(2023)
 
 # ------------------------------------------------------------------------------
 # definir nvagas
 # ordem: A0, L01, L02, L05, L06, L09, L10, L13, L14
 
-# opção 1: usar função gera_nvagas. input = ppi, pcd, tot. tem ppi e pcd default.
+# opÃ§Ã£o 1: usar funÃ§Ã£o gera_nvagas. input = ppi, pcd, tot. tem ppi e pcd default.
 # gera_nvagas (0.5366,0.0843,tot) # mg = (0.5366,0.0843,tot). output = nvagas
 
-# opção 2: vagas arbitrárias. Preferencialmente copiando de termo de adesão
+# opÃ§Ã£o 2: vagas arbitrÃ¡rias. Preferencialmente copiando de termo de adesÃ£o
 # nvagas <- c(25,5,6,4,6,1,1,1,1) # Medicina UFV
 nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
 
@@ -99,8 +99,8 @@ nvagas %>% length == 9
 # ------------------------------------------------------------------------------
 # gera distr = numero de candidatos em cada modalidade
 
-# necessita função gera_distr. input = pub, bxa, ppi, pcd, n. todos default.
-gera_distr(n=n) #distr informa número de candidatos em cada modalidade
+# necessita funÃ§Ã£o gera_distr. input = pub, bxa, ppi, pcd, n. todos default.
+gera_distr(n=n) #distr informa nÃºmero de candidatos em cada modalidade
 
 # criar vetor mod, com a ordem das modalidades
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
@@ -127,7 +127,7 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
 # ---
 
-# opção 1: distribuição igual para cada modalidade
+# opÃ§Ã£o 1: distribuiÃ§Ã£o igual para cada modalidade
 
 m<-500;s<-100 #m = mean, s = sd
 stats_por_mod<-data.frame("A0" =c("A0" ,m,s,round(distr[1])),
@@ -143,7 +143,7 @@ stats_por_mod<-data.frame("A0" =c("A0" ,m,s,round(distr[1])),
 
 # ---
 
-# opção 2: distribuição diferente para cada modalidade
+# opÃ§Ã£o 2: distribuiÃ§Ã£o diferente para cada modalidade
 # stats_por_mod<-data.frame("A0" =c("A0" ,650,110,round(distr[1])),
 #                    "L01" =c("L01" ,400,100,round(distr[2])),
 #                    "L02" =c("L02" ,450,100,round(distr[3])),
@@ -158,7 +158,7 @@ stats_por_mod<-data.frame("A0" =c("A0" ,m,s,round(distr[1])),
 
 # ------------------------------------------------------------------------------
 
-# cria função gera_candidatos
+# cria funÃ§Ã£o gera_candidatos
 gera_candidatos <- function(mod,mean,sd){
   
   n<-as.numeric(stats_por_mod["n",mod])
@@ -172,10 +172,10 @@ gera_candidatos <- function(mod,mean,sd){
                                               sd=as.numeric(stats_por_mod["sd",mod])), 
                                         digits = 2)) # distrib normal
                 
-                # gerar coluna de mod.ins (modalidade de inscrição) com base no input mod
+                # gerar coluna de mod.ins (modalidade de inscriÃ§Ã£o) com base no input mod
                 mod_ins<-mod
                 
-                # gerar coluna de mod.con (modalidade de convocação) vazio
+                # gerar coluna de mod.con (modalidade de convocaÃ§Ã£o) vazio
                 mod_con<-vector("numeric", n)
                 
   # gerar data.frame candidatos_mod
@@ -193,7 +193,7 @@ candidatos <- data.frame()
 # ------------------------------------------------------------------------------
   
 
-# roda função gera_candidatos com for loop
+# roda funÃ§Ã£o gera_candidatos com for loop
 
 for (i in 1:length(mod)){
 gera_candidatos(mod=mod[i])
@@ -203,14 +203,14 @@ gera_candidatos(mod=mod[i])
 candidatos<<-candidatos[order(candidatos[,2],decreasing=T),]
 }
 
-candidatos$id<-c(1:nrow(candidatos)) # gera id único para cada candidato
+candidatos$id<-c(1:nrow(candidatos)) # gera id Ãºnico para cada candidato
 
-# max(candidatos$nota) # confere nota máxima
-# min(candidatos$nota) # confere nota mínima
+# max(candidatos$nota) # confere nota mÃ¡xima
+# min(candidatos$nota) # confere nota mÃ­nima
 
 # ==============================================================================
 # acrescentar colunas pub, bxa, ppi, pcd
-# assume que nenhum candidato omitiu privilégio
+# assume que nenhum candidato omitiu privilÃ©gio
 
 # criar coluna pub para egressos de escola publica
 candidatos$mod_ins %in% c("L01","L02","L06","L05","L09","L14","L13","L10") -> candidatos$pub
@@ -221,7 +221,7 @@ candidatos$mod_ins %in% c("L01","L02","L09","L10") -> candidatos$bxa
 # criar coluna ppi para estudantes pretos pardos indigenas
 candidatos$mod_ins %in% c("L02","L06","L10","L14") -> candidatos$ppi
 
-# criar coluna pcd para estudantes pessoas com deficiência
+# criar coluna pcd para estudantes pessoas com deficiÃªncia
 candidatos$mod_ins %in% c("L09","L10","L13","L14") -> candidatos$pcd
 
 # ==============================================================================

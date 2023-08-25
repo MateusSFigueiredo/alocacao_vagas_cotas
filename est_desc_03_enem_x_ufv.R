@@ -2,15 +2,15 @@
 # Arquivo: est_desc_03_enem_x_ufv.R
 #
 # Quantos inscritos tem na UFV e ENEM?
-# Qual a correlaÁ„o n. inscritos na UFV e n. inscritos no ENEM por ano?
+# Qual a correla√ß√£o n. inscritos na UFV e n. inscritos no ENEM por ano?
 #
 # Modificado em: 2023-05-23.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
-# PreparaÁ„o
-library(ggplot2)# gr·ficos
+# Prepara√ß√£o
+library(ggplot2)# gr√°ficos
 # install.packages("ggrepel")
-library(ggrepel) # gr·ficos
+library(ggrepel) # gr√°ficos
 
 # ==============================================================================
 # Carregar dados_ufv
@@ -18,18 +18,18 @@ library(ggrepel) # gr·ficos
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- F   # deseja separar candidatos por curso? obrigatÛrio
+por_curso <- F   # deseja separar candidatos por curso? obrigat√≥rio
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 # source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
 
-# limpeza apÛs source
+# limpeza ap√≥s source
 if (!por_curso){
   rm(cursos_cca,cursos_ccb,cursos_cce,cursos_cch,cursos_crp,cursos_caf)
   rm(lista_cursos,lista_cursos_18_22,lista_cursos_estavel,lista_cursos_mudou)
 }
 
 # ==============================================================================
-# objetos necess·rios
+# objetos necess√°rios
 
 sisu_anos<-paste0("SISU",c(2013:2022))
 
@@ -56,7 +56,7 @@ n_inscritos <- data.frame(sisu_anos=sisu_anos,
                                       82,85,85,
                                       85)) # ENEM 2021 = SISU 2022
 
-# Fonte: WikipÈdia - "Exame Nacional do Ensino MÈdio". Consultado em 2022-12-18.
+# Fonte: Wikip√©dia - "Exame Nacional do Ensino M√©dio". Consultado em 2022-12-18.
 # Dados de inscritos do ENEM de um ano anterior ao SISU da UFV.
 # Ou seja, dados do ENEM 2011 comparados dom dados do SISU 2012.
 
@@ -64,7 +64,7 @@ n_inscritos <- data.frame(sisu_anos=sisu_anos,
 for (i in 1:10){
   dados_ano <- dados_ufv[which (Processo_Seletivo==sisu_anos[i])] # separa por ano
   n_inscritos[i,2] <- dados_ano %>% nrow()} # quantos inscritos tem por ano?
-rm(dados_ano) # usado no loop, n„o precisa mais
+rm(dados_ano) # usado no loop, n√£o precisa mais
 
 n_inscritos$inscritos_UFV %>% sum()
 n_inscritos$inscritos_ENEM %>% sum()
@@ -73,7 +73,7 @@ n_inscritos$inscritos_ENEM %>% sum()
 
 # calcula lm
 
-# summary com R quadrado e signific‚ncia
+# summary com R quadrado e signific√¢ncia
 lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% summary()
 (lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% summary())$r.squared
 (lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% summary())$coefficients[,4][2]  
@@ -103,7 +103,7 @@ formula
 
 # ==============================================================================
 
-# Plot gr·fico Inscritos no ENEM x Inscritos na UFV
+# Plot gr√°fico Inscritos no ENEM x Inscritos na UFV
 
 set.seed(10) # usado por geom_text_repel
 
@@ -124,7 +124,7 @@ ggplot(mapping = aes(n_inscritos$inscritos_ENEM_n_1/1e+6,n_inscritos$inscritos_U
                       label=n_inscritos$sisu_anos)) +
   
   # xlab e ylab
-  xlab("Inscritos no ENEM anterior (milhıes)") +
+  xlab("Inscritos no ENEM anterior (milh√µes)") +
   ylab("Inscritos na UFV") 
 
 

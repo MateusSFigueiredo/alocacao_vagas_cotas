@@ -1,27 +1,27 @@
 # ==============================================================================
 # Arquivo: analysis_02_textos.R
-# Analisa as três modalidades de concorrência. Gera textos curtos.
+# Analisa as trÃªs modalidades de concorrÃªncia. Gera textos curtos.
 #
-# Função compara_vagas:
-# analisa alocação de vagas do mesmo grupo social em modelos diferentes
+# FunÃ§Ã£o compara_vagas:
+# analisa alocaÃ§Ã£o de vagas do mesmo grupo social em modelos diferentes
 #
-# Função compara_notas_est:
-# compara estatísticas diferentes no mesmo modelo e mesma categoria
+# FunÃ§Ã£o compara_notas_est:
+# compara estatÃ­sticas diferentes no mesmo modelo e mesma categoria
 
 # Modificado em 2022-11-13.
 # Autor: Mateus Silva Figueiredo
 
 # ==============================================================================
 #
-# Dicionário
+# DicionÃ¡rio
 #
-# meta_n = compilado das notas de ingresso pelas três modalidades de concorrencia
-# meta_v = compilado das vagas alocadas pelas três modalidades de concorrencia
+# meta_n = compilado das notas de ingresso pelas trÃªs modalidades de concorrencia
+# meta_v = compilado das vagas alocadas pelas trÃªs modalidades de concorrencia
 #
 #
-# sufixo 1 = Separa candidatos seguindo concorrência separada
-# sufixo 2 = Separa candidatos seguindo concorrência concomitante, AC primeiro
-# sufixo 3 = Separa candidatos seguindo concorrência concomitante, cotas primeiro
+# sufixo 1 = Separa candidatos seguindo concorrÃªncia separada
+# sufixo 2 = Separa candidatos seguindo concorrÃªncia concomitante, AC primeiro
+# sufixo 3 = Separa candidatos seguindo concorrÃªncia concomitante, cotas primeiro
 #
 # Inputs:
 #
@@ -29,7 +29,7 @@
 #
 #
 # ==============================================================================
-# Carregar função e biblioteca necessária
+# Carregar funÃ§Ã£o e biblioteca necessÃ¡ria
 library(tidyverse)
 
 belch4<-function(x, y, z, a) 
@@ -40,17 +40,17 @@ belch6<-function(x, y, z, a, b, d)
 
 # ==============================================================================
 #
-# Tabela para converter código em palavra e gerar textos bonitos
+# Tabela para converter cÃ³digo em palavra e gerar textos bonitos
 nomes <- as.data.frame(tribble(
   ~codigo,~nome,
-  "min","mínima",
-  "max","máxima",
-  "mean","média",
+  "min","mÃ­nima",
+  "max","mÃ¡xima",
+  "mean","mÃ©dia",
   "bxa","de baixa renda",
-  "ppi","pretos, pardos ou indígenas",
-  "pcd","pessoas com deficiência",
+  "ppi","pretos, pardos ou indÃ­genas",
+  "pcd","pessoas com deficiÃªncia",
   "tot","no total",
-  "pub","egressos de escola pública",
+  "pub","egressos de escola pÃºblica",
   "geral","em geral",
   "A0", "na modalidade A0",
   "L1", "na modalidade L1",
@@ -67,12 +67,12 @@ nomes <- as.data.frame(tribble(
 
 # ==============================================================================
 
-# Gerar funções
+# Gerar funÃ§Ãµes
 #
 # ------------------------------------------------------------------------------
-# Função compara_vagas:
-# analisar alocação de vagas do mesmo grupo social em modelos diferentes
-# Função chama data.frame nomes para escrever a frase bonitinha.
+# FunÃ§Ã£o compara_vagas:
+# analisar alocaÃ§Ã£o de vagas do mesmo grupo social em modelos diferentes
+# FunÃ§Ã£o chama data.frame nomes para escrever a frase bonitinha.
 
 compara_vagas<-function(mod.a,mod.b,dimensao)
 {
@@ -85,7 +85,7 @@ compara_vagas<-function(mod.a,mod.b,dimensao)
     valor.a,
     "estudantes",
     nomes[dimensao,],
-    ". Este número é",
+    ". Este nÃºmero Ã©",
     ((valor.a/valor.b)*100-100)%>%abs()%>%round(),
     ifelse(valor.a<=valor.b,"% menor","% maior"),
     "do que os",
@@ -96,9 +96,9 @@ compara_vagas<-function(mod.a,mod.b,dimensao)
     mod.b)
 }
 compara_vagas(1,2,"bxa") # teste
-# Fim da função compara_vagas
+# Fim da funÃ§Ã£o compara_vagas
 
-# Testa função compara_vagas
+# Testa funÃ§Ã£o compara_vagas
 # Preencher com (um modelo, outro modelo, grupo)
 # Modelos  1, 2, 3
 # Grupos = tot, ppi, pcd, pub, bxa
@@ -117,8 +117,8 @@ compara_vagas(2,3,"pub")
 #
 #
 # ------------------------------------------------------------------------------
-# Função compara_notas_est: 
-# compara estatísticas diferentes no mesmo modelo 
+# FunÃ§Ã£o compara_notas_est: 
+# compara estatÃ­sticas diferentes no mesmo modelo 
 
 compara_notas_est<-function(mod.a,cate="geral",est.a="mean",est.b="min"){
   
@@ -148,12 +148,12 @@ compara_notas_est<-function(mod.a,cate="geral",est.a="mean",est.b="min"){
     "foi de",
     valor.b,
     nomes[cate,])
-} # fim da função compara_notas_est
+} # fim da funÃ§Ã£o compara_notas_est
 
-# Testando função compara_notas_est
-# Preencher com (modelo, categoria, uma estatística, outra estatística)
+# Testando funÃ§Ã£o compara_notas_est
+# Preencher com (modelo, categoria, uma estatÃ­stica, outra estatÃ­stica)
 # Modelos  1, 2, 3
-# Estatísticas = max, mean, min
+# EstatÃ­sticas = max, mean, min
 # Categorias = A0, L1, L2, L5, L6, L9, L10, L13, L14
 compara_notas_est(1,'geral', 'mean','min')
 compara_notas_est(2,'geral')
@@ -168,15 +168,15 @@ for (i in 1:3){print(compara_notas_est(i,"L2"))} # parece funcionar ok
 for (i in 1:3){print(compara_notas_est(i,"cotas"))} # parece funcionar ok
 
 
-# Cuidado ao mandar o programa fazer a função várias vezes com vetor.
-# DÁ ERRO: # i <- 1:3; compara_notas_est(i,"A0")
+# Cuidado ao mandar o programa fazer a funÃ§Ã£o vÃ¡rias vezes com vetor.
+# DÃ ERRO: # i <- 1:3; compara_notas_est(i,"A0")
 
 # ------------------------------------------------------------------------------
 #
 #
 #
 # ------------------------------------------------------------------------------
-# Função compara_notas_mod: 
+# FunÃ§Ã£o compara_notas_mod: 
 # compara a mesma estatistica em modelos diferentes
 
 compara_notas_mod<-function(mod.a,mod.b,cate="geral",est="mean"){
@@ -208,14 +208,14 @@ compara_notas_mod<-function(mod.a,mod.b,cate="geral",est="mean"){
     "no modelo",
     mod.b)
   
-} # fim da função compara_notas_mod
+} # fim da funÃ§Ã£o compara_notas_mod
 
 compara_notas_mod(1,2,cate="geral",est="mean")
 
-# Testando função compara_notas_est
+# Testando funÃ§Ã£o compara_notas_est
 # Preencher com (mod.a,mod.b,cate="geral",est="mean")
 # Modelos  1, 2, 3
-# Estatísticas = max, mean, min
+# EstatÃ­sticas = max, mean, min
 # Categorias = A0, L1, L2, L5, L6, L9, L10, L13, L14
 
 compara_notas_mod(1,2,cate="cotas","min")
@@ -223,14 +223,14 @@ compara_notas_mod(2,3,cate="L1","max")
 
 # ==============================================================================
 
-# É possível fazer função compara_notas_cat,
-# que usa o mesmo modelo, a mesma estatística,
+# Ã‰ possÃ­vel fazer funÃ§Ã£o compara_notas_cat,
+# que usa o mesmo modelo, a mesma estatÃ­stica,
 # e compara categorias diferentes. Por exemplo, 
-# a função geraria o seguinte texto:
-# [1] "No modelo 1, a nota mínima da categoria L1 foi de 677.560
-# e a nota mínima da categoria L2 foi de 662.9400."
+# a funÃ§Ã£o geraria o seguinte texto:
+# [1] "No modelo 1, a nota mÃ­nima da categoria L1 foi de 677.560
+# e a nota mÃ­nima da categoria L2 foi de 662.9400."
 #
-# No entanto, esta função me parece inútil neste momento.
+# No entanto, esta funÃ§Ã£o me parece inÃºtil neste momento.
 
 ############### RASCUNHO ABAIXO ######################
 ############### RASCUNHO ABAIXO ######################
@@ -250,36 +250,36 @@ compara_notas_mod(2,3,cate="L1","max")
 # meta_n["mean3","L9"]
 # 
 # # Escrever um em cada linha
-# print("Com modelo 2, a média das notas da A0 foi de");meta_n["mean2","A0"];
+# print("Com modelo 2, a mÃ©dia das notas da A0 foi de");meta_n["mean2","A0"];
 # 
-# # Escrever tudo numa linha só
+# # Escrever tudo numa linha sÃ³
 # paste(
 #   "Com modelo",
 #   2,
-#   ", a média das notas de",
+#   ", a mÃ©dia das notas de",
 #   "A0",
 #   "foi de",
 #   meta_n["mean2","A0"],
 #   "."
 # )
 # 
-# print("Com modelo 2, a nota média foi de");meta_n["mean2","geral"];
-# print("e a nota mínima foi de");meta_n["min2","A0"]
+# print("Com modelo 2, a nota mÃ©dia foi de");meta_n["mean2","geral"];
+# print("e a nota mÃ­nima foi de");meta_n["min2","A0"]
 # 
 # paste(
 #   "Com modelo",
 #   2,
 #   "a nota",
-#   "média",
+#   "mÃ©dia",
 #   "foi de",
 #   meta_n["mean2","geral"],
 #   "e a nota",
-#   "mínima",
+#   "mÃ­nima",
 #   "foi de",
 #   meta_n["min2","geral"]
 # )
 # 
-# # A nota mínima foi de x no modelo 1, x no modelo 2 e x no modelo 3.
+# # A nota mÃ­nima foi de x no modelo 1, x no modelo 2 e x no modelo 3.
 # 
 # 
 # compara_nota_mods<-function(n){
@@ -315,7 +315,7 @@ compara_notas_mod(2,3,cate="L1","max")
 # 
 # 
 # # ------------------------------------------------------------------------------
-# # Função compara_notas_mod: 
+# # FunÃ§Ã£o compara_notas_mod: 
 # # compara a mesma estatistica em modelos diferentes
 # 
 # compara_notas_mod<-function(mod.a,mod.b,cate="geral",est="mean"){
@@ -347,14 +347,14 @@ compara_notas_mod(2,3,cate="L1","max")
 #     "no modelo",
 #     mod.b)
 #   
-# } # fim da função compara_notas_mod
+# } # fim da funÃ§Ã£o compara_notas_mod
 # 
 # compara_notas_mod(1,2,cate="geral",est="mean")
 # 
-# # Testando função compara_notas_est
+# # Testando funÃ§Ã£o compara_notas_est
 # # Preencher com (mod.a,mod.b,cate="geral",est="mean")
 # # Modelos  1, 2, 3
-# # Estatísticas = max, mean, min
+# # EstatÃ­sticas = max, mean, min
 # # Categorias = A0, L1, L2, L5, L6, L9, L10, L13, L14
 # 
 # compara_notas_mod(1,2,cate="cotas","min")

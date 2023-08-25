@@ -4,19 +4,19 @@
 # Modificado em: 2022-12-11.
 # Autor: Mateus Silva Figueiredo
 #
-# Carrega dados do termo de ades„o.
+# Carrega dados do termo de ades√£o.
 # ==============================================================================
 #
-# Dicion·rio
+# Dicion√°rio
 #
 # Inputs:
 # Arquivo "Wania SISU 2012 a 2022 - 2022-11-17 - original.csv"
 #
 # Outputs:
-# nvagas_ADMINISTRACAO atÈ nvagas_ZOOTECNIA
+# nvagas_ADMINISTRACAO at√© nvagas_ZOOTECNIA
 #
 # ==============================================================================
-# PreparaÁ„o
+# Prepara√ß√£o
 library(tidyverse)
 library(data.table)
 
@@ -25,20 +25,22 @@ belch3 <- function(x, y, z) { eval(parse(text=(paste0(x, y, z, sep=""))))}
 
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
+# Carregar dados com data_04_carregar_dados_UFV.R
+por_curso <- F   # deseja separar candidatos por curso? obrigat√≥rio
+por_ano   <- F  # deseja separar candidatos por ano? opcional
+source("data_04_carregar_dados_UFV.R") # F,F => cria ~10 objetos
+
 # ==============================================================================
-# Carregar dados
 
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
-# list.files()
-
-
+# Carregar termo de ades√£o em formato csv
 termo_adesao_2022<-fread("vagas_ufv_termo_de_adesao_2022.csv",
 #                   nrow=10, # caso queira carregar poucos dados
+                   encoding = 'Latin-1', # Latin-1 # UTF-8
                    dec=".")
 
 termo_adesao_2022$Curso
 
-# excluir espaÁos dos cursos
+# excluir espa√ßos dos cursos
 gsub(" ", "_", termo_adesao_2022$Curso) -> termo_adesao_2022$Curso
 gsub("_-_", "_", termo_adesao_2022$Curso) -> termo_adesao_2022$Curso
 
@@ -48,7 +50,7 @@ iconv(termo_adesao_2022$Curso, to="ASCII//TRANSLIT") -> termo_adesao_2022$Curso
 # ver
 termo_adesao_2022$Curso
 
-# cursos que est„o no termo_adesao_2022 e n„o est„o em lista_cursos
+# cursos que est√£o no termo_adesao_2022 e n√£o est√£o em lista_cursos
 # deve ser vazio
 subset(termo_adesao_2022,!Curso %in% lista_cursos)$Curso
 
@@ -69,6 +71,7 @@ termo_adesao_2022$Curso[i]
 } # fecha loop de criar nvagas_CURSO
 
 sum(nvagas_ADMINISTRACAO)
+sum(nvagas_UNIVERSIDADE_FEDERAL_DE_VICOSA)
 
 # ==============================================================================
 # Limpeza

@@ -2,7 +2,7 @@
 # Arquivo: est_desc_04_ins_por_centro.R
 #
 # Quantos inscritos tem por ano, por centro e campus?
-# Gera gráfico de barras empilhadas
+# Gera grÃ¡fico de barras empilhadas
 
 # Modificado em: 2023-05-23.
 # Autor: Mateus Silva Figueiredo
@@ -10,8 +10,8 @@
 # Ideia: excluir Medicina e Med Vet.
 
 # ==============================================================================
-# Preparação
-library(ggplot2)# gráficos
+# PreparaÃ§Ã£o
+library(ggplot2)# grÃ¡ficos
 
 # ==============================================================================
 # Carregar dados_ufv
@@ -19,12 +19,12 @@ library(ggplot2)# gráficos
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- T   # deseja separar candidatos por curso? obrigatório
+por_curso <- T   # deseja separar candidatos por curso? obrigatÃ³rio
 por_ano   <- T   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
 
 # ==============================================================================
-# objetos necessários
+# objetos necessÃ¡rios
 
 sisu_anos<-paste0("SISU",c(2013:2022))
 
@@ -71,7 +71,7 @@ for (centro in c("cursos_cca", "cursos_ccb", "cursos_cce", "cursos_cch", "cursos
 
 # ------------------------------------------------------------------------------
 
-# Confere somatória. Deve ser tudo TRUE.
+# Confere somatÃ³ria. Deve ser tudo TRUE.
 ins_centros$ins_ufv == (
   ins_centros$ins_cca +
   ins_centros$ins_ccb +
@@ -82,13 +82,13 @@ ins_centros$ins_ufv == (
 
 # ------------------------------------------------------------------------------
 
-# Deletar colunas desnecessárias e renomear, para facilitar gráfico
+# Deletar colunas desnecessÃ¡rias e renomear, para facilitar grÃ¡fico
 ins_centros$ins_ufv <- NULL
 ins_centros$sisu_anos <- NULL
 colnames(ins_centros) <- c("anos","CCA","CCB","CCE","CCH","CRP","CAF")
 
 # ----------
-# Preparar para gráfico. Obrigado ChatGPT.
+# Preparar para grÃ¡fico. Obrigado ChatGPT.
 
 # Reshape the data from wide to long format
 data_long <- reshape2::melt(ins_centros, id.vars = "anos", variable.name = "Centro", value.name = "Count")
@@ -100,21 +100,21 @@ colors <- c("#B66638","#BBBBAA","#E41A1C","#377EB8","#65bb64","#ff9a00")
 # Create the stacked bar graph
 ggplot(data_long, aes(x = as.factor(anos), y = Count, fill = factor(Centro, levels = c("CAF","CRP","CCH","CCE","CCB","CCA")))) +
   geom_bar(stat = "identity") +
-  labs(x = "Edição do SISU", y = "Inscritos por Centro/Campus", fill = "Centro") +
+  labs(x = "EdiÃ§Ã£o do SISU", y = "Inscritos por Centro/Campus", fill = "Centro") +
   scale_fill_manual(values = colors) +
   theme_bw() +
   ggtitle("Inscritos na UFV 2013-2022") +
   theme(legend.position = "right")
 
-# Fim do código
+# Fim do cÃ³digo
 
 # ==============================================================================
-# Referências
+# ReferÃªncias
 # R Color Brewer's palettes https://r-graph-gallery.com/38-rcolorbrewers-palettes.html
 
 # ==============================================================================
 
-# Anotações # Possibilidades de cores
+# AnotaÃ§Ãµes # Possibilidades de cores
 
 # library(RColorBrewer)
 

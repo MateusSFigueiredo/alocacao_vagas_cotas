@@ -7,9 +7,9 @@
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
-# Usar apÛs data_04_carregar_dados_UFV.R
+# Usar ap√≥s data_04_carregar_dados_UFV.R
 #
-# Dicion·rio
+# Dicion√°rio
 #
 # Inputs:
 # dados_ufv com todos os cursos de todos os anos 2013-2022
@@ -19,14 +19,14 @@ lista_cursos
 lista_cursos_estavel
 #
 # Outputs:
-# FunÁıes:
+# Fun√ß√µes:
 # seleciona_mudaram %>% class()
 # seleciona_status %>% class()
 # seleciona_todos %>% class()
 # Tabelas
 #
 # ==============================================================================
-# PreparaÁ„o
+# Prepara√ß√£o
 
 belch2 <- function(x, y) { eval(parse(text=(paste0(x, y, sep=""))))}
 belch3 <- function(x, y, z) {eval(parse(text=(paste0(x, y, z,sep=""))))}
@@ -84,7 +84,7 @@ for (i in 1:length(lista_cursos_estavel)){
     
   } # fim do loop j
 } # fim do loop i
-# est„o criados e preenchidos df_mob_cota_A0 e df_mob_A0_cota, sem linha de total
+# est√£o criados e preenchidos df_mob_cota_A0 e df_mob_A0_cota, sem linha de total
 
 
 #-------------------------------------------------------------------------------
@@ -119,12 +119,12 @@ tail(df_mob_cota_A0,3) # Confere ultimas linhas
 tail(df_mob_cota_A0,1)
 tail(df_mob_A0_cota,1)
 
-print("Est„o preenchidas df_mob_A0_cota e df_mob_cota_A0 com linha de total")
+print("Est√£o preenchidas df_mob_A0_cota e df_mob_cota_A0 com linha de total")
 
 #===============================================================================
-# Cria funÁıes
+# Cria fun√ß√µes
 
-# Cria funÁ„o seleciona_todos
+# Cria fun√ß√£o seleciona_todos
 
 # Seleciona todos os inscritos para um ano e curso
 seleciona_todos <- function (ano,n_curso){return(
@@ -135,11 +135,11 @@ seleciona_todos <- function (ano,n_curso){return(
 seleciona_todos(2022,54) # %>% View() # todos do ano 2022 do curso lista_cursos[54]
 
 #-------------------------------------------------------------------------------
-# Cria funÁ„o seleciona_status
+# Cria fun√ß√£o seleciona_status
 
-# Seleciona todos os inscritos para um ano e curso baseado em status de convocaÁ„o
+# Seleciona todos os inscritos para um ano e curso baseado em status de convoca√ß√£o
 # Se convocado=TRUE, seleciona apenas convocados
-# Se convocado=FALSE, seleciona apenas n„o convocados
+# Se convocado=FALSE, seleciona apenas n√£o convocados
 
 seleciona_status <- function (ano,n_curso,convocado){
   (dados_ufv)[which
@@ -159,19 +159,19 @@ which (lista_cursos == "MEDICINA") # descobrir numero sabendo o nome do curso
 lista_cursos[59] # confere se numero corresponde ao curso
 
 seleciona_status(2014,59,convocado=T) # apenas convocados
-seleciona_status(2013,59,convocado=F) # apenas n„o convocados
+seleciona_status(2013,59,convocado=F) # apenas n√£o convocados
 
 seleciona_status(2022,59,convocado=F)[which (mod_ins == "L05")] # apenas convocados ins na L05
-seleciona_status(2022,59,convocado=T)[which (mod_ins == "L05")] # apenas N√O convocados ins na L05
+seleciona_status(2022,59,convocado=T)[which (mod_ins == "L05")] # apenas N√ÉO convocados ins na L05
 
 seleciona_status(2022,54,T)$ENEM %>% max() # dentre os convocados, qual maior nota
 seleciona_status(2022,54,T)$ENEM %>% min() # dentre os convocados, qual menor nota
 
-seleciona_status(2022,54,F)$Modalidade_Convocada # deve ser tudo NA, pois F = n„o convocado
+seleciona_status(2022,54,F)$Modalidade_Convocada # deve ser tudo NA, pois F = n√£o convocado
 
 
 #-------------------------------------------------------------------------------
-# Cria funÁ„o seleciona_mudaram
+# Cria fun√ß√£o seleciona_mudaram
 
 # Seleciona todos os inscritos que mudaram de modalidade, para um ano e curso
 # Se cota_para_A0=TRUE, seleciona estudantes que foram da cota para A0
@@ -195,13 +195,13 @@ seleciona_mudaram(ano=2022,n_curso=1,cota_para_A0 = T)
 seleciona_mudaram(ano=2022,n_curso=2,cota_para_A0 = F)
 
 #===============================================================================
-# Calcular diferenÁa entre menor A0 convocado e maior cotista suplente
-# Se o n˙mero for negativo, isso indica que tem cotista bom ficando de fora
+# Calcular diferen√ßa entre menor A0 convocado e maior cotista suplente
+# Se o n√∫mero for negativo, isso indica que tem cotista bom ficando de fora
 
 # Problema: alguns valores Inf ou -Inf
 
 # Cria df_diferenca_nota 
-# para calcular diferenÁa entre menor A0 convocado e maior cotista suplente
+# para calcular diferen√ßa entre menor A0 convocado e maior cotista suplente
 df_diferenca_nota <- data.frame(
   matrix(NA,nrow = length(lista_cursos_estavel), ncol = length(anos)))
 
@@ -235,7 +235,7 @@ paste(lista_cursos_estavel[j],"no ano",anos[i],"teve max_cota_sup =", max_cota_s
 } # fecha for loop i
 } # fecha for loop j
 
-print("df_diferenca_nota est· preenchido")
+print("df_diferenca_nota est√° preenchido")
 
 #------------------------------------------------------------------------------
 # Mitiga problema dos Inf e -Inf
@@ -254,22 +254,22 @@ which(lista_cursos=="MATEMATICA") # 58
 which(lista_cursos=="FISICA") # 44
 which(lista_cursos=="MEDICINA") # 59
 
-df_diferenca_nota %>% max() # 142.54. FÌsica 2013
-df_diferenca_nota %>% min() # -209.82. Matem·tica 2017.
+df_diferenca_nota %>% max() # 142.54. F√≠sica 2013
+df_diferenca_nota %>% min() # -209.82. Matem√°tica 2017.
 
 
 seleciona_todos(ano=2013,n_curso=44) %>% View()
 
 seleciona_todos(ano=2013,n_curso=44)[which (mod_ins=="A0")]$ENEM %>% max()
 
-# FÌsica 2013. 
+# F√≠sica 2013. 
 # min_A0_con - max_cota_sup = 142.54
 #   579.28   -    436.74    = 142.54
-# Cotista que ficou de fora tem nota baixa. T· ok.
+# Cotista que ficou de fora tem nota baixa. T√° ok.
 seleciona_status(ano=2013,n_curso=44,convocado=T)[which (mod_ins=="A0")]$ENEM %>% min()# -
 seleciona_status(ano=2013,n_curso=44,convocado=F)[which (mod_ins!="A0")]$ENEM %>% max()
 
-# Matem·tica 2017.
+# Matem√°tica 2017.
 # min_A0_con - max_cota_sup = -209.82
 #    433.2   -    643.02    = -209.82
 # cotista que ficou de fora tem nota alta. Ruim.
@@ -278,8 +278,8 @@ seleciona_todos(ano=2017,n_curso=58)
 seleciona_status(ano=2017,n_curso=58,convocado=T)[which (mod_ins=="A0")]$ENEM %>% min()# -
 seleciona_status(ano=2017,n_curso=58,convocado=F) %>% View() #[which (mod_ins!="A0")]$ENEM %>% max()
 
-seleciona_todos(ano=2017,n_curso=58)[which (ENEM==643.02)] # N˙mero de Chamada = 0
-seleciona_todos(ano=2017,n_curso=58)[which (ENEM==433.2)] # N˙mero de Chamada = 3
+seleciona_todos(ano=2017,n_curso=58)[which (ENEM==643.02)] # N√∫mero de Chamada = 0
+seleciona_todos(ano=2017,n_curso=58)[which (ENEM==433.2)] # N√∫mero de Chamada = 3
 
 # Medicina 2017
 lista_cursos[59]
@@ -292,7 +292,7 @@ seleciona_todos(ano=2017,n_curso=59)[which (ENEM == 776.34)] # Numero de Chamada
 # Estudando Numero de Chamada = 0 ou NA
 
 dados_ufv[which (Numero_Chamada_Convocacao == 0)][which (mod_con=="NA")]
-# 44k linhas. Chamada 0 => n„o convocado.
+# 44k linhas. Chamada 0 => n√£o convocado.
 
 dados_ufv[which (Numero_Chamada_Convocacao == 0)][which (!mod_con=="NA")]
 # 0 linhas. Nenhum Chamada 0 foi convocado.
@@ -301,8 +301,8 @@ dados_ufv[which (is.na(Numero_Chamada_Convocacao))]
 # 51k linhas. Muitos tem Chamada NA.
 
 dados_ufv[which (is.na(Numero_Chamada_Convocacao))][which (mod_con=="NA")]
-# 50k linhas. MUito tem Chamada NA e s„o n„o convocados.
-# AtÈ aÌ tudo bem
+# 50k linhas. MUito tem Chamada NA e s√£o n√£o convocados.
+# At√© a√≠ tudo bem
 
 # Problema:
 dados_ufv[which
@@ -326,33 +326,33 @@ dados_ufv[which
 # 
 df_diferenca_nota[1] %>% class()
 df_diferenca_nota[1] %>% max()
-df_diferenca_nota[1] %>% mean() # d· erro
+df_diferenca_nota[1] %>% mean() # d√° erro
 (df_diferenca_nota[1] %>% sum()) / (df_diferenca_nota[1] %>% nrow())
 
-# An·lise em texto
+# An√°lise em texto
 for (i in 1:10){
 paste(
   df_diferenca_nota[i] %>% sum() / (df_diferenca_nota[i] %>% nrow()),
-  "È a mÈdia das diferenÁas no",
+  "√© a m√©dia das diferen√ßas no",
 sisu_anos[i]) %>% print()}
-# H· n˙meros positivos em 2013:2015, 2019, 2021:2022 = bom
-# H· n˙mero negativos em 2016:2018 e 2020 = ruim
+# H√° n√∫meros positivos em 2013:2015, 2019, 2021:2022 = bom
+# H√° n√∫mero negativos em 2016:2018 e 2020 = ruim
 
 #===============================================================================
 # Analisando caso individual
 
-# CiÍncias Sociais em 2019
+# Ci√™ncias Sociais em 2019
 which (lista_cursos == "CIENCIAS_SOCIAIS") # descobrir numero sabendo o nome do curso
 
 # Ano 2019, curso 20, convocado, mod_ins A0, menor nota no ENEM
 seleciona_status(ano=2019,n_curso=20,convocado=T)[which (mod_ins == "A0")]$ENEM %>% min()
 # > 606.26
 
-# Ano 2019, curso 20, n„o convocado, mod_ins cota, maior nota no ENEM
+# Ano 2019, curso 20, n√£o convocado, mod_ins cota, maior nota no ENEM
 seleciona_status(ano=2019,n_curso=20,convocado=F)[which (mod_ins != "A0")]$ENEM %>% max()
 # > 606.34
 
-# Algo est· errado. O cotista com nota 606.34 deveria ter sido convocado pela A0.
+# Algo est√° errado. O cotista com nota 606.34 deveria ter sido convocado pela A0.
 
 # Quem tirou 606.34?
 seleciona_todos(ano=2019,n_curso=20)[which (ENEM == 606.34)]

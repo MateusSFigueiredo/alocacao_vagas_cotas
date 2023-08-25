@@ -1,24 +1,24 @@
 # ==============================================================================
 # Arquivo: est_desc_05_ins_por_modalidade.R
 #
-# Quantos inscritos tem por ano, por modalidade de inscriÁ„o?
+# Quantos inscritos tem por ano, por modalidade de inscri√ß√£o?
 # usar mod_ins
 
 # Faz:
 # Data.frame ins_mod com n. inscritos por mod, por ano
-# Gr·fico de barras empilhado com n. inscritos por mod, por ano
+# Gr√°fico de barras empilhado com n. inscritos por mod, por ano
 
-# Data.frame ins_mod2 com n. inscritos por populaÁ„o (bxa, ppi, pcd)
+# Data.frame ins_mod2 com n. inscritos por popula√ß√£o (bxa, ppi, pcd)
 
 # Falta:
-# Definir cores para gr·fico
-# Exportar gr·fico (n„o sei se precisa mesmo)
+# Definir cores para gr√°fico
+# Exportar gr√°fico (n√£o sei se precisa mesmo)
 #
 # Modificado em: 2023-08-22.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
-# PreparaÁ„o
-library(ggplot2)# gr·ficos
+# Prepara√ß√£o
+library(ggplot2)# gr√°ficos
 library(pals) # cores
 
 # ==============================================================================
@@ -27,12 +27,12 @@ library(pals) # cores
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- T   # deseja separar candidatos por curso? obrigatÛrio
+por_curso <- T   # deseja separar candidatos por curso? obrigat√≥rio
 por_ano   <- T   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
 
 # ==============================================================================
-# objetos necess·rios
+# objetos necess√°rios
 
 sisu_anos<-paste0("SISU",c(2013:2022))
 
@@ -88,7 +88,7 @@ for (i in 2013:2022){
 }
 
 # ------------------------------------------------------------------------------
-# Confere somatÛria. Deve ser tudo TRUE.
+# Confere somat√≥ria. Deve ser tudo TRUE.
 ins_mod$ins_ufv == (
   ins_mod$ins_A0 +
     ins_mod$ins_L01 +
@@ -101,14 +101,14 @@ ins_mod$ins_ufv == (
     ins_mod$ins_L14)
 
 # ------------------------------------------------------------------------------
-# Cria colunas de totais por tipo de populaÁ„o
+# Cria colunas de totais por tipo de popula√ß√£o
 # Data.frame ins_mod2 para guardar dados
-# Data.frame ins_mod vai ser usado para gr·ficos
+# Data.frame ins_mod vai ser usado para gr√°ficos
 
-if (F){ # deseja criar ins_mod2? T = sim. F = n„o.
+if (F){ # deseja criar ins_mod2? T = sim. F = n√£o.
 ins_mod2<-ins_mod
 
-# Total de inscriÁıes por cotas em ins_cotas
+# Total de inscri√ß√µes por cotas em ins_cotas
 ins_mod2$ins_cotas <- (
   ins_mod$ins_L01 +
     ins_mod$ins_L02 +
@@ -119,21 +119,21 @@ ins_mod2$ins_cotas <- (
     ins_mod$ins_L13 +
     ins_mod$ins_L14)
 
-# Total de inscriÁıes por cotas ppi em ins_cotas
+# Total de inscri√ß√µes por cotas ppi em ins_cotas
 ins_mod2$ins_bxa <- (
   ins_mod$ins_L01 +
     ins_mod$ins_L02 +
     ins_mod$ins_L09 +
     ins_mod$ins_L10)
 
-# Total de inscriÁıes por cotas ppi em ins_cotas
+# Total de inscri√ß√µes por cotas ppi em ins_cotas
 ins_mod2$ins_pcd <- (
   ins_mod$ins_L02 +
     ins_mod$ins_L06 +
     ins_mod$ins_L10 +
     ins_mod$ins_L14)
 
-# Total de inscriÁıes por cotas pcd em ins_cotas
+# Total de inscri√ß√µes por cotas pcd em ins_cotas
 ins_mod2$ins_pcd <- (
     ins_mod$ins_L09 +
     ins_mod$ins_L10 +
@@ -143,17 +143,17 @@ ins_mod2$ins_pcd <- (
 
 # ==============================================================================
 
-### Preparar para gr·fico
+### Preparar para gr√°fico
 
-# Deletar colunas desnecess·rias
+# Deletar colunas desnecess√°rias
 ins_mod$ins_ufv <- NULL
 ins_mod$sisu_anos <- NULL
 
-# renomeia colunas para facilitar gr·fico
+# renomeia colunas para facilitar gr√°fico
 colnames(ins_mod) <- gsub("ins_","",colnames(ins_mod)) 
 
 # ----------
-# Preparar para gr·fico. Obrigado ChatGPT.
+# Preparar para gr√°fico. Obrigado ChatGPT.
 
 # Reshape the data from wide to long format
 data_long <- reshape2::melt(ins_mod, id.vars = "anos", variable.name = "Mod", value.name = "Count")
@@ -180,7 +180,7 @@ ggplot(data_long, aes(x = as.factor(anos), y = Count, fill =
   # # A0 em cima                  
   # factor(Mod, levels = c("A0","L01","L02","L05","L06","L09","L10","L13","L14")))) +
     geom_bar(stat = "identity") +
-  labs(x = "EdiÁ„o do SISU", y = "Inscritos por Modalidade", fill = "Mod") +
+  labs(x = "Edi√ß√£o do SISU", y = "Inscritos por Modalidade", fill = "Mod") +
   scale_fill_manual(values = colors) +
   theme_bw() +
   ggtitle("Inscritos por modalidade de cotas na UFV") +
@@ -189,10 +189,10 @@ ggplot(data_long, aes(x = as.factor(anos), y = Count, fill =
 
 print(grafico)
 
-# Fim do cÛdigo
+# Fim do c√≥digo
 
 # ==============================================================================
-# ReferÍncias
+# Refer√™ncias
 # R Color Brewer's palettes https://r-graph-gallery.com/38-rcolorbrewers-palettes.html
 # Pals' palettes https://cran.r-project.org/web/packages/pals/vignettes/pals_examples.html 
 
@@ -201,7 +201,7 @@ print(grafico)
 # Possibilidades de cores
 # library(pals)
 
-# sequÍncias que me interessaram:
+# sequ√™ncias que me interessaram:
 colors <- c(unname(stepped3())[13:16], # tons de roxo
             unname(stepped2())[5:8], # tons de verde
             unname(kelly())[5])  # laranja
@@ -214,7 +214,7 @@ colors <- c(unname(stepped2())[5:8], # tons de verde
             unname(stepped3())[5:8], # tons de laranja
             "#201A01")
 
-# sequÍncias stepped possÌveis:
+# sequ√™ncias stepped poss√≠veis:
 unname(stepped()) == c(
 "#990F26", "#B33E52", "#CC7A88", "#E6B8BF", # unname(stepped())[1:4]
 "#99600F", "#B3823E", "#CCAA7A", "#E6D2B8", 

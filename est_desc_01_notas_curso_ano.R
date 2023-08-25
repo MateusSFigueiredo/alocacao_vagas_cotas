@@ -7,18 +7,18 @@
 #
 # Utiliza dados_ufv carregado por data_04_carregar_dados_UFV
 
-### FunÁ„o:
-# Gera estatÌstica descritiva de cada curso, ano e modalidade
+### Fun√ß√£o:
+# Gera estat√≠stica descritiva de cada curso, ano e modalidade
 # Cria boxplot com notas dos convocados na 1a chamada de cada curso,
 # de cada ano, separando AC e cotas.
 
 # Faz:
-# gr·fico boxplot na horizontal. cada gr·fico para um curso.
-# compara ano a ano a nota mÌnima, mediana e m·xima de cada curso
+# gr√°fico boxplot na horizontal. cada gr√°fico para um curso.
+# compara ano a ano a nota m√≠nima, mediana e m√°xima de cada curso
 # compara AC com cotas
-# exporta imagens. Largura da barra dos boxplots est· ok.
+# exporta imagens. Largura da barra dos boxplots est√° ok.
 
-# ObservaÁ„o:
+# Observa√ß√£o:
 # cada boxplot tem uma amplitude de notas diferente.
 
 # ==============================================================================
@@ -28,12 +28,12 @@ library(ggplot2)
 
 # ==============================================================================
 
-# PreparaÁ„o
+# Prepara√ß√£o
 # ------------------------------------------------------------------------------
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- T   # deseja separar candidatos por curso? obrigatÛrio
+por_curso <- T   # deseja separar candidatos por curso? obrigat√≥rio
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
 # data_04 faz setwd da pasta /privado
@@ -62,7 +62,7 @@ colunas<-c("id","Processo_Seletivo","nota",
 
 dados_convocados <- dados_convocados %>% select(all_of(colunas))
 
-# group = ano + escola p˙blica ou n„o
+# group = ano + escola p√∫blica ou n√£o
 dados_convocados$group <- paste0(dados_convocados$Processo_Seletivo,dados_convocados$pub)
 
 dados_convocados$ano <- paste0(dados_convocados$Processo_Seletivo,dados_convocados$pub)
@@ -73,31 +73,31 @@ dados_convocados$group<- gsub("FALSE"," AC",dados_convocados$group)
 dados_convocados$group<- gsub("TRUE"," cota",dados_convocados$group)
 dados_convocados$group<- gsub("SISU","",dados_convocados$group)
 
-# transforma coluna pub em algo bonito pro gr·fico plotar
+# transforma coluna pub em algo bonito pro gr√°fico plotar
 dados_convocados$pub<- gsub("TRUE","Cota",dados_convocados$pub)
-dados_convocados$pub<- gsub("FALSE","Ampla ConcorrÍncia",dados_convocados$pub)
+dados_convocados$pub<- gsub("FALSE","Ampla Concorr√™ncia",dados_convocados$pub)
 
 
 # ==============================================================================
-# =========================== Gr·ficos==========================================
+# =========================== Gr√°ficos==========================================
 # ==============================================================================
 
 # ==============================================================================
 # Boxplot
 # conferir se vai salvar imagens
 
-# OpÁ„o 1 - Selecionar um curso
+# Op√ß√£o 1 - Selecionar um curso
 # dados_curso <- dados_convocados[Curso == "EDUCACAO_FISICA"] # com _ no nome
 # dados_curso <- dados_convocados[Curso == lista_cursos[8]]
 # i <- 25
 # {
   
-# # OpÁ„o 2 - fazer loop com todos os cursos, gerar imagem e salvar
+# # Op√ß√£o 2 - fazer loop com todos os cursos, gerar imagem e salvar
 #  for (i in 1:length(lista_cursos)){
 # # # a cada loop, pegar um curso diferente
 #  dados_curso <- dados_convocados[Curso == lista_cursos[i]]
 
-# # OpÁ„o 3 - fazer loop com cursos listados, gerar imagem e salvar
+# # Op√ß√£o 3 - fazer loop com cursos listados, gerar imagem e salvar
 lista_cursos2 <- c("EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO","EDUCACAO_FISICA_LICENCIATURA")
 for (i in 1:length(lista_cursos2)){
 # # # a cada loop, pegar um curso diferente
@@ -105,7 +105,7 @@ dados_curso <- dados_convocados[Curso == lista_cursos2[i]]
    
    
 # --------------------------------------------------------------------
-# apÛs escolher opÁ„o 1 ou 2 ou 3, rodar tudo:
+# ap√≥s escolher op√ß√£o 1 ou 2 ou 3, rodar tudo:
 # remover escrito SISU do Processo_Seletivo e deixar apenas ano
 dados_curso$Processo_Seletivo <- gsub("SISU", " ", dados_curso$Processo_Seletivo)
 
@@ -122,34 +122,34 @@ grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fi
   guides(fill = guide_legend(reverse = TRUE)) +  # Reverses the order of the legend
     labs(
     title = titulo_grafico, 
-       x = "Nota (convocados em 1™ chamada)", y = "Ano") +
+       x = "Nota (convocados em 1¬™ chamada)", y = "Ano") +
 #  scale_y_discrete(labels = year_labels_skip) +
-  #  stat_summary(fun="mean", color="white", shape=16,size=0.1)+ # ponto branco = mÈdia
+  #  stat_summary(fun="mean", color="white", shape=16,size=0.1)+ # ponto branco = m√©dia
   theme_classic() + # fundo cinza com grade, ou fundo branco
-  coord_cartesian(xlim = range(dados_curso$nota)) + # autom·tico
-#  coord_cartesian(xlim = c(397, 733)) +  # arbitr·rio, para EducaÁ„o FÌsica
+  coord_cartesian(xlim = range(dados_curso$nota)) + # autom√°tico
+#  coord_cartesian(xlim = c(397, 733)) +  # arbitr√°rio, para Educa√ß√£o F√≠sica
   theme(axis.ticks.y = element_blank()) +
-  labs(fill = "Escola p˙blica?"); print(grafico)
+  labs(fill = "Escola p√∫blica?"); print(grafico)
 
-# } # fim do loop de lista_cursos se n„o quiser salvar gr·ficos
+# } # fim do loop de lista_cursos se n√£o quiser salvar gr√°ficos
 
 #
 # ------------------------------------------------------------------------------
 # salvar grafico boxplot como imagem png
 
-if(F){ # deseja salvar imagens? T = sim. F = n„o.
-# criar pasta para gr·ficos
+if(F){ # deseja salvar imagens? T = sim. F = n√£o.
+# criar pasta para gr√°ficos
 pasta_imagens <- "imagens_est_desc_01_notas_curso_ano" #nome da pasta
 if (!dir.exists(pasta_imagens)) {
   dir.create(pasta_imagens)
 } # cria pasta
 
 # nome do arquivo
-# image_filename <- paste0(titulo_grafico, "_notas_ano.png") # alfabÈtico
+# image_filename <- paste0(titulo_grafico, "_notas_ano.png") # alfab√©tico
 image_filename <- paste0(dados_curso$Centro[1],"_",
                          titulo_grafico, "_notas_ano.png") # por centro
 
-# determina altura do gr·fico
+# determina altura do gr√°fico
 n_anos <- dados_curso$Processo_Seletivo%>%unique()%>%length() # numero de anos
 # altura <- n_anos/6+(4/3) # ajusta altura
 # 10 anos => altura 3. 4 anos => altura 2
@@ -164,10 +164,10 @@ altura <- n_anos*2/9+7/9 # ajusta altura de cada barra do boxplot
 ggsave(file.path(pasta_imagens, image_filename), plot = grafico, width = 8, height = altura, dpi = 300)
 } # fim da parte de salvar imagem
 
-} # fim do loop de lista_cursos apÛs salvar imagens de gr·ficos
+} # fim do loop de lista_cursos ap√≥s salvar imagens de gr√°ficos
 
 # ==============================================================================
-# ReferÍncias
+# Refer√™ncias
 
 # Boxplot in Base R # Boxplot no base R
 # https://statisticsglobe.com/boxplot-in-r

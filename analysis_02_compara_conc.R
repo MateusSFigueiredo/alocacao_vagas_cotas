@@ -4,22 +4,22 @@
 # 1 = concorrencia separada (aka listas multiplas)
 # 2 = concorrencia concomitante, AC primeiro
 # 3 = concorrencia concomitante, cotas primeiro
-# 4 = concorrencia segundo Bó e Senkevics, 2023
-# 5 = concorrencia adaptado de Bó e Senkevics, 2023
+# 4 = concorrencia segundo BÃ³ e Senkevics, 2023
+# 5 = concorrencia adaptado de BÃ³ e Senkevics, 2023
 
 # Modificado em 2023-05-11.
 # Autor: Mateus Silva Figueiredo
 
 # ==============================================================================
-# Rodar após analysis_01_1, analysis_01_2, analysis_01_3, 
+# Rodar apÃ³s analysis_01_1, analysis_01_2, analysis_01_3, 
 # analysis_01_4, analysis_01_5
 
 # ==============================================================================
 
 # Cria data.frame comparando vagas
 
-# cria diferença entre modelo1 para modelos 2, 3, 4, 5
-# sprintf("%+.f" serve para colocar um sinal de + antes dos números
+# cria diferenÃ§a entre modelo1 para modelos 2, 3, 4, 5
+# sprintf("%+.f" serve para colocar um sinal de + antes dos nÃºmeros
 diff_modelo_c2 <- sprintf("%+.f", analise_v_c2[1,] - analise_v_c1[1,])
 diff_modelo_c3 <- sprintf("%+.f", analise_v_c3[1,] - analise_v_c1[1,])
 diff_modelo_c4 <- sprintf("%+.f", analise_v_c4[1,] - analise_v_c1[1,])

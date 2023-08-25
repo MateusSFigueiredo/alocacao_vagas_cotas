@@ -1,21 +1,21 @@
 # ==============================================================================
 # Arquivo: analysis_03_descreve_UFV_geral.R
 #
-# Quantos cursos tem? Quantos s„o est·veis?
+# Quantos cursos tem? Quantos s√£o est√°veis?
 # Quantos inscrtiso tem?
-# Qual a correlaÁ„o n. inscritos na UFV e n. inscritos no ENEM por ano?
+# Qual a correla√ß√£o n. inscritos na UFV e n. inscritos no ENEM por ano?
 #
 # Modificado em: 2022-12-10.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
-# Usar apÛs data_04_carregar_dados_UFV.R ter carregado dados por curso
+# Usar ap√≥s data_04_carregar_dados_UFV.R ter carregado dados por curso
 #
-# Dicion·rio
+# Dicion√°rio
 #
 # Inputs:
 # dados_ufv com todos os cursos de todos os anos 2013-2022
-# dados_2013 atÈ dados_2022 com todos os cursos em cada
+# dados_2013 at√© dados_2022 com todos os cursos em cada
 # dados_2013 em diante tem colunas id, nota, mod_ins, mod_con,
 # Processo_Seletivo e Curso
 # dados_curso
@@ -23,14 +23,14 @@ lista_cursos
 lista_cursos_estavel
 #
 # Outputs:
-# Gr·ficos
+# Gr√°ficos
 # Tabelas
 #
 # ==============================================================================
-# PreparaÁ„o
-library(ggplot2)# gr·ficos
+# Prepara√ß√£o
+library(ggplot2)# gr√°ficos
 # install.packages("ggrepel")
-library(ggrepel) # gr·ficos
+library(ggrepel) # gr√°ficos
 # install.packages("scales")
 library(scales)
 
@@ -70,7 +70,7 @@ n_inscritos <- data.frame(
                                       85),
                                       anos=2013:2022) # ENEM 2021 = SISU 2022
 
-# Fonte: WikipÈdia - "Exame Nacional do Ensino MÈdio". Consultado em 2022-12-18.
+# Fonte: Wikip√©dia - "Exame Nacional do Ensino M√©dio". Consultado em 2022-12-18.
 # Dados de inscritos do ENEM de um ano anterior ao SISU da UFV.
 # Ou seja, dados do ENEM 2011 comparados dom dados do SISU 2012.
 
@@ -79,7 +79,7 @@ for (i in 1:10){
   dados_ufv[which (Processo_Seletivo==sisu_anos[i])] -> dados_ano
   dados_ano %>% nrow() -> n_inscritos[i,2]}
 # ==============================================================================
-# Qual modelo estatÌstico usar?
+# Qual modelo estat√≠stico usar?
 
 # inscritos_UFV por ano
 plot(inscritos_UFV ~ anos, data = n_inscritos)
@@ -96,7 +96,7 @@ lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>%
 
 
 # ==============================================================================
-# Gr·ficos
+# Gr√°ficos
 
 #-------------------------------------------------------------------------------
 # Inscritos na UFV pelo tempo
@@ -105,7 +105,7 @@ plot(n_inscritos$inscritos_UFV~c(2013:2022))
 ggplot(mapping = aes(anos,n_inscritos$inscritos_UFV)) +
   geom_point() +
   ylab("Inscritos na UFV") +
-  xlab("EdiÁıes do SISU") +
+  xlab("Edi√ß√µes do SISU") +
   geom_smooth(method = "gam", se=T) + annotate("text", x = 2013.5, y = 10700, label = "Curva: GAM", colour = "blue") +
   #  geom_smooth(method = "lm", se=F) +
   scale_x_continuous(breaks=seq(2013,2022,1)) +
@@ -140,7 +140,7 @@ plot(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM)
 lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM_n_1) %>% 
   abline(col="red",lty=2)
 
-# summary com R quadrado e signific‚ncia
+# summary com R quadrado e signific√¢ncia
 lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM) %>% summary()
 (lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM) %>% summary())$r.squared
 (lm(n_inscritos$inscritos_UFV~n_inscritos$inscritos_ENEM) %>% summary())$coefficients[,4][2]  
@@ -158,7 +158,7 @@ paste("p valor =",p.valor) -> p.valor
 
 # ------------------------------------------------------------------------------
 
-# Plot melhor atÈ agora - usando geom_text_repel
+# Plot melhor at√© agora - usando geom_text_repel
 ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") + 
@@ -177,12 +177,12 @@ ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV))
   geom_text_repel(label = n_inscritos$anos) + 
   
   # xlab e ylab
-  xlab("Inscritos no ENEM anterior (milhıes)") +
+  xlab("Inscritos no ENEM anterior (milh√µes)") +
   ylab("Inscritos na UFV") 
 
 # ------------------------------------------------------------------------------
 
-# Plot melhor atÈ agora - testando posiÁ„o do geom_text
+# Plot melhor at√© agora - testando posi√ß√£o do geom_text
 ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") + 
@@ -205,32 +205,32 @@ ggplot(mapping = aes(n_inscritos$inscritos_ENEM/1e+6,n_inscritos$inscritos_UFV))
             vjust = 1.5, hjust = -0.2, color = "black")
   
   # xlab e ylab
-  xlab("Inscritos no ENEM anterior (milhıes)") +
+  xlab("Inscritos no ENEM anterior (milh√µes)") +
   ylab("Inscritos na UFV") 
 
 # ------------------------------------------------------------------------------
 
-# Plot com escala de 4.000.000 atÈ 8.000.000. xlim ignorado por scale_x
+# Plot com escala de 4.000.000 at√© 8.000.000. xlim ignorado por scale_x
 ggplot(mapping = aes((n_inscritos$inscritos_ENEM),n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") +
   xlim(3.3*10^6,9*10^6) +
   geom_text(label = n_inscritos$anos, vjust=1.5) +
-  #  ggtitle("TÌtulo no canto") +
+  #  ggtitle("T√≠tulo no canto") +
   scale_y_continuous(labels = scales::label_comma(big.mark=".",decimal.mark=",")) +
   scale_x_continuous(labels = scales::label_comma(big.mark=".",decimal.mark=",")) +
-  xlab("Inscritos no ENEM (milhıes)") +
+  xlab("Inscritos no ENEM (milh√µes)") +
   ylab("Inscritos na UFV")
 
-# Plot com escala de 4 atÈ 8 milhıes
+# Plot com escala de 4 at√© 8 milh√µes
 ggplot(mapping = aes((n_inscritos$inscritos_ENEM),n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") +
   xlim(3.3*10^6,9.6*10^6) +
   geom_text(label = n_inscritos$anos, vjust=1.5) +
-  xlab("Inscritos no ENEM (milhıes)") +
+  xlab("Inscritos no ENEM (milh√µes)") +
   ylab("Inscritos na UFV") +
-  #  ggtitle("TÌtulo no canto") +
+  #  ggtitle("T√≠tulo no canto") +
   scale_y_continuous(labels = unit_format(unit = "", scale = 1e0, big.mark=".",decimal.mark=",")) +
   scale_x_continuous(labels = unit_format(unit = "", scale = 1e-6, big.mark=".",decimal.mark=","))
 
@@ -259,7 +259,7 @@ ggplot(mapping = aes((n_inscritos$inscritos_ENEM),n_inscritos$inscritos_UFV)) +
 
 plot(n_inscritos$inscritos_UFV~c(2013:2022),
      col="blue",pch=20,cex=1,
-     xlab="n„o recomendado")
+     xlab="n√£o recomendado")
 points(n_inscritos$inscritos_ENEM_n_1/400~c(2013:2022),
        col="red",pch=15)
 
@@ -289,7 +289,7 @@ plot <- ggplot(n_inscritos, aes(x = anos)) +
     labels = seq(2, max(n_inscritos$anos), by = 2)
   ) +
   scale_y_continuous(
-    sec.axis = sec_axis(~ . / 1000000*400, name = "Inscritos no ENEM (milhıes)"),
+    sec.axis = sec_axis(~ . / 1000000*400, name = "Inscritos no ENEM (milh√µes)"),
     name = "Inscritos na UFV"
   ) +
   labs(x = "Years") +
@@ -310,65 +310,65 @@ plot
 
 
 #===============================================================================
-# An·lise em texto:
+# An√°lise em texto:
 paste(
   dados_ano %>% nrow()
-  ,"= n˙mero total de inscritos em",sisu_anos[i])
+  ,"= n√∫mero total de inscritos em",sisu_anos[i])
 paste(
   dados_ano[which (mod_con == "NA")] %>% nrow()
-  ,"= n˙mero total de inscritos n„o convocados em",sisu_anos[i])
+  ,"= n√∫mero total de inscritos n√£o convocados em",sisu_anos[i])
 
 # ==============================================================================
-# Analisando informaÁıes sobre cursos
-# Obtendo informaÁıes com print de textos
+# Analisando informa√ß√µes sobre cursos
+# Obtendo informa√ß√µes com print de textos
 
 # Quantos cursos de cada campus?
 # Em todos os dados
 paste(length(lista_cursos),"cursos ao todo") # 70
 
-paste(sum(endsWith(lista_cursos,"_RP")), "cursos em Rio ParanaÌba") # 12
+paste(sum(endsWith(lista_cursos,"_RP")), "cursos em Rio Parana√≠ba") # 12
 
 paste(sum(endsWith(lista_cursos,"_FL")), "cursos em Florestal") # 10
 
 paste(length(lista_cursos)
       -sum(endsWith(lista_cursos,"_RP"))
       -sum(endsWith(lista_cursos,"_FL")),
-      "cursos em ViÁosa") # 48
+      "cursos em Vi√ßosa") # 48
 
 # Apenas cursos que aparecem nos 10 anos de processo seletivo
-paste(length(lista_cursos_estavel),"cursos est·veis em todos os 10 anos") #64
+paste(length(lista_cursos_estavel),"cursos est√°veis em todos os 10 anos") #64
 
 print(paste(sum(endsWith(lista_cursos_estavel,"_RP")), 
-            "cursos de Rio ParanaÌba est·veis em todos os 10 anos.")) #12
+            "cursos de Rio Parana√≠ba est√°veis em todos os 10 anos.")) #12
 
 print(paste(sum(endsWith(lista_cursos_estavel,"_FL")), 
-            "cursos de Florestal est·veis em todos os 10 anos.")) #10
+            "cursos de Florestal est√°veis em todos os 10 anos.")) #10
 
 print(paste(length(lista_cursos_estavel)
             -sum(endsWith(lista_cursos_estavel,"_RP"))
             -sum(endsWith(lista_cursos_estavel,"_FL")),
-            "cursos est·veis de ViÁosa em todos os 10 anos.")) #42
+            "cursos est√°veis de Vi√ßosa em todos os 10 anos.")) #42
 
 # ==============================================================================
 # Investigando Numero_Chamada_Convocacao == NA ou == 0
 
 # Inscritos com Numero_Chamada_Convocacao == 0
-dados_ufv[which (Numero_Chamada_Convocacao == 0)] %>% nrow() # 44349 nesta situaÁ„o estranha
+dados_ufv[which (Numero_Chamada_Convocacao == 0)] %>% nrow() # 44349 nesta situa√ß√£o estranha
 dados_ufv[which (Numero_Chamada_Convocacao == 0)] %>% count(Processo_Seletivo)
-# H· estudantes com Numero_Chamada_Convocacao == 0 apenas em 2015 atÈ 2020
+# H√° estudantes com Numero_Chamada_Convocacao == 0 apenas em 2015 at√© 2020
 
 # Inscritos com Numero_Chamada_Convocacao == NA
-dados_ufv[which (!Numero_Chamada_Convocacao %in% c(0:20))] %>% nrow() # 51219 nesta situaÁ„o normal
+dados_ufv[which (!Numero_Chamada_Convocacao %in% c(0:20))] %>% nrow() # 51219 nesta situa√ß√£o normal
 dados_ufv[which (!Numero_Chamada_Convocacao %in% c(0:20))] %>% count(Processo_Seletivo)
-# H· estudantes com Numero_Chamada_Convocacao == 0 em todos os anos
+# H√° estudantes com Numero_Chamada_Convocacao == 0 em todos os anos
 
 
 # ==============================================================================
 # Cursos em que existem suplentes
 
-ano<-2022 # ediÁ„o do sisu
+ano<-2022 # edi√ß√£o do sisu
 
-# Quais s„o os cÛdigos de Numero_Chamada_Convocacao? 0 atÈ 20 e NA
+# Quais s√£o os c√≥digos de Numero_Chamada_Convocacao? 0 at√© 20 e NA
 dados_ufv$Numero_Chamada_Convocacao %>% unique() # %>% sort()
 count(dados_ufv, Numero_Chamada_Convocacao)[c(1,22)]
 
@@ -403,7 +403,7 @@ dados_ufv[which (Processo_Seletivo == sisu_anos[ano-2012])][which (mod_con=="NA"
 # Cursos em que todos os inscritos foram convocados
 
 # ==============================================================================
-# Cursos em que h· mais vagas do que inscritos em alguma modalidade
+# Cursos em que h√° mais vagas do que inscritos em alguma modalidade
 
 
 # ==============================================================================
@@ -413,7 +413,7 @@ dados_ufv[which (Processo_Seletivo == sisu_anos[ano-2012])][which (mod_con=="NA"
 ordem<-c(
   "LICENCIATURA_EM_FISICA",
   "ECONOMIA_DOMESTICA",
-  "SERVI«O_SOCIAL",
+  "SERVI√áO_SOCIAL",
   "EDUCACAO_FISICA",
   "EDUCACAO_FISICA_BACHARELADO",
   "EDUCACAO_FISICA_LICENCIATURA")

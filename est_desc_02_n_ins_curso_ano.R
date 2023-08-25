@@ -8,17 +8,17 @@
 # Utiliza dados_ufv carregado por data_04_carregar_dados_UFV
 
 # Faz:
-# - data.frame df_ins_curso_ano com n˙mero total de inscritos 
+# - data.frame df_ins_curso_ano com n√∫mero total de inscritos 
 # para cada curso em cada ano
-# - gr·fico de linha com inscritos em cada ano,
-# um gr·fico para cada centro
-# - omite valores zero dos gr·ficos
+# - gr√°fico de linha com inscritos em cada ano,
+# um gr√°fico para cada centro
+# - omite valores zero dos gr√°ficos
 # - definir cores
-# - exportar gr·ficos
+# - exportar gr√°ficos
 
 # ==============================================================================
-# PreparaÁ„o
-library(ggplot2) # gr·fico
+# Prepara√ß√£o
+library(ggplot2) # gr√°fico
 library(dplyr)
 
 # ==============================================================================
@@ -35,7 +35,7 @@ source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 
 # Criar dataframe df_ins_curso_ano
 # Linhas = anos 2013:2022
-# Colunas = n˙mero de inscritos para cada curso
+# Colunas = n√∫mero de inscritos para cada curso
 
 # Create an empty data frame to store the results
 df_ins_curso_ano <- data.frame(Ano = 2013:2022)
@@ -53,7 +53,7 @@ for (curso in lista_cursos) {
 }
 
 # head(df_ins_curso_ano)
-# print("df_ins_curso_ano est· criado")
+# print("df_ins_curso_ano est√° criado")
 
 # ------------------------------------------------------------------------------
 # Plot graph
@@ -76,7 +76,7 @@ eval(parse(text=(paste("df_ins_",centro,
                        centro,
                        "])",sep="")))) # criou
   
-# remover _ para gr·fico ficar bonito
+# remover _ para gr√°fico ficar bonito
 eval(parse(text=(paste("colnames(df_ins_",centro,
                          ") <- gsub('_',' ',colnames(df_ins_",
                          centro,
@@ -85,14 +85,14 @@ eval(parse(text=(paste("colnames(df_ins_",centro,
 }
 
 # --------------------------------------------
-# Abrir loop para gerar gr·ficos e salvar imagens
+# Abrir loop para gerar gr√°ficos e salvar imagens
 for (centro in centros) { # para todos os centros
 #for (centro in c("crp")){ # para apenas um centro
   
 #  Alimentar df_to_plot com df_ins_ centro
   eval(parse(text=(paste("df_to_plot <- df_ins_",
                          centro,sep=""))))
-# gerar gr·fico:
+# gerar gr√°fico:
 
 # Convert the data frame to a longer format for plotting
 df_long <- tidyr::pivot_longer(df_to_plot, cols = -Ano, names_to = "Curso", values_to = "Number")
@@ -100,7 +100,7 @@ df_long <- tidyr::pivot_longer(df_to_plot, cols = -Ano, names_to = "Curso", valu
 # transforma 0 em NA
  df_long[df_long == 0] <- NA
 
-# Ordenar cursos por n˙mero de inscritos em 2013
+# Ordenar cursos por n√∫mero de inscritos em 2013
 totals_2013 <- df_long %>%
   filter(Ano == 2013) %>%
   group_by(Curso) %>%
@@ -110,7 +110,7 @@ totals_2013 <- df_long %>%
 # Create a factor variable for Curso based on 2013 totals
 df_long$Curso <- factor(df_long$Curso, levels = totals_2013$Curso)
 
-# Define cores para gr·fico. Precisa de 17 cores no mÌnimo.
+# Define cores para gr√°fico. Precisa de 17 cores no m√≠nimo.
 cores <- c("#0000FF", "#FF0000", "#1CBE4F", "#FF7F00", "#9A4D62",
            "#FF00B6", "#00530E", "#009FFF", "#F8A19F", "#FFD300",
            "#783FC1", "#1F9698", "#886C00", "#F1085C", "#AA0DFE",
@@ -120,20 +120,20 @@ cores <- c("#0000FF", "#FF0000", "#1CBE4F", "#FF7F00", "#9A4D62",
 grafico <- ggplot(df_long, aes(x = as.factor(Ano), y = Number, color = Curso, group = Curso)) +
   geom_line() +
   labs(title = paste("Inscritos por curso -",toupper(centro)),
-       x = "Ano", y = "N˙mero de inscritos") +
+       x = "Ano", y = "N√∫mero de inscritos") +
   scale_x_discrete(breaks = as.factor(2013:2022)) +
   scale_color_manual(values = cores) +
   scale_y_continuous(limits = c(0, NA)) + # mostra 0 no eixo x
   theme_minimal(); 
  print(grafico)
 
-# } # fim do loop que gera gr·fico
+# } # fim do loop que gera gr√°fico
 
 # ------------------------------------------------------------------------------
-# Salvar gr·fico de linhas como imagens png
+# Salvar gr√°fico de linhas como imagens png
 
-if(F){ # deseja salvar imagens? T = sim. F = n„o.
-  # criar pasta para gr·ficos
+if(F){ # deseja salvar imagens? T = sim. F = n√£o.
+  # criar pasta para gr√°ficos
   pasta_imagens <- "imagens_est_desc_02_n_ins_curso_ano" #nome da pasta
   if (!dir.exists(pasta_imagens)) {
     dir.create(pasta_imagens)
@@ -147,13 +147,13 @@ if(F){ # deseja salvar imagens? T = sim. F = n„o.
          width = 8, height = 5, dpi = 300)
 } # fim da parte de salvar imagem
 
-} # fim do loop de lista_cursos apÛs salvar imagens de gr·ficos
+} # fim do loop de lista_cursos ap√≥s salvar imagens de gr√°ficos
 
 # ==============================================================================
 # ==============================================================================
 # ==============================================================================
 
-# Analisar apenas poucos anos, para comparaÁ„o mais simples
+# Analisar apenas poucos anos, para compara√ß√£o mais simples
 print("a seguir, plotar apenas 2013, 2015, 2022")
 
 # apenas caf
@@ -168,14 +168,14 @@ for (centro in centros) {
 }
 
 # --------------------------------------------
-# Abrir loop para gerar gr·ficos 2013 e 2022
+# Abrir loop para gerar gr√°ficos 2013 e 2022
 for (centro in centros) { # para todos os centros
 #for (centro in c("caf")){ # para apenas um centro
   
   #  Alimentar df_to_plot com df_ins_ centro
   eval(parse(text=(paste("df_to_plot <- df_ins2_",
                          centro,sep=""))))
-  # gerar gr·fico:
+  # gerar gr√°fico:
   
   # Convert the data frame to a longer format for plotting
   df_long <- tidyr::pivot_longer(df_to_plot, cols = -Ano, names_to = "Curso", values_to = "Number")
@@ -183,7 +183,7 @@ for (centro in centros) { # para todos os centros
   # transforma 0 em NA
   df_long[df_long == 0] <- NA
   
-  # Ordenar cursos por n˙mero de inscritos no primeiro ano (2013 ou n„o)
+  # Ordenar cursos por n√∫mero de inscritos no primeiro ano (2013 ou n√£o)
   totals_2013 <- df_long %>%
     filter(Ano == min(Ano)) %>%
     group_by(Curso) %>%
@@ -193,7 +193,7 @@ for (centro in centros) { # para todos os centros
   # Create a factor variable for Curso based on 2013 totals
   df_long$Curso <- factor(df_long$Curso, levels = totals_2013$Curso)
   
-  # Define cores para gr·fico. Precisa de 17 cores no mÌnimo.
+  # Define cores para gr√°fico. Precisa de 17 cores no m√≠nimo.
   cores <- c("#0000FF", "#FF0000", "#1CBE4F", "#005300", "#FF00B6",
              "#9A4D42", "#00530E", "#F8A19F", "#FFD300", "#009FFF", 
              "#783FC1", "#1F9698", "#AA0DFE", "#886C00", "#F1085C",
@@ -203,18 +203,18 @@ for (centro in centros) { # para todos os centros
   grafico <- ggplot(df_long, aes(x = as.factor(Ano), y = Number, color = Curso, group = Curso)) +
     geom_line() +
     labs(title = paste("Inscritos por curso -",toupper(centro)),
-         x = "Ano", y = "N˙mero de inscritos") +
+         x = "Ano", y = "N√∫mero de inscritos") +
     scale_x_discrete(breaks = as.factor(2013:2022)) +
     scale_color_manual(values = cores) +
     scale_y_continuous(limits = c(0, NA)) + # mostra 0 no eixo x
     theme_minimal(); 
   print(grafico)
   
-   } # fim do loop que gera gr·fico
+   } # fim do loop que gera gr√°fico
 
 
 # ==============================================================================
 
-# ReferÍncias
+# Refer√™ncias
 # Cores retiradas do pacote pals, usando paletas glasbey, alphabet2, etc.
 # Pals package https://cran.r-project.org/web/packages/pals/vignettes/pals_examples.html

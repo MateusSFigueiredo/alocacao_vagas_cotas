@@ -1,24 +1,24 @@
 # ==============================================================================
 # Arquivo: analysis_014_conc_bo.R
-# Roda modelo c4, de Aygun e Bó (2021) e Bó e Senkevics (2023)
+# Roda modelo c4, de Aygun e BÃ³ (2021) e BÃ³ e Senkevics (2023)
 
 # Todos os candidatos podem preencher vagas da AC
 # cotistas podem preencher quaisquer modalidade que eles tenham direito
-# Gera análise de notas e de preenchimento de vagas ao final
+# Gera anÃ¡lise de notas e de preenchimento de vagas ao final
 # AC ao final
 
 # Modificado em 2023-02-11.
 # Autor: Mateus Silva Figueiredo
 
 # ==============================================================================
-# Preparação
+# PreparaÃ§Ã£o
 # Deve ser feito pelo analysis_01_todas_conc, usando source()
 
 # Escolher um curso
 # cu <- "MEDICINA" # pelo nome
-# cu <- lista_cursos[59]; # pelo número na lista
+# cu <- lista_cursos[59]; # pelo nÃºmero na lista
 
-# Escolher uma edição do SISU
+# Escolher uma ediÃ§Ã£o do SISU
 # edicao <- "SISU2022" # pelo nome
 
 # ==============================================================================
@@ -27,10 +27,10 @@
 
 # lista_todos # lista de todos os candidatos para determinado curso e ano
 
-# opção 1: dados simulados
+# opÃ§Ã£o 1: dados simulados
 # lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
 
-# # opção 2: dados observados
+# # opÃ§Ã£o 2: dados observados
 # # carregado a partir de data_04_carregar_dados_UFV.R
 lista_todos <- get(paste0("dados_",cu)) %>% subset(Processo_Seletivo==edicao)
 
@@ -43,20 +43,20 @@ paste(lista_todos %>% nrow(), "candidatos em",
       lista_todos$Curso[1], "no", lista_todos$Processo_Seletivo[1])
 
 # ==============================================================================
-# é preciso existir nvagas
+# Ã© preciso existir nvagas
 
 # ordem: A0, L01, L02, L05, L06, L09, L10, L13, L14
 
-# opção 1: usar função gera_nvagas. input = ppi, pcd, tot. tem ppi e pcd default.
+# opÃ§Ã£o 1: usar funÃ§Ã£o gera_nvagas. input = ppi, pcd, tot. tem ppi e pcd default.
 # gera_nvagas (0.5366,0.0843,tot) # mg = (0.5366,0.0843,tot). output = nvagas
 
-# opção 2: vagas arbitrárias. Preferencialmente copiando de termo de adesão
+# opÃ§Ã£o 2: vagas arbitrÃ¡rias. Preferencialmente copiando de termo de adesÃ£o
 # nvagas <- c(25,5,6,4,6,1,1,1,1) # Medicina UFV
 nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
 
 nvagas %>% length == 9
 
-# é preciso existir nvagas_A0 até nvagas_L14
+# Ã© preciso existir nvagas_A0 atÃ© nvagas_L14
 {nvagas[1]->nvagas_A0
   nvagas[2]->nvagas_L01
   nvagas[3]->nvagas_L02
@@ -69,19 +69,19 @@ nvagas %>% length == 9
 
 # ==============================================================================
 
-# Cria funções preenche_ A0 até L13
+# Cria funÃ§Ãµes preenche_ A0 atÃ© L13
 
-# Cada função preenche_ faz:
-# cria aprovados_ A0 até L13
-# preenche aprovados_ A0 até L13
+# Cada funÃ§Ã£o preenche_ faz:
+# cria aprovados_ A0 atÃ© L13
+# preenche aprovados_ A0 atÃ© L13
 # Atualiza lista_todos para remover os aprovados
 
 # ------------------------------------------------------------------------------
 
-# Criar funções preenche_ mod _ c4 (c4 = concorrencia segundo bo e senkevics)
+# Criar funÃ§Ãµes preenche_ mod _ c4 (c4 = concorrencia segundo bo e senkevics)
 
-{ # criar todas as funções preenche_ A0 até L13
-print("criando funções preenche_ A0 até L13")
+{ # criar todas as funÃ§Ãµes preenche_ A0 atÃ© L13
+print("criando funÃ§Ãµes preenche_ A0 atÃ© L13")
 
 # ------------------------------------------------------------------------------
 
@@ -236,12 +236,12 @@ subset(lista_todos, !id %in% aprovados_L14$id) ->> lista_todos
 
 # ------------------------------------------------------------------------------
 
-} # fim da criação de todas as funções preenche_ A0 até L13
+} # fim da criaÃ§Ã£o de todas as funÃ§Ãµes preenche_ A0 atÃ© L13
 
 # ==============================================================================
 # Criar aprovados
 
-# # remove objetos aprovados_, caso já existam
+# # remove objetos aprovados_, caso jÃ¡ existam
  rm(list=ls(pattern="^aprovados_"))
 
 # Cria lista_todos
@@ -249,14 +249,14 @@ subset(lista_todos, !id %in% aprovados_L14$id) ->> lista_todos
 # trabalhar apenas com lista_todos. Manter candidatos inalterado.
 # pode ir removendo de lista_todos aqueles que forem aprovados.
 
-# Rodar funções preenche_
+# Rodar funÃ§Ãµes preenche_
 # IMPORTANTE! lista_todos deve estar inteira antes de rodar
-# if(nrow(lista_todos)==n) confere se lista_todos está inteira
+# if(nrow(lista_todos)==n) confere se lista_todos estÃ¡ inteira
 
 # IMPORTANTE! Rodar apenas uma vez cada uma.
-# if(isFALSE(exists("aprovados_"))) = só roda se não existir objeto aprovados_
+# if(isFALSE(exists("aprovados_"))) = sÃ³ roda se nÃ£o existir objeto aprovados_
 
-# Existem 9! ordens possíveis para fazer os preenchimentos (mais de 300 mil).
+# Existem 9! ordens possÃ­veis para fazer os preenchimentos (mais de 300 mil).
 
 # ordem proposta por bo e senkevics, 2023 (L10, L02, L09, L1, L14, L06, L13, L05, A0)
 {
@@ -268,9 +268,9 @@ subset(lista_todos, !id %in% aprovados_L14$id) ->> lista_todos
   if(isFALSE(exists("aprovados_L06"))) {preenche_L06_c4()}
   if(isFALSE(exists("aprovados_L13"))) {preenche_L13_c4()}
   if(isFALSE(exists("aprovados_L05"))) {preenche_L05_c4()}
-  if(isFALSE(exists("aprovados_A0")))  {preenche_A0_c4()} # AC por último
+  if(isFALSE(exists("aprovados_A0")))  {preenche_A0_c4()} # AC por Ãºltimo
   
-} # todas as funções preenche foram rodadas
+} # todas as funÃ§Ãµes preenche foram rodadas
 
 # cria objeto com todos os aprovados
 aprovados <- do.call("rbind", list(aprovados_A0,
@@ -280,7 +280,7 @@ aprovados <- do.call("rbind", list(aprovados_A0,
                                    aprovados_L13,aprovados_L14))
 
 # ==============================================================================
-# Análises
+# AnÃ¡lises
 
 # ------------------------------------------------------------------------------
  
@@ -309,7 +309,7 @@ analise_v_c4$pcd <- sum(analise_v_c4$L09, analise_v_c4$L10, # soma das cotas par
 
 # ------------------------------------------------------------------------------
 
-# Análise - notas
+# AnÃ¡lise - notas
 
 # Cria data.frame analise_n_c4 para concorrencia c4 (bo e senkevics) para as notas
 analise_n_c4<-data.frame(matrix(ncol = length(mod)+1, nrow = 3),
@@ -344,8 +344,8 @@ convocados_c4 <- aprovados_c4
 
 # Limpeza
 
-rm(list=ls(pattern="^aprovados")) # objetos que começam com "aprovados"
-rm(list=ls(pattern="^preenche")) # objetos que começam com "preenche"
+rm(list=ls(pattern="^aprovados")) # objetos que comeÃ§am com "aprovados"
+rm(list=ls(pattern="^preenche")) # objetos que comeÃ§am com "preenche"
 # rm(lista_todos)
 
 # manter analise e candidatos. manter aprovados_c4

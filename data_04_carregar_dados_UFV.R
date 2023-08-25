@@ -2,16 +2,15 @@
 # Arquivo: data_04_carregar_dados_UFV.R
 
 #
-# Modificado em: 2023-08-21
+# Modificado em: 2023-08-23
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
 # Separa em data.frames por ano
 # Separa em data.frames por curso
 
-### A FAZER:
-# Distinguir cursos de Licenciatura Noturno e ABI Integral do campus Viçosa
-# feito?
+# diff:
+# sempre carrega lista_cursos (linha 250), e não apaga (linha 383)
 
 # ==============================================================================
 #
@@ -247,14 +246,14 @@ if (por_ano){
 # Trabalhando por curso
 # Cursos já devem ter sido sinonimizados lá em cima na linha 54
 
+# Identificar lista de cursos.
+lista_cursos <- unique(dados_ufv$Curso) %>% sort()
+# lista_cursos # 70 cursos
+
 ##  Deseja carregar dados por curso? 
 # por_curso <- F # T = sim, F = não
 
 if (por_curso){
-  
-  # Identificar lista de cursos.
-  lista_cursos <- unique(dados_ufv$Curso) %>% sort()
-  # lista_cursos # 70 cursos
   
   for (cu in lista_cursos) {
     filtro <- dados_ufv[Curso == cu]
@@ -381,7 +380,7 @@ rm(lista_cursos_18,lista_cursos_22)
 # limpeza caso não for trabalhar com cursos
 if (!por_curso){
   rm(cursos_cca,cursos_ccb,cursos_cce,cursos_cch,cursos_crp,cursos_caf)
-  rm(lista_cursos,lista_cursos_18_22,lista_cursos_estavel,lista_cursos_mudou)
+#  rm(lista_cursos,lista_cursos_18_22,lista_cursos_estavel,lista_cursos_mudou)
 }
 
 # setwd para facilitar uso de outros scripts

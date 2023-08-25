@@ -8,7 +8,7 @@
 # Utiliza dados_ufv carregado por data_04_carregar_dados_UFV
 
 ### OBJETIVO A FAZER:
-# Gera estatÌstica descritiva de cada curso, ano e modalidade
+# Gera estat√≠stica descritiva de cada curso, ano e modalidade
 
 # ==============================================================================
 # Pacotes
@@ -20,10 +20,10 @@ library(RColorBrewer)
 
 # ==============================================================================
 
-# PreparaÁ„o
+# Prepara√ß√£o
 # ------------------------------------------------------------------------------
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- T   # deseja separar candidatos por curso? obrigatÛrio
+por_curso <- T   # deseja separar candidatos por curso? obrigat√≥rio
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 # data_04 faz setwd da pasta /privado
@@ -60,7 +60,7 @@ colunas<-c("id","Processo_Seletivo","nota",
 
 dados_convocados <- dados_convocados %>% select(all_of(colunas))
 
-# group = ano + escola p˙blica ou n„o
+# group = ano + escola p√∫blica ou n√£o
 dados_convocados$group <- paste0(dados_convocados$Processo_Seletivo,dados_convocados$pub)
 
 dados_convocados$ano <- paste0(dados_convocados$Processo_Seletivo,dados_convocados$pub)
@@ -71,48 +71,48 @@ dados_convocados$group<- gsub("FALSE"," AC",dados_convocados$group)
 dados_convocados$group<- gsub("TRUE"," cota",dados_convocados$group)
 dados_convocados$group<- gsub("SISU","",dados_convocados$group)
 
-# transforma coluna pub em algo bonito pro gr·fico plotar
+# transforma coluna pub em algo bonito pro gr√°fico plotar
 dados_convocados$pub<- gsub("TRUE","cota",dados_convocados$pub)
 dados_convocados$pub<- gsub("FALSE","AC",dados_convocados$pub)
 
 
 # ==============================================================================
-# =========================== Gr·ficos==========================================
+# =========================== Gr√°ficos==========================================
 # ==============================================================================
 
 
 # ------------------------------------------------------------------------------
-# Necess·rio para ambas ridgelines
+# Necess√°rio para ambas ridgelines
 # Create a vector with the year labels
 year_labels <- c("2022","","2021", "", "2020", "", "2019", "", "2018", "",
                  "2017", "", "2016", "", "2015", "", "2014", "",
                  "2013", "")
 
 # ------------------------------------------------------------------------------
-# Ridgeline autom·tica. Linha horizontal atÈ o fim dos eixos
+# Ridgeline autom√°tica. Linha horizontal at√© o fim dos eixos
 
 # Seleciona curso
 dados_convocados[Curso == cursos_ufv[6]] -> dados_curso
 # cursos_ufv[6] # confere curso
 # dados_curso[Processo_Seletivo == "SISU2020"] -> dados_curso # cf um ano
 
-# Fazer gr·fico ridgeline com m·ximo e mÌnimo (|) e mÈdia (o) usando stat_summary
+# Fazer gr√°fico ridgeline com m√°ximo e m√≠nimo (|) e m√©dia (o) usando stat_summary
 
 # Plot ridgeline
 ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
   geom_density_ridges() +
   stat_summary(fun = "mean", geom = "point", shape = 21, size = 3,
-               color = "white", # ponto indica mÈdia
+               color = "white", # ponto indica m√©dia
                position = position_nudge(y = 0.1), # ponto um pouco pra cima 
                show.legend = F
                ) +
   stat_summary(fun = "min", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2), # ponto um pouco pra cima 
                show.legend = F
                ) +
   stat_summary(fun = "max", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2), # ponto um pouco pra cima
                show.legend = F
   ) +
@@ -123,17 +123,17 @@ ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
     scale_fill_cyclical(values = c("#F8766D", "#00BA38"), guide = "legend",
                         name = "Modalidade") +
   #   theme_ridges(grid = T) # + 
-  labs(title = gsub("_"," ",dados_curso$Curso[1]), # tÌtulo = curso sem _
+  labs(title = gsub("_"," ",dados_curso$Curso[1]), # t√≠tulo = curso sem _
        x = "Nota",
        y = "Ano",
        fill = "") +  # new legend label
   theme_minimal()
 
 # ------------------------------------------------------------------------------
-# Ridgeline com c·lculo de densidade, sem linha horizontal atÈ o fim dos eixos
+# Ridgeline com c√°lculo de densidade, sem linha horizontal at√© o fim dos eixos
 
-i <- 6 # caso n„o for usar o loop
-# for loop para gerar todos os gr·ficos de uma vez
+i <- 6 # caso n√£o for usar o loop
+# for loop para gerar todos os gr√°ficos de uma vez
 # for (i in 1:length(cursos_ufv))
 {
 # Seleciona curso
@@ -166,11 +166,11 @@ grafico <- ggplot(dados_densidades, aes(x = nota, y = fct_rev(group), height = d
   coord_cartesian(xlim = c(400, 820)) +
   scale_y_discrete(limits = rev(levels(dados_curso$group))
 #                   , labels = year_labels # adiciona year_labels, 
-                   # year_labels d· mentira quando curso mudou nesses 10 anos
+                   # year_labels d√° mentira quando curso mudou nesses 10 anos
 #                  , labels = unique(dados_densidades$group) # testando labels, 
   ); print(grafico)
 
-# fazendo ridgeline com base em densidade calculada, n„o adicionar max mean min
+# fazendo ridgeline com base em densidade calculada, n√£o adicionar max mean min
 
 
 }
@@ -183,8 +183,8 @@ grafico <- ggplot(dados_densidades, aes(x = nota, y = fct_rev(group), height = d
 # Histogramas
 
 # ------------------------------------------------------------------------------
-# Colocar 10 histogramas na mesma p·gina
-par(mfrow=c(2,5)) # 2 linhas, 5 colunas de gr·ficos
+# Colocar 10 histogramas na mesma p√°gina
+par(mfrow=c(2,5)) # 2 linhas, 5 colunas de gr√°ficos
 
 anos <- c("SISU2013","SISU2014",
           "SISU2015","SISU2016",
@@ -192,7 +192,7 @@ anos <- c("SISU2013","SISU2014",
           "SISU2019","SISU2020",
           "SISU2021","SISU2022")
 
-i <- 2 # caso n„o use loop
+i <- 2 # caso n√£o use loop
 for (i in 1:10){
 dados_convocados[dados_convocados$Processo_Seletivo==anos[i]] -> dados
 hist(dados$nota,ylim=c(0,350),xlim=c(300,900),
@@ -200,7 +200,7 @@ hist(dados$nota,ylim=c(0,350),xlim=c(300,900),
        main=dados$Processo_Seletivo[1])
 } # caso use loop
 
-par(mfrow=c(1,1)) # retornar para apenas 1 gr·fico por imagem
+par(mfrow=c(1,1)) # retornar para apenas 1 gr√°fico por imagem
 # ------------------------------------------------------------------------------
 # ==============================================================================
 # Boxplot
@@ -213,7 +213,7 @@ dados_curso <- dados_convocados[Curso == lista_cursos[25]]
 # ------------------------------------------------------------------------------
 
 # Boxplot no base R
-if(FALSE){ #if(FALSE) serve para ignorar o cÛdigo
+if(FALSE){ #if(FALSE) serve para ignorar o c√≥digo
 boxplot(nota ~ group, dados_curso,
         at = c(1+00,2+00,
                1+04,2+04,
@@ -227,9 +227,9 @@ boxplot(nota ~ group, dados_curso,
                1+36,2+36
                ),
         main = "Medicina",
-        xlab = "Escola p˙blica?",
+        xlab = "Escola p√∫blica?",
         ylab = "Nota",
-        col = c("red","green"))} #if(FALSE) serve para ignorar o cÛdigo
+        col = c("red","green"))} #if(FALSE) serve para ignorar o c√≥digo
 
 # ------------------------------------------------------------------------------
 # Boxplot e violin no ggplot
@@ -241,8 +241,8 @@ ggplot(dados_curso, aes(x = group, y = nota, fill = pub)) +
 #  geom_violin() +  # ou violino
   scale_fill_manual(values = c("red", "blue")) +
   labs(
-    title = gsub("_"," ",dados_curso$Curso[1]), # tÌtulo = curso sem _
-       x = "Escola p˙blica?", y = "Nota") +
+    title = gsub("_"," ",dados_curso$Curso[1]), # t√≠tulo = curso sem _
+       x = "Escola p√∫blica?", y = "Nota") +
   stat_summary(fun="mean", color="white", shape=16,size=0.1)+
   theme_classic() +
   coord_cartesian(ylim = range(dados_curso$nota))
@@ -253,7 +253,7 @@ ggplot(dados_curso, aes(x = group, y = nota, fill = pub)) +
 ggplot(dados_curso, aes(x = nota, y = group, fill = pub)) +
   geom_boxplot() +
   scale_fill_manual(values = c("red", "blue")) +
-  labs(title = gsub("_", " ", dados_curso$Curso[1]), x = "Nota", y = "Escola p˙blica?") +
+  labs(title = gsub("_", " ", dados_curso$Curso[1]), x = "Nota", y = "Escola p√∫blica?") +
   stat_summary(fun = "mean", color = "white", shape = 16, size = 0.1) +
   theme_classic() +
   coord_cartesian(xlim = range(dados_curso$nota))
@@ -265,10 +265,10 @@ ggplot(dados_curso, aes(x = group, y = nota, fill = pub)) +
 #  geom_boxplot() + # escolher ou boxplot
   geom_violin() +  # ou violino
   scale_fill_manual(values = c("red", "blue")) +
-#  stat_summary(fun.y="mean")+ # mÈdia
+#  stat_summary(fun.y="mean")+ # m√©dia
   labs(
-    title = gsub("_"," ",dados_curso$Curso[1]), # tÌtulo = curso sem _
-    x = "Escola p˙blica?", y = "Nota") +
+    title = gsub("_"," ",dados_curso$Curso[1]), # t√≠tulo = curso sem _
+    x = "Escola p√∫blica?", y = "Nota") +
   scale_x_discrete(labels = c("A"),
                    breaks = c(1)) +
   theme_classic() +
@@ -283,14 +283,14 @@ dados_convocados[Curso == cursos_ufv[6]] -> dados_curso
 # boxplot horizontal funcionando ok
 ggplot(dados_curso, aes(y = fct_rev(group), x = nota, fill = pub)) +
   geom_violin(
-    coef = Inf # coef = Inf faz com que whisker v· atÈ max e min
+    coef = Inf # coef = Inf faz com que whisker v√° at√© max e min
     ) + # escolher ou boxplot
 #  geom_violin() +  # ou violino
   scale_fill_manual(values = c("red", "blue")) +
   labs(
-#    title = dados_curso$Curso[1], # tÌtulo = curso
+#    title = dados_curso$Curso[1], # t√≠tulo = curso
     title = gsub("_"," ",dados_curso$Curso[1]), # remove _ do curso
-       x = "Nota", y = "Escola p˙blica?") +
+       x = "Nota", y = "Escola p√∫blica?") +
 #scale_y_discrete(labels = year_labels, position = position_nudge(y = 0.2)) +
   stat_summary(fun="mean", color="white", shape=16,size=0.1)+
 #  theme_classic() +
@@ -309,7 +309,7 @@ grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fi
     x = "Nota", y = "Ano") +
 #  scale_y_discrete(labels = str_remove(dados_curso$Processo_Seletivo, "SISU")) +
   coord_cartesian(xlim = range(dados_curso$nota)) +
-  labs(fill = "Escola p˙blica?");print(grafico)
+  labs(fill = "Escola p√∫blica?");print(grafico)
 
 
 
@@ -329,22 +329,22 @@ dados_convocados$Processo_Seletivo %>% unique()
   
 
 
-# Fazer gr·fico ridgeline com m·ximo e mÌnimo (|) e mÈdia (o)
+# Fazer gr√°fico ridgeline com m√°ximo e m√≠nimo (|) e m√©dia (o)
 # Ridgelines muito boas:
 
 # Ridgeline
 ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
   geom_density_ridges() +
     stat_summary(fun = "mean", geom = "point", shape = 21, size = 3,
-               color = "white", # ponto indica mÈdia
+               color = "white", # ponto indica m√©dia
                position = position_nudge(y = 0.1) # ponto um pouco pra cima 
                ) +
   stat_summary(fun = "min", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2) # ponto um pouco pra cima 
   ) +
   stat_summary(fun = "max", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2) # ponto um pouco pra cima 
   ) +
   scale_y_discrete(limits = rev(levels(dados_curso$group))
@@ -353,7 +353,7 @@ ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
   coord_cartesian(xlim = c(400, 820)) + # decide nota max e min no eixo x 
 #  scale_fill_cyclical(values = c("red","blue"), guide = "legend")
 #   theme_ridges(grid = T) # + 
-  labs(title = gsub("_"," ",dados_curso$Curso[1]), # tÌtulo = curso sem _
+  labs(title = gsub("_"," ",dados_curso$Curso[1]), # t√≠tulo = curso sem _
        x = "Nota",
        y = "Ano",
        fill = "") +  # new legend label
@@ -376,14 +376,14 @@ ggplot(dados_curso, aes(x = nota, y = fct_rev(group), fill = pub)) +
     position = position_nudge(y = 0.2)
   ) +
   
-  # add linha vertical | para mÌnimo
+  # add linha vertical | para m√≠nimo
   stat_summary(fun = "min", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2) # ponto um pouco pra cima 
   ) +
-  # add linha vertical | para m·ximo
+  # add linha vertical | para m√°ximo
   stat_summary(fun = "max", geom = "point", shape = "|", size = 2,
-               color = "black", # ponto indica mÈdia
+               color = "black", # ponto indica m√©dia
                position = position_nudge(y = 0.2) # ponto um pouco pra cima 
   ) +
   
@@ -410,7 +410,7 @@ boxplot(x,col="red")
 which(lista_cursos=="ECONOMIA_DOMESTICA")
 
 # ==============================================================================
-# ReferÍncias
+# Refer√™ncias
 
 # Boxplot in Base R # Boxplot no base R
 # https://statisticsglobe.com/boxplot-in-r

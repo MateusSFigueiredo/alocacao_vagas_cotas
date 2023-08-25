@@ -2,41 +2,41 @@
 # Arquivo: analysis_04_numero_inscritos_por_ano.R
 
 #
-# Modificado em: 2022-12-10
+# Modificado em: 2023-08-23.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
-# Usar apÛs data_04_carregar_dados_UFV.R
-# Calcula numero de inscritos por ano
+# Usar ap√≥s data_04_carregar_dados_UFV.R
+# Calcula numero de inscritos por ano, por modalidade
 #
-# Dicion·rio
+# Dicion√°rio
 #
 # Inputs:
 # dados_ufv com todos os cursos de todos os anos 2013-2022
 # lista_cursos_estavel 
 #
 # Outputs:
-# n_inscritos_total, com o numero de inscritos por curso por ano por modalidade
+# n_inscritos_total, com n. de inscritos por curso por ano por modalidade
 # ==============================================================================
-# PreparaÁ„o
+# Prepara√ß√£o
 belch2 <- function(x, y) { eval(parse(text=(paste0(x, y, sep=""))))}
 # belch3 <- function(x, y, z) {eval(parse(text=(paste0(x, y, z,sep=""))))}
 
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 
-
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 # ==============================================================================
-# N˙mero de inscritos por curso a cada ano
+# N√∫mero de inscritos por curso a cada ano
 
-dados_ufv$Processo_Seletivo %>% unique() -> sisu_anos; sisu_anos # SISU2013 atÈ SISU2022
+dados_ufv$Processo_Seletivo %>% unique() -> sisu_anos; sisu_anos # SISU2013 at√© SISU2022
 lista_cursos_estavel # todos os cursos presentes nos 10 anos de dados. length = 64
-mod # modalidades de A0 a L01 atÈ L14
+mod # modalidades de A0 a L01 at√© L14
 insc_mod  <- paste0("insc_",mod)   # para usar para preencher df
-mod_cotas # modalidades de L01 atÈ L14
+mod_cotas # modalidades de L01 at√© L14
 
 # define e == qual ano, m == qual modalidade
-e<-2013-2012; sisu_anos[e] # ediÁ„o do sisu. alterar primeiro ano desta linha
+e<-2013-2012; sisu_anos[e] # edi√ß√£o do sisu. alterar primeiro ano desta linha
 m<-1; mod[m] # qual modalidade
 
 # cria colunas para inscritos_por_curso
@@ -84,25 +84,25 @@ for (i in 1:length(lista_cursos_estavel)){
         dados_curso[which
                     (Processo_Seletivo == sisu_anos[e])][which # subset ano
                                                          (mod_ins == mod[m])] # subset modalidade
-        # n„o subset por numero de chamada, para pegar todos os inscritos
+        # n√£o subset por numero de chamada, para pegar todos os inscritos
       ) %>% nrow() -> inscritos_por_curso[sisu_anos[e],insc_mod[m]]
       m <- m+1
     } # fecha loop a que preenche vagas de mods modalidades = colunas
     e <- e+1
-  } # fecha loop b que pula pra prÛxima linha = prÛximo ano
+  } # fecha loop b que pula pra pr√≥xima linha = pr√≥ximo ano
   # fim dos dois for loop
   
   # confere
   inscritos_por_curso
   
   # ------------------------------------------------------------------------------
-  # preenche inscritos_cotas somando insc_L01 atÈ insc_L14
+  # preenche inscritos_cotas somando insc_L01 at√© insc_L14
   
   e<-1
   for (a in 1:10){
     (inscritos_por_curso[sisu_anos[e],insc_mod[2:9]]) %>%
       sum() -> inscritos_por_curso$insc_cotas[e]
-    # inscritos_por_curso$insc_cotas # conferÍncia
+    # inscritos_por_curso$insc_cotas # confer√™ncia
     e <- e+1} # fim do loop a para preencher vagas_cotas
   
   
@@ -116,23 +116,26 @@ for (i in 1:length(lista_cursos_estavel)){
   cu<-cu+1
 }
 # fecha for loop cu
-# agora, existem objetos inscritos_ADMINISTRACAO atÈ inscritos_ZOOTECNIA
+# agora, existem objetos inscritos_ADMINISTRACAO at√© inscritos_ZOOTECNIA
 
 # cria lista de todos os data.frames que foram criados
 lista_objetos <- paste0("inscritos_",lista_cursos_estavel)
 
-# une todos os data.frames em um sÛ, usando um for loop
+# une todos os data.frames em um s√≥, usando um for loop
 n_inscritos_total <- eval(parse(text=lista_objetos[1]))
 for (i in 2:length(lista_cursos_estavel)){
   rbind(n_inscritos_total,eval(parse(text=lista_objetos[i])))->n_inscritos_total
 }
 
-# remover rownames, pois s„o desnecessarios agora
+# remover rownames, pois s√£o desnecessarios agora
 rownames(n_inscritos_total) <- NULL
 
+# confere
+n_inscritos_total %>% head()
+n_inscritos_total %>% tail()
 # ==============================================================================
 
-# ConferÍncia com dados_ufv - Apenas cursos est·veis nos 10 anos
+# Confer√™ncia com dados_ufv - Apenas cursos est√°veis nos 10 anos
 sum(n_inscritos_total$insc_A0) ==
   dados_ufv[which(mod_ins=="A0")][which(Curso %in% lista_cursos_estavel)] %>% nrow()
 # deve ser TRUE
@@ -151,12 +154,13 @@ subset(n_inscritos_total,ano=="SISU2018") -> n_inscritos_2018
 subset(n_inscritos_total,ano %in% c("SISU2018","SISU2019","SISU2020",
                                     "SISU2021","SISU2022")) -> n_inscritos_2018_2022
 
+# gera frase com n inscritos, curso, modalidade, ano
 paste("Houve",n_inscritos_2018$insc_L09[54],"inscritos para",
        n_inscritos_2018$curso[54],"na modalidade L09 no SISU2018") #125
 
 # ==============================================================================
-# An·lise
-# Cria data.frame n˙mero de inscritos por ano
+# An√°lise
+# Cria data.frame n√∫mero de inscritos por ano
 
 inscritos_por_ano <- data.frame(ano=sisu_anos,
                                 n_inscritos=0)
@@ -187,10 +191,71 @@ inscritos_por_ano$n_inscritos==
   inscritos_por_ano$n_inscritos_A0+inscritos_por_ano$n_inscritos_cotas
 
 # ==============================================================================
+# Escrevendo em 2023-08-23
+# Comparar n_inscritos com n_vagas para saber quais cursos tem 
+# ao menos 1 inscrito por vaga em todas as modalidades (= curso concorrido)
+
+# Carregar nvagas do termo de ades√£o de 2022
+# list.files()
+source("data_05_carregar_termo_adesao.R")
+
+# comparar inscritos com nvagas
+
+# ------------------------------------------------------------------------------
+# de um curso e ano:
+
+# criar nvagas_curso e inscritos_curso
+nvagas_curso <- nvagas_MEDICINA
+inscritos_curso <- inscritos_MEDICINA["SISU2022",][, names(inscritos_MEDICINA) %in% insc_mod] %>% 
+  as.vector() %>% as.numeric()
+
+# testes preliminares:
+length(nvagas_curso) == length(inscritos_curso) # deve ser TRUE
+nvagas_curso[1] %>% data.class() == "numeric"
+inscritos_curso[1] %>% data.class() == "numeric"
+
+# se TRUE, ent√£o tudo TRUE, ent√£o curso concorrido
+concorrido <- all(nvagas_curso <= inscritos_curso)
+
+if(concorrido){print("concorrido")}
+
+# ------------------------------------------------------------------------------
+# para todos os cursos de um ano
+
+e <- "SISU2022"
+# for (cu in c("FISICA")){ # um curso
+for (cu in cursos[1:2]){ # alguns cursos
+# for (cu in cursos){ # todos os cursos
+  
+  # cria nvagas_curso
+  belch2("nvagas_curso <<- nvagas_",cu);
+  
+  # cria inscritos_curso
+  belch5("inscritos_curso <<- inscritos_",
+  cu,
+  "['SISU2022',][, names(inscritos_",
+  cu,
+  ") %in% insc_mod] %>% as.vector() %>% as.numeric()")
+  
+  print(nvagas_curso);
+  print(inscritos_curso);
+  
+  # se TRUE, ent√£o tudo TRUE, ent√£o curso concorrido
+  concorrido <- all(nvagas_curso <= inscritos_curso)
+  
+  if(concorrido){print("concorrido")} else {print("vago")}
+  
+  print(cu)
+  
+}
+
+# falta: listar cursos concorridos
+
+# ==============================================================================
 # Limpeza
 rm(inscritos_por_curso)
 
-# Para apagar todos os objetos inscritos_ADMINISTRACAO atÈ inscritos_ZOOTECNIA:
+# Para apagar todos os objetos inscritos_ADMINISTRACAO at√© inscritos_ZOOTECNIA:
 # for (i in 1:length(lista_cursos_estavel)) {
 # eval(parse(text=(paste0("rm(inscritos_",
 #                         lista_cursos_estavel[i],

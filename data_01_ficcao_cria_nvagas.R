@@ -1,31 +1,31 @@
 # ==============================================================================
 # Arquivo: data_01_cria_nvagas.R
-# Informa n˙mero de vagas em um curso
-# Cria nvagas com divisıes e arredondamentos consecutivos
+# Informa n√∫mero de vagas em um curso
+# Cria nvagas com divis√µes e arredondamentos consecutivos
 #
 # Modificado em: 2023-08-18-17-30.
-# Divis„o para PCD primeiro, depois para sd.
+# Divis√£o para PCD primeiro, resto para sd.
 
-# N„o consegui fazer o cÛdigo concordar com o Termo de Ades„o toda vez.
+# N√£o consegui fazer o c√≥digo concordar com o Termo de Ades√£o toda vez.
 # Problema: Se tiver 0.5 vagas para PCD, arredonda para cima ou para baixo?
-# Termo de Ades„o de Medicina UFV arredonda pra cima.
-# Termo de Ades„o de Eng Hidrica da UFRGS arredonda pra baixo.
-# SoluÁ„o: funÁ„o round_pcd permite escolher qual arredondamento usar
-# tentativa_round È uma tentativa de explicar o observado.
+# Termo de Ades√£o de Medicina UFV arredonda pra cima.
+# Termo de Ades√£o de Eng Hidrica da UFRGS arredonda pra baixo.
+# Solu√ß√£o: fun√ß√£o round_pcd permite escolher qual arredondamento usar
+# tentativa_round √© uma tentativa de explicar o observado.
 
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
-# Dicion·rio
+# Dicion√°rio
 #
 # Inputs:
 # tot (total de vagas)
-# ppi (% de pretos pardos indÌgenas)
-# pcd (% de pessoas com deficiÍncia)
+# ppi (% de pretos pardos ind√≠genas)
+# pcd (% de pessoas com defici√™ncia)
 # round_pcd (qual arredondamento usar para pcd)
 #
 # Outputs:
-# nvagas (vetor com n˙mero de vagas em cada modalidade.
+# nvagas (vetor com n√∫mero de vagas em cada modalidade.
 #         modalidades em ordem crescente)
 #
 # ==============================================================================
@@ -47,16 +47,16 @@ tentativa_round <- function(x) {
   }
 } # se for 0.5, arredonda para baixo. Todos os outros, segue round_5_up.
 
-# Cria funÁ„o round_pcd. Escolher uma opÁ„o.
-round_pcd <- function(x){exato<-round(x,5);return(exato)} # n„o arredondar
+# Cria fun√ß√£o round_pcd. Escolher uma op√ß√£o.
+round_pcd <- function(x){exato<-round(x,5);return(exato)} # n√£o arredondar
 round_pcd <- ceiling # para seguir Decreto
 round_pcd <- round_5_up # para arredondamento meio vai pra cima
-round_pcd <- round # para arredondar para o par mais prÛximo
+round_pcd <- round # para arredondar para o par mais pr√≥ximo
 round_pcd <- tentativa_round
 
 # ==============================================================================
 {
-### FunÁ„o gera_nvagas
+### Fun√ß√£o gera_nvagas
 
 gera_nvagas<-function (ppi=0.5366, pcd=0.0843, tot){
   tot <- tot
@@ -67,24 +67,24 @@ gera_nvagas<-function (ppi=0.5366, pcd=0.0843, tot){
   ###divide 50% para baixa renda, o resto pra alta renda
   n.baixa <- ceiling(n.cotas/2); #baixa renda, L1+L9+L2+L10
   n.alta  <- n.cotas-n.baixa; #alta renda, L5+L13+L6+L14
-  ###divide % de ppi por estado para ppi, o resto pra n„o-ppi (branco)
+  ###divide % de ppi por estado para ppi, o resto pra n√£o-ppi (branco)
   n.baixa.ppi     <- ceiling(n.baixa*ppi); #baixa renda ppi, L2+L10
   n.baixa.branco  <- n.baixa-n.baixa.ppi; #baixa renda branco, L1+L9
   n.alta.ppi      <- ceiling(n.alta*ppi); #alta renda ppi, L6+L14
   n.alta.branco   <- n.alta-n.alta.ppi #alta renda branco, L5+13
   
-  ###divide % de pcd por estado para pcd, o resto pra sem deficiÍncia
-  n.baixa.ppi.pcd    <- round_pcd(n.baixa.ppi*pcd); #L10, pessoa com deficiÍncia
-  n.baixa.ppi.sd     <- n.baixa.ppi-n.baixa.ppi.pcd; #L2, sem deficiÍncia
+  ###divide % de pcd por estado para pcd, o resto pra sem defici√™ncia
+  n.baixa.ppi.pcd    <- round_pcd(n.baixa.ppi*pcd); #L10, pessoa com defici√™ncia
+  n.baixa.ppi.sd     <- n.baixa.ppi-n.baixa.ppi.pcd; #L2, sem defici√™ncia
   
-  n.baixa.branco.pcd <- round_pcd(n.baixa.branco*pcd); #L9, pessoa com deficiÍncia
-  n.baixa.branco.sd  <- n.baixa.branco-n.baixa.branco.pcd; #L1, sem deficiÍncia
+  n.baixa.branco.pcd <- round_pcd(n.baixa.branco*pcd); #L9, pessoa com defici√™ncia
+  n.baixa.branco.sd  <- n.baixa.branco-n.baixa.branco.pcd; #L1, sem defici√™ncia
   
-  n.alta.ppi.pcd     <- round_pcd(n.alta.ppi*pcd); #L14, pessoa com deficiÍncia
-  n.alta.ppi.sd      <- n.alta.ppi-n.alta.ppi.pcd; #L6, sem deficiÍncia
+  n.alta.ppi.pcd     <- round_pcd(n.alta.ppi*pcd); #L14, pessoa com defici√™ncia
+  n.alta.ppi.sd      <- n.alta.ppi-n.alta.ppi.pcd; #L6, sem defici√™ncia
   
-  n.alta.branco.pcd  <- round_pcd(n.alta.branco*pcd); #L13, pessoa com deficiÍncia
-  n.alta.branco.sd   <- n.alta.branco-n.alta.branco.pcd #L5, sem deficiÍncia
+  n.alta.branco.pcd  <- round_pcd(n.alta.branco*pcd); #L13, pessoa com defici√™ncia
+  n.alta.branco.sd   <- n.alta.branco-n.alta.branco.pcd #L5, sem defici√™ncia
   
     ###Cria vetor nvagas
   nvagas <<- c(n.A0,n.baixa.branco.sd,n.baixa.ppi.sd,
@@ -93,18 +93,18 @@ gera_nvagas<-function (ppi=0.5366, pcd=0.0843, tot){
                n.alta.branco.pcd,n.alta.ppi.pcd)
 }
 
-# Roda funÁ„o e cria valores
+# Roda fun√ß√£o e cria valores
 
-if (T){ # caso queira rodar funÁ„o, colocar T 
-gera_nvagas (ppi=0.5366,pcd=0.1,tot=50) # informa trÍs par‚metros
+if (T){ # caso queira rodar fun√ß√£o, colocar T 
+gera_nvagas (ppi=0.5366,pcd=0.1,tot=50) # informa tr√™s par√¢metros
 # gera_nvagas (tot=50) # usa dois default, informa apenas tot
 }
 # output = vetor nvagas
-# nvagas # ordem alfabÈtica das modalidades
+# nvagas # ordem alfab√©tica das modalidades
 # mod <- c("A0","L1","L2","L5","L6", "L9", "L10", "L13", "L14")
 }
 # ==============================================================================
-# Rodar funÁ„o para testes
+# Rodar fun√ß√£o para testes
 ppi <- 0.6139
 pcd <- 0.6
 n <- 20

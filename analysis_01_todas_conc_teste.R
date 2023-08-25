@@ -1,23 +1,23 @@
 # ==============================================================================
 # Arquivo: analysis_01_todas_conc.R
-# Roda scripts de analysis_01 de formas de concorrência
+# Roda scripts de analysis_01 de formas de concorrÃªncia
 #
 #
 # Modificado em 2023-05-11
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
-# Dicionário
+# DicionÃ¡rio
 # Inputs:
 #
 # Outputs:
-# analise_n1 = nota máxima, média e mínima de cada categoria com modelo 1
-# analise_v1 = número de candidatos convocados por modalidade com modelo 1
+# analise_n1 = nota mÃ¡xima, mÃ©dia e mÃ­nima de cada categoria com modelo 1
+# analise_v1 = nÃºmero de candidatos convocados por modalidade com modelo 1
 #
-# analise_n2 = nota máxima, média e mínima de cada categoria com modelo 2
-# analise_v2 = número de candidatos convocados por modalidade com modelo 2
+# analise_n2 = nota mÃ¡xima, mÃ©dia e mÃ­nima de cada categoria com modelo 2
+# analise_v2 = nÃºmero de candidatos convocados por modalidade com modelo 2
 #
-# analise_n3 = nota máxima, média e mínima de cada categoria com modelo 3
-# analise_v3 = número de candidatos convocados por modalidade com modelo 3
+# analise_n3 = nota mÃ¡xima, mÃ©dia e mÃ­nima de cada categoria com modelo 3
+# analise_v3 = nÃºmero de candidatos convocados por modalidade com modelo 3
 #
 # ==============================================================================
 #
@@ -29,12 +29,12 @@ getwd()
 
 # ------------------------------------------------------------------------------
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- T   # deseja separar candidatos por curso? obrigatório
+por_curso <- T   # deseja separar candidatos por curso? obrigatÃ³rio
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 # data_04 faz setwd da pasta /privado
 
-# Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
+# Criar vetores n_vagas para cada curso, com base no termo de adesÃ£o de 2022
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
@@ -47,9 +47,9 @@ getwd()                                                 # conferir pasta
 
 # Escolher um curso
 # cu <- "LICENCIATURA_EM_QUIMICA_FL" # pelo nome
- cu <- lista_cursos_18_22[10]; # pelo número na lista
+ cu <- lista_cursos_18_22[10]; # pelo nÃºmero na lista
 
-# Escolher uma edição do SISU
+# Escolher uma ediÃ§Ã£o do SISU
 edicao <- "SISU2018" # pelo nome
 
 # Definir n_vagas, a partir do nvagas_CURSO gerado por data_05
@@ -58,7 +58,7 @@ nvagas <- get(paste0("nvagas_",cu))
 # ------------------------------------------------------------------------------
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # definir pasta
 { 
-# Correr concorrências
+# Correr concorrÃªncias
 source("analysis_01_1_conc_separada.R") # parece ok
 source("analysis_01_2_conc_c_ac.R")     # parece ok 
 source("analysis_01_3_conc_c_cotas.R")  # parece ok           
@@ -67,13 +67,13 @@ source("analysis_01_5_conc_ob.R")       # precisa ser checado
 
 # ==============================================================================
 #
-# Meta análise
+# Meta anÃ¡lise
 # Criar dfs com resultado compilado dos tres modelos
 #
 # Criar df meta_n com todas as notas dos tres modelos
 meta_n<-rbind(analise_n_c1,analise_n_c2,analise_n_c3,analise_n_c4,analise_n_c5)
 
-# Criar df meta_v com todas as alocações de vagas dos tres modelos
+# Criar df meta_v com todas as alocaÃ§Ãµes de vagas dos tres modelos
 meta_v<-rbind(analise_v_c1,analise_v_c2,analise_v_c3,analise_v_c4,analise_v_c5)
 
 # ------------------------------------------------------------------------------
