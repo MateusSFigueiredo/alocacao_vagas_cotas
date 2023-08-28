@@ -21,18 +21,17 @@
 #
 # ==============================================================================
 #
-# ==============================================================================
-
+# Preparação
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 getwd()
 # list.files()
+# ==============================================================================
+# Carregar dados
 
-# ------------------------------------------------------------------------------
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- T   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
-# data_04 faz setwd da pasta /privado
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
@@ -41,21 +40,42 @@ source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 # criar vetor mod, com a ordem das modalidades
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
-# ------------------------------------------------------------------------------
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # definir pasta
-getwd()                                                 # conferir pasta
-
-# Escolher um curso
+# ==============================================================================
+# Escolher um curso e ano arbitrários
 # cu <- "LICENCIATURA_EM_QUIMICA_FL" # pelo nome
- cu <- lista_cursos_18_22[10]; # pelo número na lista
+# cu <- lista_cursos_18_22[10]; # pelo número na lista
 
 # Escolher uma edição do SISU
-edicao <- "SISU2018" # pelo nome
+# edicao <- "SISU2018" # pelo nome
 
 # Definir n_vagas, a partir do nvagas_CURSO gerado por data_05
-nvagas <- get(paste0("nvagas_",cu))
+# nvagas <- get(paste0("nvagas_",cu))
 
 # ------------------------------------------------------------------------------
+# Escolher um curso e ano a partir de df_so_concorridos
+# Gerar conjunto candidatos com analysis_001_compara_ins_vagas.R
+# Carregar df_so_concorridos, apenas se ainda não existir df_so_concorridos
+if (!exists ("df_so_concorridos")) source("analysis_001_compara_ins_vagas.R")
+df_so_concorridos %>% nrow()
+# limpeza após alaysis_001
+rm(cu,concorrido,i,j)
+
+# ==============================================================================
+# Iniciar alocação
+i<-1 # de 1 até 63, para os 63 conjuntos concorridos encontrados
+df_so_concorridos[i,1] # nome do curso curso i
+
+# gerar conjunto candidatos a partir de número 1 a 63
+candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
+
+# Atribuir nvagas correto # criar nvagas a partir do nome do curso i
+nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1]))
+
+# para regularizar, fingir que nenhum candidato foi convocado ainda
+candidatos$mod_con <- 0
+
+# ==============================================================================
+
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # definir pasta
 { 
 # Correr concorrências
@@ -78,7 +98,9 @@ meta_v<-rbind(analise_v_c1,analise_v_c2,analise_v_c3,analise_v_c4,analise_v_c5)
 
 # ------------------------------------------------------------------------------
 # Conferir resultados
-cu;edicao;nvagas
+df_so_concorridos[i,1] # nome do curso i, usado no conjunto
+df_so_concorridos[i,2] # edição do sisu, usado no conjunto
+nvagas
 meta_v
 }
 # ==============================================================================

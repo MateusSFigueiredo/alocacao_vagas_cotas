@@ -1,12 +1,16 @@
 # ==============================================================================
 # Arquivo: analysis_001_compara_ins_vagas.R
-# Há mais inscritos ou mais vagas para cada curso, em cada modalidade?
+# Determina quais conjuntos de candidatos para um curso em um ano são concorridos
+# Ser concorrido = não sobre vaga
+# Há 1 ou mais candidatos para cada vaga em todas as modalidades
 #
-# Escrito em 2023-05-17
-# Modificado em 2023-08-28, para usar lista_cursos_estavel_18_22 em vez de lista_cursos_18_22
+# Modificado em 2023-08-28
 # Autor: Mateus Silva Figueiredo
 
-# Atualização 2023-0-26: gera df_so_concorridos para gerar candidatos
+# Identifica os 63 conjuntos concorridos, listados em df_so_concorridos,
+# usar df_so_concorridos para gerar candidatos para as análises
+
+# Atualização 2023-08-28: agora são só 63 conjuntos concorridos, pois AGRONOMIA 2020 não é
 
 # Aviso: se mudar de nome, mudar também em analysis_01_todas_conc.R, que usa source este
 # ==============================================================================
@@ -19,12 +23,12 @@ getwd()
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- T   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
-source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
+if (!exists("dados_ufv")) source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 # data_04 faz setwd da pasta /privado
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
-source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # redundante
+if (!exists("nvagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
 # criar vetor mod, com a ordem das modalidades
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
@@ -38,7 +42,7 @@ getwd()                                                 # conferir pasta
 # Escolher apenas um curso
 # i<-1
 # # cu <- "LICENCIATURA_EM_QUIMICA_FL" # pelo nome
-#  cu <- lista_cursos_estavel_18_22[i]; # pelo número na lista
+  cu <- lista_cursos_estavel_18_22[1]; # pelo número na lista
 # 
 # # Escolher uma edição do SISU
 # edicao <- "SISU2018" # pelo nome
@@ -68,7 +72,11 @@ for (cu in 1:length(lista_cursos_estavel_18_22)){
 for (j in 2:6){
 
 # cria inscritos_curso_ano
-inscritos_curso_ano <- get(paste0("dados_",df_concorridos[cu,1])) %>% subset(Processo_Seletivo==colnames(df_concorridos)[j])
+inscritos_curso_ano <- get(paste0("dados_",df_concorridos[cu,1])) %>% 
+  subset(Processo_Seletivo==colnames(df_concorridos)[j])
+
+# cria nvagas a partir de nvagas_ cu
+ nvagas <- get(paste0("nvagas_",lista_cursos_estavel_18_22[cu]))
 
 # ----------------------
 # cria vetor ninscritos e preenche
@@ -93,13 +101,14 @@ df_concorridos[cu,j]<-concorrido
 } # end j loop # colunas de df_concorridos
 } # end cu loop # cursos
 
-View(df_concorridos)
+# View(df_concorridos)
 nrow(df_concorridos) %>% paste("cursos analisados, estáveis entre 2018:2022")
 
 # ---------------------------------------
 # Totais
 sum(df_concorridos[,2:6]) %>% paste("células prenchidas") # total de células preenchidas
 (df_concorridos %>% length * df_concorridos %>% nrow) %>% paste("células ao todo") # total de células
+sum(df_concorridos[,2:6]) == 63 # deve ser TRUE, espera-se 63 células preenchidas
 
 # cria coluna df_concorridos$SISU_todos
 # df_concorridos$SISU_todos <- rowSums( df_concorridos[,2:6] )
@@ -126,7 +135,7 @@ df_so_concorridos <- df_concorridos %>%
 
 # Print the resulting dataframe
 print(df_so_concorridos)
-df_so_concorridos %>% nrow()
+df_so_concorridos %>% nrow() # deve ser 63
 
 # ----
 # um conjunto concorrido = inscritos para um curso, em um ano,

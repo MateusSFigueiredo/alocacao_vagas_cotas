@@ -6,7 +6,7 @@
 # cotistas só podem preencher vaga da cota que eles se inscreveram
 # Gera análise de notas e de preenchimento de vagas ao final
 #
-# Modificado em 2023-02-11
+# Modificado em 2023-08-28
 # Autor: Mateus Silva Figueiredo
 #
 # ==============================================================================
@@ -30,10 +30,8 @@
 # lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
 
 # # opção 2: dados observados
-# # carregado a partir de data_04_carregar_dados_UFV.R
-lista_todos <- get(paste0("dados_",cu)) %>% subset(Processo_Seletivo==edicao)
-
-lista_todos %>% head()
+# # carregado a partir de candidatos gerado por analysis_01
+lista_todos <- candidatos
 
 # ------------------------------------------------------------------------------
 

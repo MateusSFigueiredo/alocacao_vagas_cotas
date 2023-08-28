@@ -7,17 +7,12 @@
 #
 # Modificado em 2023-05-12
 # Autor: Mateus Silva Figueiredo
+
+# Atualização 2023-08-28 - fazer rodar com "candidatos"
 #
 # ==============================================================================
 # Preparação
 # Deve ser feito pelo analysis_01_todas_conc, usando source()
-
-# Escolher um curso
-# cu <- "MEDICINA" # pelo nome
-# cu <- lista_cursos[59]; # pelo número na lista
-
-# Escolher uma edição do SISU
-# edicao <- "SISU2022" # pelo nome
 
 # ==============================================================================
 #
@@ -29,8 +24,8 @@
 # lista_todos <- candidatos # gerado por data_02_cria_candidatos_por_mod.R
 
 # # opção 2: dados observados
-# # carregado a partir de data_04_carregar_dados_UFV.R
-lista_todos <- get(paste0("dados_",cu)) %>% subset(Processo_Seletivo==edicao)
+# # carregado a partir de candidatos gerado por analysis_01
+lista_todos <- candidatos
 
 # lista_todos %>% head(1)
 

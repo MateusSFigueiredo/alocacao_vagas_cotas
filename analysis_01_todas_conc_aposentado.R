@@ -6,6 +6,8 @@
 # Autor: Mateus Silva Figueiredo
 # Atualização de 2023-08-26: gera candidatos com source("analysis_001_compara_ins_vagas.R")
 
+# não usa source analysis_01_x 
+# talvez aposentar este script
 
 # ==============================================================================
 #
@@ -51,7 +53,7 @@ belch5 <- function(x, y, z, a, b)
 {eval(parse(text=(paste(x, y, z, a, b,sep=""))))}
 #
 #
-mod <- c("A0","L1","L2","L5","L6", "L9", "L10", "L13", "L14")
+mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 # 
 # ==============================================================================
@@ -108,18 +110,21 @@ if(!exists("nvagas_ZOOTECNIA")) source("est_desc_05_ins_por_modalidade.R") #  cr
 # gerar conjunto candidatos com analysis_001_compara_ins_vagas.R
 # carregar df_so_concorridos, apenas se ainda não existir df_so_concorridos
 if (!exists ("df_so_concorridos")) source("analysis_001_compara_ins_vagas.R")
-View(df_so_concorridos)
+df_so_concorridos %>% nrow()
 
-i<-1 # de 1 até 65, para os 65 conjuntos concorridos encontrados
-candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
 # ==============================================================================
-# Atribuir nvagas correto
+# Iniciar alocação
+i<-1 # de 1 até 63, para os 63 conjuntos concorridos encontrados
+df_so_concorridos[i,1] # nome do curso curso i
+
+# gerar conjunto candidatos a partir de número 1 a 63
+candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
+# ------------------------------------------------------------------------------
+# Atribuir nvagas correto # criar nvagas a partir do nome do curso i
+nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1]))
 
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0
-cursos[ncurso]
-
-df_so_concorridos[i]
 
 # ==============================================================================
 # Confere candidatos
@@ -163,6 +168,7 @@ for (i in 1:length(nvagas)){
 }
 
 # ERRO. Error in x[[jj]][iseq] <- vjj : replacement has length zero
+# 2023-08-28: resolvido?
 
  head(aprovados_A0);tail(aprovados_A0) #aprovados em A0
  head(lista_A0) #lista de espera em A0
