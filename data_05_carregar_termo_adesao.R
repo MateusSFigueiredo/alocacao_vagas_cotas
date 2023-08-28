@@ -55,6 +55,11 @@ termo_adesao_2022$Curso
 subset(termo_adesao_2022,!Curso %in% lista_cursos)$Curso
 
 # ==============================================================================
+# conferir se nomes de cursos são iguais com lista_cursos obtida de dados_ufv
+all (termo_adesao_2022$Curso %in% c(lista_cursos,"UNIVERSIDADE_FEDERAL_DE_VICOSA"))
+# deve ser TRUE
+
+# ==============================================================================
 # Criar nvagas_curso para todos os cursos
 
 for (i in 1:nrow(termo_adesao_2022)){ # abre loop de criar nvagas_CURSO
@@ -70,8 +75,10 @@ termo_adesao_2022$Curso[i]
 )
 } # fecha loop de criar nvagas_CURSO
 
-sum(nvagas_ADMINISTRACAO)
-sum(nvagas_UNIVERSIDADE_FEDERAL_DE_VICOSA)
+# sum(nvagas_ADMINISTRACAO)
+# sum(nvagas_UNIVERSIDADE_FEDERAL_DE_VICOSA)
+
+print("nvagas estão carregadas")
 
 # ==============================================================================
 # Limpeza

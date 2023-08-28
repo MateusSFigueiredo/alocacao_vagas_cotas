@@ -2,7 +2,7 @@
 # Arquivo: data_04_carregar_dados_UFV.R
 
 #
-# Modificado em: 2023-08-23
+# Modificado em: 2023-08-25
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
@@ -24,7 +24,8 @@
 # dados_2013 até dados_2022 com todos os cursos em cada
 # dados_2013 em diante tem colunas id, nota, mod_ins, mod_con,
 # Processo_Seletivo e Curso
-# lista_cursos, lista_cursos_estavel, lista_cursos_mudou, lista_cursos_18_22
+# lista_cursos, lista_cursos_estavel, lista_cursos_mudou, lista_cursos_18_22,
+# lista_cursos_estavel_18_22
 #
 # ==============================================================================
 # Preparação
@@ -34,6 +35,12 @@ library(data.table)
 # Disable scientific notation
 # Para manter o Número de Inscrição inalterado
 options(scipen = 999)
+
+# Manter comentado para não atrapalhar outros scripts que chamam este com source
+# # Deseja carregar dados por ano? 
+# por_ano <- F # T = sim, F = não
+# # Deseja carregar dados por ano? 
+# por_ano <- F # T = sim, F = não
 
 # ==============================================================================
 # Carregar dados
@@ -343,7 +350,14 @@ dados_ufv[Processo_Seletivo=="SISU2018"]$Curso %>% unique() -> lista_cursos_18
 dados_ufv[Processo_Seletivo=="SISU2022"]$Curso %>% unique() -> lista_cursos_22
 
 intersect(lista_cursos_18,lista_cursos_22) %>% sort() -> lista_cursos_18_22
+lista_cursos_18_22 %>% length # 67 cursos
 rm(lista_cursos_18,lista_cursos_22)
+
+# Cursos que variaram oferta de vagas entre 2018 e 2022
+lista_cursos_mudou2 <- c("CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP","SERVICO_SOCIAL")
+
+# Cursos que ofereceram mesma quantidade de vagas entre 2018 e 2022
+lista_cursos_estavel_18_22 <- setdiff(lista_cursos_18_22,lista_cursos_mudou2)
 
 # ------------------------------------------------------------------------------
 

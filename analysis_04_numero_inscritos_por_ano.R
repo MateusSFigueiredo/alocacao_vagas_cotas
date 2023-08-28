@@ -2,8 +2,9 @@
 # Arquivo: analysis_04_numero_inscritos_por_ano.R
 
 #
-# Modificado em: 2023-08-23.
+# Modificado em: 2023-08-25.
 # Autor: Mateus Silva Figueiredo
+
 # ==============================================================================
 #
 # Usar após data_04_carregar_dados_UFV.R
@@ -191,67 +192,12 @@ inscritos_por_ano$n_inscritos==
   inscritos_por_ano$n_inscritos_A0+inscritos_por_ano$n_inscritos_cotas
 
 # ==============================================================================
-# Escrevendo em 2023-08-23
-# Comparar n_inscritos com n_vagas para saber quais cursos tem 
-# ao menos 1 inscrito por vaga em todas as modalidades (= curso concorrido)
-
-# Carregar nvagas do termo de adesão de 2022
-# list.files()
-source("data_05_carregar_termo_adesao.R")
-
-# comparar inscritos com nvagas
-
-# ------------------------------------------------------------------------------
-# de um curso e ano:
-
-# criar nvagas_curso e inscritos_curso
-nvagas_curso <- nvagas_MEDICINA
-inscritos_curso <- inscritos_MEDICINA["SISU2022",][, names(inscritos_MEDICINA) %in% insc_mod] %>% 
-  as.vector() %>% as.numeric()
-
-# testes preliminares:
-length(nvagas_curso) == length(inscritos_curso) # deve ser TRUE
-nvagas_curso[1] %>% data.class() == "numeric"
-inscritos_curso[1] %>% data.class() == "numeric"
-
-# se TRUE, então tudo TRUE, então curso concorrido
-concorrido <- all(nvagas_curso <= inscritos_curso)
-
-if(concorrido){print("concorrido")}
-
-# ------------------------------------------------------------------------------
-# para todos os cursos de um ano
-
-e <- "SISU2022"
-# for (cu in c("FISICA")){ # um curso
-for (cu in cursos[1:2]){ # alguns cursos
-# for (cu in cursos){ # todos os cursos
-  
-  # cria nvagas_curso
-  belch2("nvagas_curso <<- nvagas_",cu);
-  
-  # cria inscritos_curso
-  belch5("inscritos_curso <<- inscritos_",
-  cu,
-  "['SISU2022',][, names(inscritos_",
-  cu,
-  ") %in% insc_mod] %>% as.vector() %>% as.numeric()")
-  
-  print(nvagas_curso);
-  print(inscritos_curso);
-  
-  # se TRUE, então tudo TRUE, então curso concorrido
-  concorrido <- all(nvagas_curso <= inscritos_curso)
-  
-  if(concorrido){print("concorrido")} else {print("vago")}
-  
-  print(cu)
-  
-}
-
-# falta: listar cursos concorridos
-
+# Obs: analysis_001_compara_ins_vagas.R já compara inscritos com vagas
+# Removida parte "Comparar n_inscritos com n_vagas para saber quais cursos tem 
+# ao menos 1 inscrito por vaga em todas as modalidades (= curso concorrido)",
+# que era redundante com analysis_001_compara_ins_vagas.R
 # ==============================================================================
+
 # Limpeza
 rm(inscritos_por_curso)
 

@@ -1,6 +1,13 @@
 # ==============================================================================
 # Arquivo: analysis_01_todas_conc.R
 # Roda três modelos de alocação de vagas
+
+# Modificado em 2023-08-26.
+# Autor: Mateus Silva Figueiredo
+# Atualização de 2023-08-26: gera candidatos com source("analysis_001_compara_ins_vagas.R")
+
+
+# ==============================================================================
 #
 # Separa candidatos seguindo concorrência simples = modelo 1
 # Cada candidato só preenche vaga da modalidade de inscrição
@@ -12,13 +19,12 @@
 # Separa candidatos seguindo concorrência concomitante, cotas primeiro = modelo3
 # Primeiro preenche as vagas das cotas
 # Depois preenche vagas de Ampla Concorrência com todos os candidatos
-#
-# Modificado em 2023-08-23.
-# Autor: Mateus Silva Figueiredo
+
 # ==============================================================================
 
 # Avisos.
 # Dá erro se tiver mais vaga do que candidato para alguma modalidade.
+# Solução: usar apenas os conjuntos de cursos concorridos (n=64 conjuntos)
 
 # ==============================================================================
 #
@@ -49,7 +55,7 @@ mod <- c("A0","L1","L2","L5","L6", "L9", "L10", "L13", "L14")
 mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 # 
 # ==============================================================================
-# Utiliza função gera_candidatos() para gerar candidatos de todas as mod
+# Ficção: Utiliza função gera_candidatos() para gerar candidatos de todas as mod
 #
 #set.seed(4) # caso queira ser determinístico. Qualquer número serve.
 #set.seed(NULL) # caso queira ser aleatório.
@@ -69,40 +75,51 @@ mod_cotas <- mod[mod!= "A0"] # cria mod_cotas sem A0
 
 
 # ==============================================================================
-# # Criar candidatos a partir de dados_[ano] da UFV
+# # Fato: Criar candidatos a partir de dados_[ano] da UFV
 
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- F   # deseja separar candidatos por curso? 
 por_ano   <- T   # deseja separar candidatos por ano? obrigatório
-source("data_04_carregar_dados_UFV.R") # F,T cria ~20 objetos
 
-#
-dados_ano <- dados_2022 # colocar ano que quiser
-dados_ano$Curso %>% unique() -> cursos; length(cursos)
-ncurso<-66 # colocar número que quiser, até o número de crrsos
-cursos[ncurso] 
-subset(dados_ano,Curso==cursos[ncurso]
-       ,select=c(id,nota,
-                 Numero_Chamada_Convocacao,
-                 mod_ins,mod_con)
-       ) -> candidatos
+# Carregar apenas se não existir dados_2022 = se ainda não tiver corrido source data_04
+if(!exists("dados_2022")) source("data_04_carregar_dados_UFV.R")
+ # F,T cria ~20 objetos
 
-# gerar nvagas a partir de dados_[ano] # PARECE ERRADO
-nvagas<-c(
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="A0"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L01"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L02"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L05"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L06"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L09"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L10"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L13"),
-sum(candidatos[Numero_Chamada_Convocacao==1]$mod_con=="L14")
-)
-nvagas
+# ------------------------------------------------------------------------------
+# Carregar nvagas com source("est_desc_05_ins_por_modalidade.R")
+# Carregar apenas se não existir nvagas_ZOOTECNIA = se ainda não tiver corrido source data_05
+if(!exists("nvagas_ZOOTECNIA")) source("est_desc_05_ins_por_modalidade.R") #  cria ~70 objetos
+
+# ==============================================================================
+# Gerar conjunto candidatos
+# ------------------------------------------------------------------------------
+# # gerar conjunto candidatos - arbitrário - pode ter conjuntos não concorridos
+# dados_ano <- dados_2022 # colocar ano que quiser
+# dados_ano$Curso %>% unique() -> cursos; length(cursos)
+# ncurso<-66 # colocar número que quiser, até o número de crrsos
+# cursos[ncurso] 
+# subset(dados_ano,Curso==cursos[ncurso]
+#        ,select=c(id,nota,
+#                  Numero_Chamada_Convocacao,
+#                  mod_ins,mod_con)
+#        ) -> candidatos
+
+# ------------------------------------------------------------------------------
+# gerar conjunto candidatos com analysis_001_compara_ins_vagas.R
+# carregar df_so_concorridos, apenas se ainda não existir df_so_concorridos
+if (!exists ("df_so_concorridos")) source("analysis_001_compara_ins_vagas.R")
+View(df_so_concorridos)
+
+i<-1 # de 1 até 65, para os 65 conjuntos concorridos encontrados
+candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
+# ==============================================================================
+# Atribuir nvagas correto
+
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0
 cursos[ncurso]
+
+df_so_concorridos[i]
 
 # ==============================================================================
 # Confere candidatos
@@ -110,6 +127,8 @@ head(candidatos);tail(candidatos);summary(candidatos)
 candidatos %>% count(mod_ins)
 candidatos %>% count(mod_con)
 
+# ==============================================================================
+# ==============================================================================
 # ==============================================================================
 # Roda modelo 1
 print("Roda modelo 1")
