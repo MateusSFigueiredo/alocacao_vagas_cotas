@@ -82,7 +82,7 @@ inscritos_curso_ano <- get(paste0("dados_",df_concorridos[cu,1])) %>%
 # cria vetor ninscritos e preenche
 ninscritos<-numeric()
 
-# preenche
+# preenche usando comprimento de ninscritos. modalidade comm 0 inscritos não aparece.
 for (m in 1:9){
 inscritos_curso_ano[mod_ins==mod[m]] %>% nrow() -> ninscritos[m]
 }

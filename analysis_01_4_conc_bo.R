@@ -7,8 +7,10 @@
 # Gera análise de notas e de preenchimento de vagas ao final
 # AC ao final
 
-# Modificado em 2023-08-28
+# Modificado em 2023-08-30
 # Autor: Mateus Silva Figueiredo
+
+# Atualização 2023-08-30: conserta nvagas
 
 # ==============================================================================
 # Preparação
@@ -50,7 +52,7 @@ paste(lista_todos %>% nrow(), "candidatos em",
 
 # opção 2: vagas arbitrárias. Preferencialmente copiando de termo de adesão
 # nvagas <- c(25,5,6,4,6,1,1,1,1) # Medicina UFV
-nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
+# nvagas <- c(30,5,8,5,8,1,1,1,1) # Pedagogia UFV
 
 nvagas %>% length == 9
 

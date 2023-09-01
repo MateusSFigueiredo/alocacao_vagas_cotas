@@ -8,6 +8,9 @@
 #
 # Modificado em 2023-08-28
 # Autor: Mateus Silva Figueiredo
+
+# Obs. 2023-08-30: problema no total de convocados
+# talvez devido a cotista ir pra AC e não ter mais cotista para aquela vaga
 #
 # ==============================================================================
 # Preparação

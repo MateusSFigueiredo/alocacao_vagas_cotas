@@ -4,9 +4,12 @@
 # Quantos inscritos tem por ano, por modalidade de inscrição?
 # usar mod_ins
 
+# Não distingue cursos
+
 # Faz:
 # Data.frame ins_mod com n. inscritos por mod, por ano
 # Gráfico de barras empilhado com n. inscritos por mod, por ano
+# Gráfico de linhas, mesmos dados
 
 # Data.frame ins_mod2 com n. inscritos por população (bxa, ppi, pcd)
 
@@ -14,7 +17,7 @@
 # Definir cores para gráfico
 # Exportar gráfico (não sei se precisa mesmo)
 #
-# Modificado em: 2023-08-22.
+# Modificado em: 2023-09-01.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 # Preparação
@@ -189,8 +192,66 @@ ggplot(data_long, aes(x = as.factor(anos), y = Count, fill =
 
 print(grafico)
 
-# Fim do código
 
+
+# ==============================================================================
+# Fazer gráfico de linhas
+
+# modifica ins_mod para 0 virar NA
+mydata[zero_vagas, "L01"][mydata[zero_vagas, "L01"] == 0] <- NA
+ins_mod[ins_mod==0] <- NA
+ins_mod
+
+# Gráfico de linhas
+grafico <- ggplot(data = ins_mod, aes(x = anos)) +
+  geom_line(aes(y = L01, color = "L01")) +
+  geom_line(aes(y = L02, color = "L02")) +
+  geom_line(aes(y = L05, color = "L05")) +
+  geom_line(aes(y = L06, color = "L06")) +
+  geom_line(aes(y = L09, color = "L09")) +
+  geom_line(aes(y = L10, color = "L10")) +
+  geom_line(aes(y = L13, color = "L13")) +
+  geom_line(aes(y = L14, color = "L14")) +
+  geom_line(aes(y = A0, color = "A0")) +
+  labs(x = "Edição do SISU", y = "Número de inscritos", color = "Modalidade") +
+  scale_color_manual(values = c(
+    L01 = "blue", L02 = "red", L05 = "green", L06 = "purple", 
+    L09 = "orange", L10 = "darkgray", L13 = "brown", L14 = "cyan", 
+    A0 = "black"
+  )) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(ins_mod$anos), max(ins_mod$anos), by = 1)) +
+#  scale_y_log10() + # y em log
+  ggtitle("Inscritos por modalidade por ano")
+
+print(grafico)
+rm(grafico)
+
+# ------------------------------------------------------------------------------
+# Gráfico de linhas apenas de PCD
+
+ins_mod_pcd <- ins_mod[6:10,]
+ins_mod_pcd[,2:5] <- NULL
+ins_mod_pcd
+
+grafico <- ggplot(data = ins_mod_pcd, aes(x = anos)) +
+
+  geom_line(aes(y = L09, color = "L09")) +
+  geom_line(aes(y = L10, color = "L10")) +
+  geom_line(aes(y = L13, color = "L13")) +
+  geom_line(aes(y = L14, color = "L14")) +
+  labs(x = "Edição do SISU", y = "Número de inscritos", color = "Modalidade") +
+  scale_color_manual(values = c(
+    L09 = "orange", L10 = "darkgray", L13 = "brown", L14 = "cyan"
+  )) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(2017), max(ins_mod$anos), by = 1)) +
+  #  scale_y_log10() + # y em log
+  ggtitle("Inscritos por modalidade PCD por ano")
+
+print(grafico)
+
+# Fim do código em 2023-09-01
 # ==============================================================================
 # Referências
 # R Color Brewer's palettes https://r-graph-gallery.com/38-rcolorbrewers-palettes.html
