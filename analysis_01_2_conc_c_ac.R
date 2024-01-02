@@ -1,16 +1,18 @@
 # ==============================================================================
-# Arquivo: analysis_01_2_conc_separada.R # escrevendo
+# Arquivo: analysis_01_2_conc_c_ac.R # escrevendo
 # Roda modelo 2, de concorrência concomitante, AC primeiro
 #
 # Todos os candidatos podem preencher vagas da AC
 # cotistas só podem preencher vaga da cota que eles se inscreveram
 # Gera análise de notas e de preenchimento de vagas ao final
 #
-# Modificado em 2023-08-28
+# Modificado em 2024-01-02.
 # Autor: Mateus Silva Figueiredo
 
 # Obs. 2023-08-30: problema no total de convocados
 # talvez devido a cotista ir pra AC e não ter mais cotista para aquela vaga
+#
+# diff 2024-01-02. Alteração mínima. Nome correto do arquivo.
 #
 # ==============================================================================
 # Preparação

@@ -1,5 +1,5 @@
 # # ==============================================================================
-# Arquivo: analysis_02_compara_conc.R
+# Arquivo: analysis_02_0_compara_conc.R
 # Compara cinco modelos de concorrencia:
 # 1 = concorrencia separada (aka listas multiplas)
 # 2 = concorrencia concomitante, AC primeiro
@@ -12,8 +12,10 @@
 # Erro: mesmo com apenas concs 1 a 4, ainda dá erro returning Inf e -Inf
 # mas será que tem problema?
 
-# Modificado em 2023-08-31.
+# Modificado em 2024-01-02.
 # Autor: Mateus Silva Figueiredo
+
+# diff: documentação.
 
 # ==============================================================================
 # Carregar dados
@@ -43,7 +45,7 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
 # ------------------------------------------------------------------------------
 
-# alguns conjuntos
+# apenas alguns conjuntos
 # iteracoes <- 4{ # abre loop i, um para cada conjunto
 
 # ------------------------------------------------------------------------------

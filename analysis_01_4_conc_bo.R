@@ -1,5 +1,5 @@
 # ==============================================================================
-# Arquivo: analysis_014_conc_bo.R
+# Arquivo: analysis_01_4_conc_bo.R
 # Roda modelo c4, de Aygun e Bó (2021) e Bó e Senkevics (2023)
 
 # Todos os candidatos podem preencher vagas da AC
@@ -7,10 +7,11 @@
 # Gera análise de notas e de preenchimento de vagas ao final
 # AC ao final
 
-# Modificado em 2023-08-30
+# Modificado em 2024-01-02.
 # Autor: Mateus Silva Figueiredo
 
-# Atualização 2023-08-30: conserta nvagas
+# diff 2023-08-30: conserta nvagas
+# diff 2024-01-02: apenas documentação
 
 # ==============================================================================
 # Preparação
@@ -45,7 +46,7 @@ paste(lista_todos %>% nrow(), "candidatos em",
 # ==============================================================================
 # é preciso existir nvagas
 
-# ordem: A0, L01, L02, L05, L06, L09, L10, L13, L14
+# ordem de nvagas: A0, L01, L02, L05, L06, L09, L10, L13, L14
 
 # opção 1: usar função gera_nvagas. input = ppi, pcd, tot. tem ppi e pcd default.
 # gera_nvagas (0.5366,0.0843,tot) # mg = (0.5366,0.0843,tot). output = nvagas
@@ -258,7 +259,7 @@ subset(lista_todos, !id %in% aprovados_L14$id) ->> lista_todos
 
 # Existem 9! ordens possíveis para fazer os preenchimentos (mais de 300 mil).
 
-# ordem proposta por bo e senkevics, 2023 (L10, L02, L09, L1, L14, L06, L13, L05, A0)
+# ordem proposta por bo e senkevics, 2023 (L10, L02, L09, L01, L14, L06, L13, L05, A0)
 {
   if(isFALSE(exists("aprovados_L10"))) {preenche_L10_c4()}
   if(isFALSE(exists("aprovados_L02"))) {preenche_L02_c4()}

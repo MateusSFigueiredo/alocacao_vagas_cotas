@@ -2,7 +2,7 @@
 # Arquivo: data_04_carregar_dados_UFV.R
 
 #
-# Modificado em: 2023-08-25
+# Modificado em: 2024-01-02.
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
@@ -10,7 +10,7 @@
 # Separa em data.frames por curso
 
 # diff:
-# sempre carrega lista_cursos (linha 250), e não apaga (linha 383)
+# corrigido nome das modalidades (L1 para L01 etc.)
 
 # ==============================================================================
 #
@@ -37,10 +37,9 @@ library(data.table)
 options(scipen = 999)
 
 # Manter comentado para não atrapalhar outros scripts que chamam este com source
-# # Deseja carregar dados por ano? 
+# # Deseja carregar dados por ano e por curso? 
 # por_ano <- F # T = sim, F = não
-# # Deseja carregar dados por ano? 
-# por_ano <- F # T = sim, F = não
+# por_curso <- F # T = sim, F = não
 
 # ==============================================================================
 # Carregar dados
@@ -167,25 +166,24 @@ subset (dados_ufv,Processo_Seletivo %in% c("SISU2018",
 # Junta regra1 com regra2
 rbind (regra1, regra2) -> dados_ufv; rm(regra1, regra2)
 
-# # Conferência
+# # Para conferência, descomentar e rodar
+
 # unique (dados_ufv$Modalidade_Inscrita)
 # count (dados_ufv,mod_ins)
-# 
 # subset (dados_ufv,mod_ins=="A0")[1]
-# subset (dados_ufv,mod_ins=="L1")[1]
-# subset (dados_ufv,mod_ins=="L2")[1]
-# subset (dados_ufv,mod_ins=="L5")[1]
-# subset (dados_ufv,mod_ins=="L6")[1]
-# subset (dados_ufv,mod_ins=="L9")[1]
+# subset (dados_ufv,mod_ins=="L01")[1]
+# subset (dados_ufv,mod_ins=="L02")[1]
+# subset (dados_ufv,mod_ins=="L05")[1]
+# subset (dados_ufv,mod_ins=="L06")[1]
+# subset (dados_ufv,mod_ins=="L09")[1]
 # subset (dados_ufv,mod_ins=="L10")[1]
 # subset (dados_ufv,mod_ins=="L13")[1]
 # subset (dados_ufv,mod_ins=="L14")[1]
-
 paste("dados_ufv tem",ncol(dados_ufv),"colunas")   
 
 # ==============================================================================
 # acrescentar colunas pub, bxa, ppi, pcd
-# assume que nenhum candidato omitiu privilégio
+# assume que nenhum candidato omitiu pertencimento a algum grupo
 
 # criar coluna pub para egressos de escola publica
 dados_ufv$mod_ins %in% c("L01","L02","L06","L05","L09","L14","L13","L10") -> dados_ufv$pub

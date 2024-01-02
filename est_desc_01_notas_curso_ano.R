@@ -1,11 +1,14 @@
 # ==============================================================================
 # Arquivo: est_desc_01_notas_curso_ano.R
+#
+# Modificado em: 2024-01-02
 
-#
-# Modificado em: 2023-08-21.
 # Autor: Mateus Silva Figueiredo
+# diff 2023-02-01: documentação. Cancela tentativa de anotação no boxplot.
 #
-# Utiliza dados_ufv carregado por data_04_carregar_dados_UFV
+# Utiliza dados_ufv carregado por data_04_carregar_dados_ufv
+
+# ==============================================================================
 
 ### Função:
 # Gera estatística descritiva de cada curso, ano e modalidade
@@ -36,7 +39,6 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 por_curso <- T   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
-# data_04 faz setwd da pasta /privado
 # 
 # ==============================================================================
 
@@ -88,7 +90,7 @@ dados_convocados$pub<- gsub("FALSE","Ampla Concorrência",dados_convocados$pub)
 
 # Opção 1 - Selecionar um curso
 # dados_curso <- dados_convocados[Curso == "EDUCACAO_FISICA"] # com _ no nome
-# dados_curso <- dados_convocados[Curso == lista_cursos[8]]
+ dados_curso <- dados_convocados[Curso == lista_cursos[8]]
 # i <- 25
 # {
   
@@ -98,19 +100,39 @@ dados_convocados$pub<- gsub("FALSE","Ampla Concorrência",dados_convocados$pub)
 #  dados_curso <- dados_convocados[Curso == lista_cursos[i]]
 
 # # Opção 3 - fazer loop com cursos listados, gerar imagem e salvar
-lista_cursos2 <- c("EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO","EDUCACAO_FISICA_LICENCIATURA")
-for (i in 1:length(lista_cursos2)){
-# # # a cada loop, pegar um curso diferente
-dados_curso <- dados_convocados[Curso == lista_cursos2[i]]
+# lista_cursos2 <- c("EDUCACAO_FISICA","EDUCACAO_FISICA_BACHARELADO","EDUCACAO_FISICA_LICENCIATURA")
+# for (i in 1:length(lista_cursos2)){
+# # # # a cada loop, pegar um curso diferente
+# dados_curso <- dados_convocados[Curso == lista_cursos2[i]]
    
    
 # --------------------------------------------------------------------
 # após escolher opção 1 ou 2 ou 3, rodar tudo:
 # remover escrito SISU do Processo_Seletivo e deixar apenas ano
-dados_curso$Processo_Seletivo <- gsub("SISU", " ", dados_curso$Processo_Seletivo)
+dados_curso$Processo_Seletivo <- gsub("SISU", "", dados_curso$Processo_Seletivo)
 
+# ==============================================================================
+# número de convocados em 1a chamada em cada ano # usando Chat GPT
+# objetivo: colocar n de convocados a cada ano do lado de cada boxplot
 
-# ------------------------------------------------------------------------------
+library(dplyr)
+
+# Initialize an empty list to store the results
+results_list <- list()
+
+# Iterate through each year from 2013 to 2022
+for (year in 2013:2022) {
+  # Replace the year in the condition and calculate the number of rows
+  num_convocations <- dados_curso[Numero_Chamada_Convocacao == 1 & Processo_Seletivo == year, ] %>% nrow()
+  
+  # Store the result in the list
+  results_list[[as.character(year)]] <- num_convocations
+}
+
+# Convert the list to a dataframe n_convocados
+n_convocados <- data.frame(Year = as.numeric(names(results_list)), Convocations = unlist(results_list))
+
+# ==============================================================================
 # Boxplot no ggplot
 
 titulo_grafico <- gsub("_"," ",dados_curso$Curso[1]) # remove _ do curso
@@ -129,10 +151,11 @@ grafico <<- ggplot(dados_curso, aes(y = fct_rev(Processo_Seletivo), x = nota, fi
   coord_cartesian(xlim = range(dados_curso$nota)) + # automático
 #  coord_cartesian(xlim = c(397, 733)) +  # arbitrário, para Educação Física
   theme(axis.ticks.y = element_blank()) +
-  labs(fill = "Escola pública?"); print(grafico)
+  labs(fill = "Escola pública?") 
+
+print(grafico)
 
 # } # fim do loop de lista_cursos se não quiser salvar gráficos
-
 #
 # ------------------------------------------------------------------------------
 # salvar grafico boxplot como imagem png

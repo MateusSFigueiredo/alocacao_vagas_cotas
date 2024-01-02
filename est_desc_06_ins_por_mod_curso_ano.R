@@ -9,11 +9,10 @@
 # Faz:
 # Lista número de inscritos por modalidade, por ano, por curso
 # Soma quantos casos teve 0 inscritos
+# Exporta df_ins_mca.csv
 
-# Falta:
-# Exportar
-
-# Modificado em: 2023-09-01.
+# Modificado em: 2024-02-01.
+# diff: documentação.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 

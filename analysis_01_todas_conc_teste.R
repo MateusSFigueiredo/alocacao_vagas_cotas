@@ -19,6 +19,12 @@
 # analise_n3 = nota máxima, média e mínima de cada categoria com modelo 3
 # analise_v3 = número de candidatos convocados por modalidade com modelo 3
 #
+# analise_n4 = nota máxima, média e mínima de cada categoria com modelo 4
+# analise_v4 = número de candidatos convocados por modalidade com modelo 4
+#
+# analise_n5 = nota máxima, média e mínima de cada categoria com modelo 5
+# analise_v5 = número de candidatos convocados por modalidade com modelo 5
+#
 # ==============================================================================
 #
 # Preparação
@@ -37,7 +43,7 @@ source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
-# criar vetor mod, com a ordem das modalidades
+# criar vetor mod, com a ordem das modalidades de nvagas
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
 # ==============================================================================
@@ -57,8 +63,9 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 # Carregar df_so_concorridos, apenas se ainda não existir df_so_concorridos
 if (!exists ("df_so_concorridos")) source("analysis_001_compara_ins_vagas.R")
 df_so_concorridos %>% nrow()
-# limpeza após alaysis_001
-rm(cu,concorrido,i,j)
+
+# limpeza após analysis_001
+if (exists ("concorrido")) rm(cu,concorrido,i,j) # não tem problema se der Warning messages
 
 # ==============================================================================
 # Iniciar alocação

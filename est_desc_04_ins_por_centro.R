@@ -4,8 +4,10 @@
 # Quantos inscritos tem por ano, por centro e campus?
 # Gera gráfico de barras empilhadas
 
-# Modificado em: 2023-05-23.
+# Modificado em: 2023-09-15.
 # Autor: Mateus Silva Figueiredo
+
+# Última alteração: salva imagem. Título lateral "centro/ \n campus"
 
 # Ideia: excluir Medicina e Med Vet.
 
@@ -95,16 +97,40 @@ data_long <- reshape2::melt(ins_centros, id.vars = "anos", variable.name = "Cent
 
 #---
 
-colors <- c("#B66638","#BBBBAA","#E41A1C","#377EB8","#65bb64","#ff9a00")
+colors <- c("#B66638","#BBBBAA","#E41A1C","#377EB8","#65bb64","#ff9a00") # por centro
+# colors <- c("black","black","black","black","black","black") # para total
 
 # Create the stacked bar graph
-ggplot(data_long, aes(x = as.factor(anos), y = Count, fill = factor(Centro, levels = c("CAF","CRP","CCH","CCE","CCB","CCA")))) +
+grafico <- ggplot(data_long, aes(x = as.factor(anos), y = Count, fill = factor(Centro, levels = c("CAF","CRP","CCH","CCE","CCB","CCA")))) +
   geom_bar(stat = "identity") +
-  labs(x = "Edição do SISU", y = "Inscritos por Centro/Campus", fill = "Centro") +
+  labs(x = "Edição do SISU", y = "Inscritos por Centro/Campus", fill = bquote("Centro/ \nCampus")) +
   scale_fill_manual(values = colors) +
   theme_bw() +
   ggtitle("Inscritos na UFV 2013-2022") +
   theme(legend.position = "right")
+
+grafico
+
+# ==============================================================================
+# Salvar imagem
+if (T){ # deseja salvar imagens? T = sim. F = não.
+
+  # criar pasta para gráficos
+  pasta_imagens <- "imagens_est_desc_04_ins_por_centro" #nome da pasta
+  if (!dir.exists(pasta_imagens)) {
+    dir.create(pasta_imagens)
+  } # cria pasta
+  
+  # nome do arquivo
+  image_filename <- "ins_por_centro.png"
+#  image_filename <- "ins_all_black.png" # para total
+    
+  # salva imagem
+  ggsave(file.path(pasta_imagens, image_filename), plot = grafico, 
+         width = 8, height = 4, dpi = 300)
+  
+}
+
 
 # Fim do código
 

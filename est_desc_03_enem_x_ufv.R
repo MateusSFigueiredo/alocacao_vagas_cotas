@@ -4,8 +4,10 @@
 # Quantos inscritos tem na UFV e ENEM?
 # Qual a correlação n. inscritos na UFV e n. inscritos no ENEM por ano?
 #
-# Modificado em: 2023-05-23.
+# Modificado em: 2023-09-15.
 # Autor: Mateus Silva Figueiredo
+
+# Última modificação: salva imagem.
 # ==============================================================================
 # Preparação
 library(ggplot2)# gráficos
@@ -20,7 +22,7 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- F   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
-# source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
+source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
 
 # limpeza após source
 if (!por_curso){
@@ -99,15 +101,18 @@ paste("p valor =",p.valor) -> p.valor
 formula <- paste0("y = ", intercepto," + (",slope," * x)")
 formula
 
-# ------------------------------------------------------------------------------
-
 # ==============================================================================
+{ # gerar gráfico e salvar imagem
+  
+  dimensoes <- c(8,5,21) # altura, largura, seed. (8,5,21) para texto
+  # dimensoes <- c(6.67,   4.17,   3) # (6.67, 4.17, 3) para powerpoint
+  seed <- dimensoes[3] # pode ser qualquer numero
+  set.seed(seed) # usado por geom_text_repel
 
+# ------------------------------------------------------------------------------
 # Plot gráfico Inscritos no ENEM x Inscritos na UFV
 
-set.seed(10) # usado por geom_text_repel
-
-ggplot(mapping = aes(n_inscritos$inscritos_ENEM_n_1/1e+6,n_inscritos$inscritos_UFV)) +
+grafico <- ggplot(mapping = aes(n_inscritos$inscritos_ENEM_n_1/1e+6,n_inscritos$inscritos_UFV)) +
   geom_point() +
   geom_smooth(method = "lm") + 
   annotate("text", x = 8, y = 10700, label = "Curva: LM", colour = "blue") +
@@ -127,5 +132,29 @@ ggplot(mapping = aes(n_inscritos$inscritos_ENEM_n_1/1e+6,n_inscritos$inscritos_U
   xlab("Inscritos no ENEM anterior (milhões)") +
   ylab("Inscritos na UFV") 
 
+grafico
+
+# ==============================================================================
+# Salvar imagem. usa dimensoes definido na linha 105
+if (F){ # deseja salvar imagens? T = sim. F = não.
+  
+  # criar pasta para gráficos
+  pasta_imagens <- "imagens_est_desc_03_enem_x_ufv" #nome da pasta
+  if (!dir.exists(pasta_imagens)) {
+    dir.create(pasta_imagens)
+  } # cria pasta
+
+  # nome do arquivo utilizando altura, largura e seed
+  image_filename <- paste0("ins_enem_x_ufv_",
+                           round(dimensoes[1],2),"_",
+                           round(dimensoes[2],2),"_",
+                           seed,".png")
+  
+  # salva imagem
+  ggsave(file.path(pasta_imagens, image_filename), plot = grafico, 
+         width = dimensoes[1], height = dimensoes[2], dpi = 300)
+  
+}
+} # fim de gerar gráfico e salvar imagem
 
 # Fim do script

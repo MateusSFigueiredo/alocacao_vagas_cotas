@@ -3,15 +3,14 @@
 # Informa número de vagas em um curso
 # Cria nvagas com divisões e arredondamentos consecutivos
 #
-# Modificado em: 2023-08-18-17-30.
+# Modificado em: 2024-01-02.
 # Divisão para PCD primeiro, resto para sd.
 
-# Não consegui fazer o código concordar com o Termo de Adesão toda vez.
-# Problema: Se tiver 0.5 vagas para PCD, arredonda para cima ou para baixo?
-# Termo de Adesão de Medicina UFV arredonda pra cima.
-# Termo de Adesão de Eng Hidrica da UFRGS arredonda pra baixo.
+# O Termo de Adesão das universidades nem sempre se comporta
+# como previsto pelos Decretos que regulamentam a Lei de Cotas.
+
 # Solução: função round_pcd permite escolher qual arredondamento usar
-# tentativa_round é uma tentativa de explicar o observado.
+# tentativa_round é uma tentativa de explicar o observado nos Termos de Adesão.
 
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
@@ -48,11 +47,11 @@ tentativa_round <- function(x) {
 } # se for 0.5, arredonda para baixo. Todos os outros, segue round_5_up.
 
 # Cria função round_pcd. Escolher uma opção.
-round_pcd <- function(x){exato<-round(x,5);return(exato)} # não arredondar
+# round_pcd <- function(x){exato<-round(x,5);return(exato)} # não arredondar
 round_pcd <- ceiling # para seguir Decreto
-round_pcd <- round_5_up # para arredondamento meio vai pra cima
-round_pcd <- round # para arredondar para o par mais próximo
-round_pcd <- tentativa_round
+# round_pcd <- round_5_up # para arredondamento meio vai pra cima
+# round_pcd <- round # para arredondar para o par mais próximo
+# round_pcd <- tentativa_round
 
 # ==============================================================================
 {

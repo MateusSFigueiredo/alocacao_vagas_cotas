@@ -1,14 +1,14 @@
 # ==============================================================================
-# Arquivo: analysis_011_conc_separada.R
+# Arquivo: analysis_01_1_conc_separada.R
 # Roda modelo c1, de concorrência separada
 #
 # Só preenche vagas da modalidade X candidatos inscritos na modalidade X
 # Gera análise de notas e de preenchimento de vagas ao final
 #
-# Modificado em 2023-05-12
+# Modificado em 2024-01-02.
 # Autor: Mateus Silva Figueiredo
 
-# Atualização 2023-08-28 - fazer rodar com "candidatos"
+# diff 2024-01-02. Alteração mínima. Nome correto do arquivo.
 #
 # ==============================================================================
 # Preparação

@@ -9,7 +9,7 @@
 # Cria data frame com candidatos com nota e modalidade de inscrição
 # Permite usar média e desvio padrão diferente para cada modalidade
 # 
-# Modificado em 2023-02-11.
+# Modificado em 2024-01-02.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 #
@@ -37,6 +37,9 @@
 # vetor distr
 # se n=1, vetor distr é porcentagem de candidatos em cada modalidade
 # se n=no total de candidatos, distr é número de candidatos em cada modalidade
+# ==============================================================================
+# Preparação
+library(tidyverse)
 
 # ==============================================================================
 # Cria função gera_distr
@@ -126,9 +129,10 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 # preencher nota de cada candidato
 
 # ---
+# colocar if (T) na opção desejada
 
 # opção 1: distribuição igual para cada modalidade
-
+if (T){
 m<-500;s<-100 #m = mean, s = sd
 stats_por_mod<-data.frame("A0" =c("A0" ,m,s,round(distr[1])),
                    "L01"=c("L01",m,s,round(distr[2])),
@@ -140,22 +144,22 @@ stats_por_mod<-data.frame("A0" =c("A0" ,m,s,round(distr[1])),
                    "L13"=c("L13",m,s,round(distr[8])),
                    "L14"=c("L14",m,s,round(distr[9])) #dados arbitrarios
 ); rownames(stats_por_mod)<-c("mod","mean","sd","n"); rm(m,s)
-
+}
 # ---
 
 # opção 2: distribuição diferente para cada modalidade
-# stats_por_mod<-data.frame("A0" =c("A0" ,650,110,round(distr[1])),
-#                    "L01" =c("L01" ,400,100,round(distr[2])),
-#                    "L02" =c("L02" ,450,100,round(distr[3])),
-#                    "L05" =c("L05" ,600,110,round(distr[4])),
-#                    "L06" =c("L06" ,500,100,round(distr[5])),
-#                    "L09" =c("L09" ,420,100,round(distr[6])),
-#                    "L10"=c("L10",410,100,round(distr[7])),
-#                    "L13"=c("L13",300,100,round(distr[8])),
-#                    "L14"=c("L14",310,100,round(distr[9])) #dados arbitrarios
-# ); rownames(stats_por_mod)<-c("mod","mean","sd","n")
-
-
+if (F){
+stats_por_mod<-data.frame("A0" =c("A0" ,650,110,round(distr[1])),
+                   "L01" =c("L01" ,400,100,round(distr[2])),
+                   "L02" =c("L02" ,450,100,round(distr[3])),
+                   "L05" =c("L05" ,600,110,round(distr[4])),
+                   "L06" =c("L06" ,500,100,round(distr[5])),
+                   "L09" =c("L09" ,420,100,round(distr[6])),
+                   "L10"=c("L10",410,100,round(distr[7])),
+                   "L13"=c("L13",300,100,round(distr[8])),
+                   "L14"=c("L14",310,100,round(distr[9])) #dados arbitrarios
+); rownames(stats_por_mod)<-c("mod","mean","sd","n")
+}
 # ------------------------------------------------------------------------------
 
 # cria função gera_candidatos

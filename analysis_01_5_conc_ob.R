@@ -7,10 +7,10 @@
 # Gera análise de notas e de preenchimento de vagas ao final
 # AC primeiro
 
-# Modificado em 2023-08-30
+# Modificado em 2023-10-05
 # Autor: Mateus Silva Figueiredo
 
-# Atualização 2023-08-30: conserta nvagas
+# Atualização 2023-10-05: corrige comentário
 
 # ==============================================================================
 # Preparação
@@ -78,7 +78,7 @@ nvagas %>% length == 9
 
 # ------------------------------------------------------------------------------
 
-# Criar funções preenche_ mod _ c5 (c5 = concorrencia segundo bo e senkevics)
+# Criar funções preenche_ mod _ c5 (c5 = concorrencia bo e senkevics invertida)
 
 { # criar todas as funções preenche_ A0 até L13
   print("criando funções preenche_ A0 até L13")
@@ -258,7 +258,7 @@ rm(list=ls(pattern="^aprovados_"))
 
 # Existem 9! ordens possíveis para fazer os preenchimentos (mais de 300 mil).
 
-# ordem (A0, L05, L13, L06, L14, L01, L09, L02, A0): OPOSTA à de bo e senkevics, 2023 
+# ordem (A0, L05, L13, L06, L14, L01, L09, L02, L10): OPOSTA à de bo e senkevics, 2023 
 
 {
   if(isFALSE(exists("aprovados_A0")))  {preenche_A0_c5()} # AC primeiro

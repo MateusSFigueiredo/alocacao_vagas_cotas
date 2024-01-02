@@ -2,7 +2,7 @@
 # Arquivo: analysis_02_1_confere_conjuntos.R
 
 # Rodar após analysis_02_compara_conc.R
-# Amplpia df_so_concorridos com colunas c2ok e c5ok
+# Amplia df_so_concorridos com colunas c2ok e c5ok
 
 # ------------------------------------------------------------------------------
 
@@ -15,11 +15,13 @@
 
 # solução: limitar ainda mais a lista de conjuntos
 # problema: isso cria um viés
-# decisão: simplificar análise para poder terminar logo o mestrado
+# decisão: simplificar análise para poder terminar logo esta parte da pesquisa
 # decisão: solução vale a pena, só explicitar o viés depois
 
-# Modificado em 2023-08-31.
+# Modificado em 2024-01-02
 # Autor: Mateus Silva Figueiredo
+
+# diff: documentação.
 
 # ==============================================================================
 # cria coluna c2ok que vai me falar se a concorência c2 está ok

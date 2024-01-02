@@ -1,16 +1,15 @@
 # ==============================================================================
 # Arquivo: analysis_001_compara_ins_vagas.R
 # Determina quais conjuntos de candidatos para um curso em um ano são concorridos
-# Ser concorrido = não sobre vaga
-# Há 1 ou mais candidatos para cada vaga em todas as modalidades
+# Ser concorrido = n. inscritos >= n. vagas para todas as modalidades
 #
-# Modificado em 2023-08-28
+# Modificado em 2023-09-27
 # Autor: Mateus Silva Figueiredo
 
 # Identifica os 63 conjuntos concorridos, listados em df_so_concorridos,
 # usar df_so_concorridos para gerar candidatos para as análises
 
-# Atualização 2023-08-28: agora são só 63 conjuntos concorridos, pois AGRONOMIA 2020 não é
+# Atualização 2023-09-27: calcula que há 32 cursos entre os conjuntos concorridos.
 
 # Aviso: se mudar de nome, mudar também em analysis_01_todas_conc.R, que usa source este
 # ==============================================================================
@@ -146,6 +145,9 @@ dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,
 # gera conjunto candidatos
 candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
 # ==============================================================================
+
+df_so_concorridos$curso %>% unique %>% length
+# Entre os conjuntos concorridos, há 32 cursos diferentes. 
 
 print("Fim do arquivo")
 # Fim do arquivo
