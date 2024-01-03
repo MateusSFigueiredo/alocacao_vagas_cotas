@@ -3,8 +3,10 @@
 # Roda scripts de analysis_01 de formas de concorrência
 #
 #
-# Modificado em 2023-05-11
+# Modificado em 2024-01-03.
 # Autor: Mateus Silva Figueiredo
+
+# diff: Carregar dados com if !exists, para evitar carregar a toa.
 # ==============================================================================
 # Dicionário
 # Inputs:
@@ -37,11 +39,11 @@ getwd()
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- T   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
-source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
+if (!exists("dados_ZOOTECNIA")) source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
-source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
+if (!exists("vagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
 # criar vetor mod, com a ordem das modalidades de nvagas
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")

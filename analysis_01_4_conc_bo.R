@@ -11,7 +11,9 @@
 # Autor: Mateus Silva Figueiredo
 
 # diff 2023-08-30: conserta nvagas
-# diff 2024-01-02: apenas documentação
+
+# diff 2024-01-03: 
+# Mudança grande: funções preenche_ agora têm arrange(desc(nota))
 
 # ==============================================================================
 # Preparação
@@ -92,6 +94,9 @@ preenche_A0_c4<-function(){
 aprovados_A0 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_A0))
 colnames(aprovados_A0) <<- colnames(lista_todos)
 
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
+
 # Preenche aprovados_A0
 lista_todos %>% slice_head(n=nvagas_A0) ->> aprovados_A0 # ignora mod_ins
 aprovados_A0$mod_con <<- "A0"
@@ -108,6 +113,9 @@ preenche_L01_c4<-function(){
 aprovados_L01 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L01))
 colnames(aprovados_L01) <<- colnames(lista_todos)
 
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
+
 # Preenche aprovados_L01 # apenas pub e bxa
 lista_todos %>% subset(pub) %>% subset(bxa) %>% slice_head(n=nvagas_L01) ->> aprovados_L01
 aprovados_L01$mod_con <<- "L01"
@@ -123,6 +131,9 @@ preenche_L02_c4<-function(){
 # Cria aprovados_L02
 aprovados_L02 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L02))
 colnames(aprovados_L02) <<- colnames(lista_todos)
+
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
 
 # Preenche aprovados_L02# apenas pub bxa ppi
 lista_todos %>% subset(pub) %>% subset(bxa) %>% subset(ppi) %>%
@@ -141,6 +152,9 @@ preenche_L05_c4<-function(){
 aprovados_L05 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L05))
 colnames(aprovados_L05) <<- colnames(lista_todos)
 
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
+
 # Preenche aprovados_L05# apenas pub
 lista_todos %>% subset(pub) %>% 
   slice_head(n=nvagas_L05) ->> aprovados_L05
@@ -157,6 +171,9 @@ preenche_L06_c4<-function(){
 # Cria aprovados_L06
 aprovados_L06 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L06))
 colnames(aprovados_L06) <<- colnames(lista_todos)
+
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
 
 # Preenche aprovados_L06# apenas pub ppi
 lista_todos %>% subset(pub) %>% subset(ppi) %>%
@@ -175,6 +192,9 @@ preenche_L09_c4<-function(){
 aprovados_L09 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L09))
 colnames(aprovados_L09) <<- colnames(lista_todos)
 
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
+
 # Preenche aprovados_L09 # apenas pub bxa pcd
 lista_todos %>% subset(pub) %>% subset(bxa) %>% subset(pcd) %>%
   slice_head(n=nvagas_L09) ->> aprovados_L09
@@ -191,6 +211,9 @@ preenche_L10_c4<-function(){
 # Cria aprovados_L10
 aprovados_L10 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L10))
 colnames(aprovados_L10) <<- colnames(lista_todos)
+
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
 
 # Preenche aprovados_L10 # apenas pub bxa ppi pcd
 lista_todos %>% subset(pub) %>% subset(bxa) %>% subset(ppi) %>% subset(pcd) %>%
@@ -209,6 +232,9 @@ preenche_L13_c4<-function(){
 aprovados_L13 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L13))
 colnames(aprovados_L13) <<- colnames(lista_todos)
 
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
+
 # Preenche aprovados_L13 # apenas pub  pcd
 lista_todos %>% subset(pub) %>%  subset(pcd) %>%
   slice_head(n=nvagas_L13) ->> aprovados_L13
@@ -225,6 +251,9 @@ preenche_L14_c4<-function(){
 # Cria aprovados_L14
 aprovados_L14 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L14))
 colnames(aprovados_L14) <<- colnames(lista_todos)
+
+# Reorder lista_todos based on nota column
+lista_todos <<- lista_todos %>% arrange(desc(nota))
 
 # Preenche aprovados_L14 # apenas pub ppi pcd
 lista_todos %>% subset(pub) %>% subset(ppi) %>% subset(pcd) %>%

@@ -5,14 +5,15 @@
 # Gera documento Word com todos os 63 dataframes
 #  comparando as sistemáticas c1 até c5
 
-# Modificado em 2024-01-02
+# Modificado em 2024-01-03
 # Autor: Mateus Silva Figueiredo
 
-# diff: comentar para não executar alguns trechos.
-# Alteração em salvar documento Word: nome do arquivo contém data.
+# diff: setwd() para conseguir rodar source. Documentação.
 
 # ==============================================================================
 quero_imprimir <- F # caso queira salvar um novo documento word
+
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Rodar após analysis_02_0_compara_conc.R
 if(!exists("comparando_vagas")) {source("analysis_02_0_compara_conc.R")} # caso não tenha rodado ainda
@@ -212,6 +213,9 @@ save_path <- paste0("output_analysis_02_2_comp_vagas_", tempo_atual, ".docx")
 print(doc, target = save_path); print("Saved the Word document.")
 } # Fim de salvar documento word
 } # Fim de quero imprimir
+
+# Depois de gerar documento Word, colorir células usando
+# macro Word AlterarCoresv09mais10 de output_analysis_02_2_comp_vagas.txt
 # ==============================================================================
 # Rascunho
 

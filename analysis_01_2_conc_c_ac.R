@@ -6,13 +6,15 @@
 # cotistas só podem preencher vaga da cota que eles se inscreveram
 # Gera análise de notas e de preenchimento de vagas ao final
 #
-# Modificado em 2024-01-02.
+# Modificado em 2024-01-03.
 # Autor: Mateus Silva Figueiredo
 
 # Obs. 2023-08-30: problema no total de convocados
 # talvez devido a cotista ir pra AC e não ter mais cotista para aquela vaga
 #
-# diff 2024-01-02. Alteração mínima. Nome correto do arquivo.
+# diff 2024-01-03: cria preenche_A0 por ultimo. Não deve fazer diferença.
+# Mudança em documentação.
+# Mudança grande: funções preenche_ agora têm arrange(desc(nota))
 #
 # ==============================================================================
 # Preparação
@@ -81,6 +83,9 @@ nvagas %>% length == 9
     aprovados_A0 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_A0))
     colnames(aprovados_A0) <<- colnames(lista_todos)
     
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
+    
     # Preenche aprovados_A0
     lista_todos %>% slice_head(n=nvagas_A0) ->> aprovados_A0
     aprovados_A0$mod_con <<- "A0"
@@ -97,6 +102,9 @@ nvagas %>% length == 9
     # Cria aprovados_L01
     aprovados_L01 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L01))
     colnames(aprovados_L01) <<- colnames(lista_todos)
+    
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
     
     # Preenche aprovados_L01
     lista_todos %>% subset(mod_ins=="L01") %>%slice_head(n=nvagas_L01) ->> aprovados_L01
@@ -115,6 +123,9 @@ nvagas %>% length == 9
     aprovados_L02 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L02))
     colnames(aprovados_L02) <<- colnames(lista_todos)
     
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
+    
     # Preenche aprovados_L02
     lista_todos %>% subset(mod_ins=="L02") %>% slice_head(n=nvagas_L02) ->> aprovados_L02
     aprovados_L02$mod_con <<- "L02"
@@ -131,6 +142,9 @@ nvagas %>% length == 9
     # Cria aprovados_L05
     aprovados_L05 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L05))
     colnames(aprovados_L05) <<- colnames(lista_todos)
+    
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
     
     # Preenche aprovados_L05
     lista_todos %>% subset(mod_ins=="L05") %>%slice_head(n=nvagas_L05) ->> aprovados_L05
@@ -149,6 +163,9 @@ nvagas %>% length == 9
     aprovados_L06 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L06))
     colnames(aprovados_L06) <<- colnames(lista_todos)
     
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
+    
     # Preenche aprovados_L06
     lista_todos %>% subset(mod_ins=="L06") %>%slice_head(n=nvagas_L06) ->> aprovados_L06
     aprovados_L06$mod_con <<- "L06"
@@ -165,6 +182,9 @@ nvagas %>% length == 9
     # Cria aprovados_L09
     aprovados_L09 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L09))
     colnames(aprovados_L09) <<- colnames(lista_todos)
+    
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
     
     # Preenche aprovados_L09
     lista_todos %>% subset(mod_ins=="L09") %>%slice_head(n=nvagas_L09) ->> aprovados_L09
@@ -183,6 +203,9 @@ nvagas %>% length == 9
     aprovados_L10 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L10))
     colnames(aprovados_L10) <<- colnames(lista_todos)
     
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
+    
     # Preenche aprovados_L10
     lista_todos %>% subset(mod_ins=="L10") %>%slice_head(n=nvagas_L10) ->> aprovados_L10
     aprovados_L10$mod_con <<- "L10"
@@ -200,6 +223,9 @@ nvagas %>% length == 9
     aprovados_L13 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L13))
     colnames(aprovados_L13) <<- colnames(lista_todos)
     
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
+    
     # Preenche aprovados_L13
     lista_todos %>% subset(mod_ins=="L13") %>%slice_head(n=nvagas_L13) ->> aprovados_L13
     aprovados_L13$mod_con <<- "L13"
@@ -216,6 +242,9 @@ nvagas %>% length == 9
     # Cria aprovados_L14
     aprovados_L14 <<- data.frame(matrix(ncol = ncol(lista_todos), nrow = nvagas_L14))
     colnames(aprovados_L14) <<- colnames(lista_todos)
+    
+    # Reorder lista_todos based on nota column
+    lista_todos <<- lista_todos %>% arrange(desc(nota))
     
     # Preenche aprovados_L14
     lista_todos %>% subset(mod_ins=="L14") %>%slice_head(n=nvagas_L14) ->> aprovados_L14

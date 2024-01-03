@@ -10,12 +10,13 @@
 # Gera df comparando_vagas
 
 # Erro: mesmo com apenas concs 1 a 4, ainda dá erro returning Inf e -Inf
-# mas será que tem problema?
+# mas será que tem problema? Erro só ocorre em cursos pouco concorridos.
 
-# Modificado em 2024-01-02.
+# Modificado em 2024-01-03.
 # Autor: Mateus Silva Figueiredo
 
-# diff: documentação.
+# diff: cria objetos inicio e fim. Para rodar para apenas alguns conjuntos.
+# Print nota máxima de candidatos e mínima de convocados_c5 para conferência.
 
 # ==============================================================================
 # Carregar dados
@@ -38,19 +39,20 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
 # ==============================================================================
 # Iniciar alocação
-# definir iterações, para depois rodar for loop
-
-# apenas um conjunto
-# iteracoes<-1 # de 1 até 63, para os 63 conjuntos concorridos encontrados
+# definir inicio e fim, para depois rodar for loop
 
 # ------------------------------------------------------------------------------
 
 # apenas alguns conjuntos
-# iteracoes <- 4{ # abre loop i, um para cada conjunto
+# inicio<-29; fim<-31
 
 # ------------------------------------------------------------------------------
 # ================ ABRE FOR LOOP ===============================================
-for (i in 1:nrow(df_so_concorridos)){ # abre loop i, um para cada conjunto
+
+# para todos os conjuntos:
+inicio<-1; fim<-nrow(df_so_concorridos)
+
+for (i in inicio:fim){ # abre loop i, um para cada conjunto
   
 # gerar conjunto candidatos a partir de número 1 a 63
 candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
@@ -63,9 +65,6 @@ nvagas
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0
 candidatos %>% head
-
-# Rodar após analysis_01_1, analysis_01_2, analysis_01_3, 
-# analysis_01_4, analysis_01_5
 
 # remover objetos analise_n e analise_v
 rm(list = ls(pattern = "^analise_n"))
@@ -106,8 +105,11 @@ rownames(comparando_vagas) <- c("Modelo c1",
 # verificar resultados
 print(comparando_vagas)
 print(paste(candidatos$Curso[1],candidatos$Processo_Seletivo[1]))
-paste(sum(nvagas),"== sum(nvagas)")
-# MATEMÁTICA 2018, total não bate com sum nvagas
+print(paste(sum(nvagas),"== sum(nvagas)"))
+# obter nota máxima para garantir não haver duplicata dos conjuntos
+print(paste((max(candidatos$nota)),"é a nota máxima de candidatos"))
+print(paste((min(convocados_c5$nota)),"é a nota minima de convocados_c5"))
+# MATEMÁTICA 2018, total não bate com sum nvagas. Resolvido com analysis_02_2
 # ------------------------------------------------------------------------------
 # salvar como comp_vagas_ curso _ sisu, usa como fonte candidatos
 eval(parse(text=(paste0(
