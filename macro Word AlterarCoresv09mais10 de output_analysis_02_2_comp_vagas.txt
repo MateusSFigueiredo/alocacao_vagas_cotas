@@ -1,0 +1,56 @@
+' Macro para alterar cores das células das tabelas do documento Word output_analysis_02_2_comp_vagas
+' Células com +1 +2 +3 ficam verde claro
+' Células com -1 -2 -3 ficam rosa
+' Células com +0 ficam brancas
+' Células no NA ficam cinzas
+' Demais células com + ficam verde
+' Demais células com - ficam vermelho
+Sub AlterarCoresv09mais10()
+
+    Dim tbl As Table
+    Dim cell As cell
+' Começa macro 9
+    ' Loop through each table in the document
+    For Each tbl In ActiveDocument.Tables
+        ' Loop through each cell in the table
+        For Each cell In tbl.Range.Cells
+            Dim cellText As String
+            cellText = cell.Range.Text
+
+            ' Check conditions and format cell accordingly
+            If Left(cellText, 1) = "-" Then
+                cell.Shading.BackgroundPatternColor = wdColorRed
+            ElseIf Left(cellText, 1) = "+" Then
+                cell.Shading.BackgroundPatternColor = wdColorGreen
+            ElseIf Left(cellText, 2) = "NA" Then
+                cell.Shading.BackgroundPatternColor = wdColorGray25
+            End If
+        Next cell
+    Next tbl
+' Termina macro 9
+' Começa macro 10
+    For Each tbl In ActiveDocument.Tables
+        For Each cell In tbl.Range.Cells
+            cellText = cell.Range.Text
+
+            ' Remove line breaks, carriage returns, and extra spaces
+            cellText = Replace(cellText, Chr(13), "")
+            cellText = Replace(cellText, Chr(7), "")
+            cellText = Trim(cellText)
+
+            Select Case cellText
+                Case "-1", "-2", "-3"
+                    cell.Range.Shading.BackgroundPatternColor = RGB(255, 192, 203) ' Pink color
+                Case "+1", "+2", "+3"
+                    cell.Range.Shading.BackgroundPatternColor = RGB(144, 238, 144) ' Light green color
+                Case "+0"
+                    cell.Range.Shading.BackgroundPatternColor = wdColorWhite
+                Case "NA", "+", "-"
+                    ' Do nothing for these specific cases
+                Case Else
+                    ' Leave other cells unchanged
+            End Select
+        Next cell
+    Next tbl
+' Termina macro 10
+End Sub
