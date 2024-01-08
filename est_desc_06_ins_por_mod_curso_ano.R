@@ -11,8 +11,10 @@
 # Soma quantos casos teve 0 inscritos
 # Exporta df_ins_mca.csv
 
-# Modificado em: 2024-02-01.
-# diff: documentação.
+# Cria df_compara_termo_ins
+
+# Modificado em: 2024-07-01.
+# diff: compara Termo de Adesão 2022 com inscritos.
 # Autor: Mateus Silva Figueiredo
 # ==============================================================================
 
@@ -25,7 +27,7 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- T   # deseja separar candidatos por curso? 
 por_ano   <- F   # deseja separar candidatos por ano? opcional
-source("data_04_carregar_dados_UFV.R") # cria ~10 objetos
+source("data_04_carregar_dados_UFV.R") # T,F cria ~80 objetos
 
 # ==============================================================================
 # objetos necessários
@@ -170,6 +172,132 @@ zero_inscritos
 # ==============================================================================
 # exportar df_ins_mca
 getwd()
-write.csv(df_ins_mca,"df_ins_mca.csv")
+
+# obtém tempo atual, sem segundos, para nome do arquivo
+tempo_atual<-format(Sys.time(), "%Y-%m-%d-%H-%M")
+
+# Nome do documento
+save_path <- paste0("df_ins_mca_", tempo_atual, ".csv")
+
+write.csv(df_ins_mca,save_path)
 
 # write.csv(DataFrame Name, "Path to export the DataFrame\\File Name.csv", row.names=FALSE)
+
+# ==============================================================================
+# Escrevendo em 2024-01-07
+
+# Objetivo: comparar número de inscritos com número de vagas do Termo de Adesão
+
+# Carregar Termo de Adesão 2022
+source("data_05_carregar_termo_adesao.R")
+termo_adesao_2022
+termo_adesao_2018
+
+# ------------------------------------------------------------------------------
+
+df_ins_mca %>% nrow() # 671
+
+# Interesse apenas entre 2018 e 2022
+df_ins_vagas <- subset(df_ins_mca,
+                       df_ins_mca$Ano %in% c("SISU2018","SISU2019",
+                                        "SISU2020","SISU2021",
+                                        "SISU2022"))
+
+df_ins_vagas %>% nrow() # 336
+
+# Apenas cursos estáveis entre 2018 e 2022
+df_ins_vagas <- subset(df_ins_vagas,
+                       df_ins_vagas$Curso %in% lista_cursos_estavel_18_22)
+
+df_ins_vagas %>% filter(Curso %in% lista_cursos_estavel_18_22) %>% nrow()
+df_ins_vagas %>% filter(!Curso %in% lista_cursos_estavel_18_22) # deve ser vazio
+
+
+df_ins_vagas %>% nrow() # 330
+
+# ------------------------
+
+termo_adesao_2022 %>% colnames()
+df_ins_vagas %>% colnames()
+colunas <- intersect(termo_adesao_2022 %>% colnames(),df_ins_vagas %>% colnames())
+colunas
+
+df_ins_vagas_resumido <- df_ins_vagas %>% select(all_of(colunas))
+termo_resumido_22 <- termo_adesao_2022 %>% select(all_of(colunas))
+termo_resumido_18 <- termo_adesao_2018 %>% select(all_of(colunas))
+
+i<-1
+lista_cursos_estavel_18_22[i]
+
+sum (!termo_resumido_22$Curso %in% lista_cursos_estavel_18_22)
+# 2 false = Ciencia de Alimentos RP, e UFV
+
+sum (!termo_resumido_18$Curso %in% lista_cursos_estavel_18_22)
+# 3 false = Lic Física, Ciencia de Alimentos RP, e UFV
+# ---
+
+# df_termo indica origem dos dados do termo de adesao
+# df_ins indica origem dos dados dos inscritos
+df_termo_18 <- data.frame(Origem="T2018") # T de termo
+df_termo <- data.frame(Origem="T2022") # T de termo
+df_ins <- data.frame(Origem=c(2018:2022))
+
+# ------------------------------------------------------------------------------
+# Para um curso, apenas T2022:
+
+# Subsetting rows in termo_resumido_22 with Curso equal to 'i'
+# Add coluna df_termo antes
+subset_termo <- cbind (df_termo,subset(termo_resumido_22, Curso == lista_cursos_estavel_18_22[i]))
+
+# Subsetting rows in df_ins_vagas_resumido with Curso equal to 'i'
+subset_df_ins <- cbind (df_ins,subset(df_ins_vagas_resumido, Curso == lista_cursos_estavel_18_22[i]))
+
+# Combining the subsets using rbind
+df_compara_termo_ins <- rbind(subset_termo, subset_df_ins)
+
+# ------------------------------------------------------------------------------
+# Para todos os cursos
+
+# Creating an empty data frame to store the combined results
+df_compara_termo_ins <- data.frame()
+
+for (i in 1:length(lista_cursos_estavel_18_22)) {
+  
+  # Subsetting rows in termo_resumido_22 with Curso equal to 'i'
+  termo_curso_22 <- subset(termo_resumido_22, Curso == lista_cursos_estavel_18_22[i])
+  
+  # Subsetting rows in termo_resumido_18 with Curso equal to 'i'
+  termo_curso_18 <- subset(termo_resumido_18, Curso == lista_cursos_estavel_18_22[i])
+  
+  # Adiciona coluna Origem T2022 e T2018
+  termo_curso_22 <- cbind(df_termo, termo_curso_22)
+  termo_curso_18 <- cbind (df_termo_18, termo_curso_18)
+  
+  # Subsetting rows in df_ins_vagas_resumido with Curso equal to 'i'
+  subset_inscritos <- subset(df_ins_vagas_resumido, Curso == lista_cursos_estavel_18_22[i])
+  
+  # Adiciona coluna Origem 2018:2022
+  subset_inscritos <- cbind(df_ins, subset_inscritos)
+  
+  # Combining
+  df_compara_curso <- rbind(termo_curso_18,termo_curso_22,subset_inscritos)
+  
+  # Cresce df_compara_termo_ins
+  df_compara_termo_ins <- rbind(df_compara_termo_ins,df_compara_curso)
+}
+
+df_compara_termo_ins
+
+# ==============================================================================
+# exportar df_compara_termo_ins
+getwd()
+
+# obtém tempo atual, sem segundos, para nome do arquivo
+tempo_atual<-format(Sys.time(), "%Y-%m-%d-%H-%M")
+
+# Nome do documento
+save_path <- paste0("df_compila_termo_ins_", tempo_atual, ".csv")
+
+write.csv(df_compara_termo_ins,save_path)
+
+# ==============================================================================

@@ -2,15 +2,15 @@
 # Arquivo: data_04_carregar_dados_UFV.R
 
 #
-# Modificado em: 2024-01-02.
+# Modificado em: 2024-01-08.
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
 # Separa em data.frames por ano
 # Separa em data.frames por curso
 
-# diff:
-# corrigido nome das modalidades (L1 para L01 etc.)
+# diff 2024-01-08: remove Servico Social de lista_cursos_mudou2
+# diff: correção grande em Regra para SISU 2018 a 2022
 
 # ==============================================================================
 #
@@ -149,16 +149,16 @@ subset (dados_ufv,Processo_Seletivo %in% c("SISU2018",
                                            "SISU2019","SISU2020",
                                            "SISU2021","SISU2022")) -> regra2
 {
-  regra2[regra2 == "UFV1"] <- "L02" # UFV1 == L2. pub + bxa + ppi
-  regra2[regra2 == "UFV3"] <- "L01" # UFV2 == L1. pub + bxa
-  regra2[regra2 == "UFV5"] <- "L06" # UFV3 == L6. pub + ppi
-  regra2[regra2 == "UFV7"] <- "L05" # UFV4 == L5. pub 
-  regra2[regra2 == "UFV9"] <- "A0" # UFV5 == A0. 
+  regra2[regra2 == "UFV1"] <- "L02" # UFV1 == L02. 
+  regra2[regra2 == "UFV3"] <- "L01" # UFV3 == L01. 
+  regra2[regra2 == "UFV5"] <- "L06" # UFV5 == L06
+  regra2[regra2 == "UFV7"] <- "L05" # UFV5 == L07.  
+  regra2[regra2 == "UFV9"] <- "A0"  # UFV9 == A0. 
   
-  regra2[regra2 == "UFV2"] <- "L09"  # UFV2 == L2. pub + bxa + ppi + pcd
-  regra2[regra2 == "UFV4"] <- "L10" # UFV4 == L1. pub + bxa + pcd
-  regra2[regra2 == "UFV6"] <- "L13" # UFV6 == L6. pub + ppi + pcd
-  regra2[regra2 == "UFV8"] <- "L14" # UFV8 == L5. pub + pcd
+  regra2[regra2 == "UFV2"] <- "L10" # UFV2 == L10. 
+  regra2[regra2 == "UFV4"] <- "L09" # UFV4 == L09. 
+  regra2[regra2 == "UFV6"] <- "L14" # UFV6 == L14. 
+  regra2[regra2 == "UFV8"] <- "L13" # UFV8 == L13. 
   
   regra2[regra2 == "UFVNA"] <- "NA" #NA 
 } # fim regra 2013 a 2016
@@ -352,7 +352,8 @@ lista_cursos_18_22 %>% length # 67 cursos
 rm(lista_cursos_18,lista_cursos_22)
 
 # Cursos que variaram oferta de vagas entre 2018 e 2022
-lista_cursos_mudou2 <- c("CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP","SERVICO_SOCIAL")
+# diff 2024-01-08: remove Servico Social de lista_cursos_mudou2
+lista_cursos_mudou2 <- c("CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP")
 
 # Cursos que ofereceram mesma quantidade de vagas entre 2018 e 2022
 lista_cursos_estavel_18_22 <- setdiff(lista_cursos_18_22,lista_cursos_mudou2)

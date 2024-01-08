@@ -18,11 +18,14 @@
 # Objetivo final:
 # Gerar Word compila_meta_n
 
-# Modificado em 2024-01-03.
+# Modificado em 2024-01-04.
 # Autor: Mateus Silva Figueiredo
+
+# diff: organização.
 
 # ==============================================================================
 # Carregar dados
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
 por_curso <- T   # deseja separar candidatos por curso? obrigatório
@@ -30,7 +33,6 @@ por_ano   <- F   # deseja separar candidatos por ano? opcional
 if (!exists("dados_ZOOTECNIA")) source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 if (!exists("vagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
 # Carregar df_so_concorridos
@@ -110,15 +112,6 @@ for (i in inicio:fim){ # abre loop i, um para cada conjunto
 } # fim do loop i, de cada conjunto
 
 # ==============================================================================
-# Limpeza
-if(T){
-  # remover objetos analise_n e analise_v
-  rm(list = ls(pattern = "^comp_vagas"))
-  rm(list = ls(pattern = "^convocados"))
-  rm("candidatos")
-}
-
-# ==============================================================================
 
 # Se a linha tiver NaN, Inf ou -Inf, faça a linha inteira virar NA
 
@@ -142,3 +135,14 @@ eval(parse(text=(paste0(
   "df -> meta_n_",df_so_concorridos[i,1],"_",df_so_concorridos[i,2]
 ))))
 } # fecha loop
+
+
+
+# ==============================================================================
+# Limpeza
+if(T){
+  # remover objetos analise_n e analise_v
+  rm(list = ls(pattern = "^comp_vagas"))
+  rm(list = ls(pattern = "^convocados"))
+  rm("candidatos")
+}

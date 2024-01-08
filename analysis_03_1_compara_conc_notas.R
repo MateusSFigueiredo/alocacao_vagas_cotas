@@ -17,6 +17,7 @@
 # meta_n_ CURSO ANO comparativo a c1
 # Gera dfs comparando_vagas
 # Exporta arquivo Excel com formatação condicional
+# e com hora de exportação
 
 # Limitação:
 # Valores NA são exportados como células vazias
@@ -28,43 +29,35 @@
 # Preparação
 library(tidyverse)
 
+# Para exportar para Excel
+# Load the writexl package
+# install.packages("openxlsx")
+library(openxlsx)
+
 # ==============================================================================
 # Carregar dados a partir de analysis_03_0
 if (!exists("meta_n_DIREITO_SISU2019")) source("analysis_03_0_compila_meta_n.R") 
 # cria ~200 objetos
 
-# ==============================================================================
-# Iniciar alocação
+# ------------------------------------------------------------------------------
 # definir inicio e fim, para depois rodar for loop
-
-# ------------------------------------------------------------------------------
-
-# apenas alguns conjuntos
-# inicio<-29; fim<-31
-
-# ==============================================================================
-
-# Exportar para Excel
-
-# Load the writexl package
-# install.packages("openxlsx")
-library(openxlsx)
-
-
-
-# ------------------------------------------------------------------------------
 
 # para um conjunto
 # inicio<-1; fim<-5
+
+# apenas alguns conjuntos
+# inicio<-29; fim<-31
 
 # para todos os conjuntos:
 inicio<-1; fim<-nrow(df_so_concorridos)
 
 
 # ================ ABRE FOR LOOP ============================================
+# Iniciar alocação
 
 # Create a new Excel workbook
 wb <- createWorkbook()
+options("openxlsx.numFmt" = "0.00") # 2 decimal cases formating
 
 for (i in inicio:fim){ # abre loop i, um para cada conjunto 
 
@@ -141,7 +134,7 @@ ano <- substr(df_so_concorridos[i,2],5,8)
 titulo_planilha <- paste0(curso,"_",ano)
 
 # Definir título da tabela e da planilha
-titulo_tabela <- paste0("Notas de ", df_so_concorridos[i,1]," ",df_so_concorridos[i,2])
+titulo_tabela <- paste0("Notas de ", df_so_concorridos[i,1],"_",df_so_concorridos[i,2])
 
 # ------------------------------------------------------
 # cria planilha e preenche
@@ -151,7 +144,8 @@ addWorksheet(wb, titulo_planilha)
 writeData(wb, titulo_planilha, titulo_tabela, startCol = 1, startRow = 1)
 writeData(wb, titulo_planilha, dif_n, startCol = 1, startRow = 2, rowNames = TRUE)
 
-# Formatação condicional nas linhas de c2 até c5
+# ---------------------------------------------------------
+# Formatação condicional nas linhas de c2 até c5 - cores
 # min_value <- min(dif_n[3:10,])-1
 # max_value <- max(dif_n[3:10,])+1
 
@@ -170,13 +164,21 @@ conditionalFormatting(wb, sheet = titulo_planilha,
                       style = posStyle,
                       rows = 5:12, cols = 2:12)
 
+# ---------------------------------------------------------
+# anota data e hora atual
+# gera texto_hora ao mesmo tempo
+tempo_atual <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S"); texto_hora<-paste0("Documento gerado em ",format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
+
 } # fim do loop i, de cada conjunto
+
+# Add ultima planilha com informações e data
+addWorksheet(wb, "hora")
+writeData(wb, "hora", texto_hora, startCol = 1, startRow = 1)
 
 # ==============================================================================
 
 # Save the Excel workbook
 if(T){
-tempo_atual <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 save_path <- paste0("output_analysis_03_1_comp_notas_", tempo_atual, ".xlsx")
 saveWorkbook(wb, save_path, overwrite = TRUE)
 }

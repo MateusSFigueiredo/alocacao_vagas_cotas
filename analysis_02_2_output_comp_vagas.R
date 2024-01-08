@@ -1,8 +1,8 @@
 # # ==============================================================================
-# Arquivo: analysis_02_2_altera_comp_vagas
+# Arquivo: analysis_02_2_output_comp_vagas
 
 # Transforma linhas de erro em NA
-# Gera documento Word com todos os 63 dataframes
+# Gera documento Word com todos os dataframes
 #  comparando as sistemáticas c1 até c5
 
 # Modificado em 2024-01-03
@@ -11,7 +11,7 @@
 # diff: setwd() para conseguir rodar source. Documentação.
 
 # ==============================================================================
-quero_imprimir <- F # caso queira salvar um novo documento word
+quero_imprimir <- T # caso queira salvar um novo documento word
 
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
@@ -53,7 +53,7 @@ if(!exists("comparando_vagas")) {source("analysis_02_0_compara_conc.R")} # caso 
 # ------------------------------------------------------------------------------
 # para todos os cursos # c2
 
-# --- eu
+# --- eu que fiz
 # apaga linha 2 caso tot =! '+0', preenche com NA
 # para todos os conjuntos
 

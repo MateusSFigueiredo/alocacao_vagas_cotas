@@ -3,10 +3,12 @@
 # Roda scripts de analysis_01 de formas de concorrência
 #
 #
-# Modificado em 2024-01-03.
+# Modificado em 2024-01-08
 # Autor: Mateus Silva Figueiredo
 
-# diff: Carregar dados com if !exists, para evitar carregar a toa.
+# diff: documentação.
+# diff: consegue ler nvagas de 2018
+# diff: renomeador de analysis_01_todas_conc_teste.R para analysis_01_todas_conc.R
 # ==============================================================================
 # Dicionário
 # Inputs:
@@ -43,6 +45,7 @@ if (!exists("dados_ZOOTECNIA")) source("data_04_carregar_dados_UFV.R") # cria ~8
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
+carrega_2018 <- T # deseja carregar nvagas do termo de 2018?
 if (!exists("vagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
 # criar vetor mod, com a ordem das modalidades de nvagas
@@ -71,14 +74,18 @@ if (exists ("concorrido")) rm(cu,concorrido,i,j) # não tem problema se der Warn
 
 # ==============================================================================
 # Iniciar alocação
-i<-1 # de 1 até 63, para os 63 conjuntos concorridos encontrados
+i<-1 # de 1 até 67, para os 67 conjuntos concorridos encontrados
 df_so_concorridos[i,1] # nome do curso curso i
 
-# gerar conjunto candidatos a partir de número 1 a 63
+# gerar conjunto candidatos a partir de número 1 a 67
 candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
 
-# Atribuir nvagas correto # criar nvagas a partir do nome do curso i
-nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1]))
+# Atribuir nvagas correto, do termo 2018 ou 2022
+# se for SISU2018, pegar nvagas_CURSO_2018
+# se não, pegar nvagas_CURSO
+# criar nvagas a partir do nome do curso i
+if(candidatos$Processo_Seletivo[1]=="SISU2018"){nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1],"_2018"))} else {
+nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1])) }
 
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0

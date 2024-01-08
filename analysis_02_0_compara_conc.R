@@ -12,11 +12,10 @@
 # Erro: mesmo com apenas concs 1 a 4, ainda dá erro returning Inf e -Inf
 # mas será que tem problema? Erro só ocorre em cursos pouco concorridos.
 
-# Modificado em 2024-01-03.
+# Modificado em 2024-01-08.
 # Autor: Mateus Silva Figueiredo
 
-# diff: cria objetos inicio e fim. Para rodar para apenas alguns conjuntos.
-# Print nota máxima de candidatos e mínima de convocados_c5 para conferência.
+# diff: consegue trabalhar com termo 2018. TESTANDO.
 
 # ==============================================================================
 # Carregar dados
@@ -57,10 +56,12 @@ for (i in inicio:fim){ # abre loop i, um para cada conjunto
 # gerar conjunto candidatos a partir de número 1 a 63
 candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
   
-if(exists("nvagas")) rm("nvagas")
-# Atribuir nvagas correto # criar nvagas a partir do curso em candidatos
-nvagas <- get(paste0("nvagas_",candidatos$Curso[1]))
-nvagas
+# Atribuir nvagas correto, do termo 2018 ou 2022
+# se for SISU2018, pegar nvagas_CURSO_2018
+# se não, pegar nvagas_CURSO
+# criar nvagas a partir do nome do curso i
+if(candidatos$Processo_Seletivo[1]=="SISU2018"){nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1],"_2018"))} else {
+  nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1])) }
 
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0
@@ -109,7 +110,7 @@ print(paste(sum(nvagas),"== sum(nvagas)"))
 # obter nota máxima para garantir não haver duplicata dos conjuntos
 print(paste((max(candidatos$nota)),"é a nota máxima de candidatos"))
 print(paste((min(convocados_c5$nota)),"é a nota minima de convocados_c5"))
-# MATEMÁTICA 2018, total não bate com sum nvagas. Resolvido com analysis_02_2
+# alguns cursos: total não bate com sum nvagas. Resolvido com analysis_02_2
 # ------------------------------------------------------------------------------
 # salvar como comp_vagas_ curso _ sisu, usa como fonte candidatos
 eval(parse(text=(paste0(
