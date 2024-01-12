@@ -5,13 +5,15 @@
 # Gera documento Word com todos os dataframes
 #  comparando as sistemáticas c1 até c5
 
-# Modificado em 2024-01-03
+# Modificado em 2024-01-09
 # Autor: Mateus Silva Figueiredo
 
-# diff: setwd() para conseguir rodar source. Documentação.
+# diff: permite que outro script chame este com quero_imprimir == F
 
 # ==============================================================================
-quero_imprimir <- T # caso queira salvar um novo documento word
+# T para salvar um novo documento word
+# apenas se ainda não existir objeto "quero_imprimir"
+if(!exists("quero_imprimir")){quero_imprimir <- F} 
 
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
@@ -54,17 +56,19 @@ if(!exists("comparando_vagas")) {source("analysis_02_0_compara_conc.R")} # caso 
 # para todos os cursos # c2
 
 # --- eu que fiz
-# apaga linha 2 caso tot =! '+0', preenche com NA
+# se tot == +0, print true
+# se tot != +0, então linha 2 vira NA
 # para todos os conjuntos
 
-eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[2] == '+0'")))
+# para um conjunto:
+# eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[2] == '+0'")))
 
 # ==== rodar for loop c2 ====
 for (i in 1:nrow(df_so_concorridos)){
 
-if(eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[2] == '+0'")))){
-  "true"
-} else {"false"
+if((eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[2] == '+0'"))))){
+  print(i)
+} else {print("false")
   eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "[2,] <- NA")))
 } # fecha if
   }; print("fim loop c2") # fecha for loop
@@ -77,13 +81,13 @@ if(eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_c
 # apaga linha 5 caso tot =! '+0', preenche com NA
 # para todos os conjuntos
 
-eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[5] == '+0'")))
+# eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[5] == '+0'")))
 
 # ==== rodar for loop c5 ====
 for (i in 1:nrow(df_so_concorridos)){
   
-if(eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[5] == '+0'")))){
-  "true"
+if ((eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "$tot[5] == '+0'"))))){
+  print(i)
 } else {"false"
   eval(parse(text = paste0("comp_vagas_", df_so_concorridos[i, 1], "_", df_so_concorridos[i, 2], "[5,] <- NA")))
 } # fecha if

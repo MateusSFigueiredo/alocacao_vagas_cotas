@@ -1,21 +1,23 @@
-# # ==============================================================================
+# ==============================================================================
 # Arquivo: analysis_02_0_compara_conc.R
-# Compara cinco modelos de concorrencia:
-# 1 = concorrencia separada (aka listas multiplas)
-# 2 = concorrencia concomitante, AC primeiro
-# 3 = concorrencia concomitante, cotas primeiro
-# 4 = concorrencia segundo Bó e Senkevics, 2023
-# 5 = concorrencia adaptado de Bó e Senkevics, 2023
 
-# Gera df comparando_vagas
-
-# Erro: mesmo com apenas concs 1 a 4, ainda dá erro returning Inf e -Inf
-# mas será que tem problema? Erro só ocorre em cursos pouco concorridos.
-
-# Modificado em 2024-01-08.
+# Modificado em 2024-01-12.
 # Autor: Mateus Silva Figueiredo
 
-# diff: consegue trabalhar com termo 2018. TESTANDO.
+# diff: detalhe no head(2), apenas muda preview.
+
+# ==============================================================================
+
+# Compara cinco modelos de concorrencia: c1 até c5
+
+# Gera dataframe comparando_vagas
+
+# Para cada curso, informa preenchimento das vagas na c1
+# e a diferença para os modelos c2 até c5
+# para cada modalidade de inscrição, grupo social, e total
+
+# Em alguns casos, o total difere do esperado.
+# Essas linhas são apagadas por outro script.
 
 # ==============================================================================
 # Carregar dados
@@ -25,7 +27,7 @@ por_curso <- T   # deseja separar candidatos por curso? obrigatório
 por_ano   <- F   # deseja separar candidatos por ano? opcional
 if (!exists("dados_ZOOTECNIA")) source("data_04_carregar_dados_UFV.R") # cria ~80 objetos
 
-# Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
+# Criar vetores n_vagas p/ cada curso, com base no termo de adesão de 2022 e 2018
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 if (!exists("vagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
@@ -65,7 +67,7 @@ if(candidatos$Processo_Seletivo[1]=="SISU2018"){nvagas <- get(paste0("nvagas_",d
 
 # para regularizar, fingir que nenhum candidato foi convocado ainda
 candidatos$mod_con <- 0
-candidatos %>% head
+candidatos %>% head (2)
 
 # remover objetos analise_n e analise_v
 rm(list = ls(pattern = "^analise_n"))

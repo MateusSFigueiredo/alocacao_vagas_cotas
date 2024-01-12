@@ -1,27 +1,22 @@
 # # ==============================================================================
 # Arquivo: analysis_03_0_compila_meta_n.R
 
-# Compila dados dos cinco modelos de concorrencia:
-# 1 = concorrencia separada (aka listas multiplas)
-# 2 = concorrencia concomitante, AC primeiro
-# 3 = concorrencia concomitante, cotas primeiro
-# 4 = concorrencia segundo Bó e Senkevics, 2023
-# 5 = concorrencia adaptado de Bó e Senkevics, 2023
 
-# Faz:
-# dfs meta_n_ CURSO _ SISU ANO
-# Atribuir NA para linhas com Nan, -Inf ou Inf
-
-# Falta:
-# Exportar como Word (talvez fazer em outro script)
-
-# Objetivo final:
-# Gerar Word compila_meta_n
-
-# Modificado em 2024-01-04.
+# Modificado em 2024-01-11.
 # Autor: Mateus Silva Figueiredo
 
-# diff: organização.
+# diff: trabalhar com termo de adesão 2018. documentação.
+
+# --------
+
+# Compila dados dos cinco modelos de concorrencia: c1 até c5
+
+# Faz:
+# dataframes meta_n_ CURSO _ SISU ANO
+# ou seja, meta-análise resumida das notas por curso e por ano
+
+# Atribuir NA para linhas com Nan, -Inf ou Inf
+# ou seja, apaga as linhas em que deu erro (parece que só em c5 dá erro)
 
 # ==============================================================================
 # Carregar dados
@@ -64,13 +59,17 @@ inicio<-1; fim<-nrow(df_so_concorridos)
 
 for (i in inicio:fim){ # abre loop i, um para cada conjunto
   
-  # gerar conjunto candidatos a partir de número 1 a 63
+  # gerar conjunto candidatos a partir de número 1 a 67
   candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
   
   if(exists("nvagas")) rm("nvagas")
-  # Atribuir nvagas correto # criar nvagas a partir do curso em candidatos
-  nvagas <- get(paste0("nvagas_",candidatos$Curso[1]))
-  nvagas
+  
+  # Atribuir nvagas correto, do termo 2018 ou 2022
+  # se for SISU2018, pegar nvagas_CURSO_2018
+  # se não, pegar nvagas_CURSO
+  # criar nvagas a partir do nome do curso i
+  if(candidatos$Processo_Seletivo[1]=="SISU2018"){nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1],"_2018"))} else {
+    nvagas <- get(paste0("nvagas_",df_so_concorridos[i,1])) }
   
   # para regularizar, fingir que nenhum candidato foi convocado ainda
   candidatos$mod_con <- 0

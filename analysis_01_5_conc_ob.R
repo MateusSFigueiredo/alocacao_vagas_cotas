@@ -7,12 +7,14 @@
 # Gera análise de notas e de preenchimento de vagas ao final
 # AC primeiro
 
-# Modificado em 2024-01-03.
+# Modificado em 2024-01-12.
 # Autor: Mateus Silva Figueiredo
 
-# diff 2024-01-03: 
-# Mudança grande: funções preenche_ agora têm arrange(desc(nota))
+# diff 2024-01-11: 
+# Mudança grande: preenche analise_v e analise_n com NA caso 
+# caso total de convocados != total de n vagas
 
+# diff: 2021-01-12: outro jeito de preencher os NA: analise_n_c5[] <- NA
 # ==============================================================================
 # Preparação
 # Deve ser feito pelo analysis_01_todas_conc, usando source()
@@ -364,6 +366,14 @@ analise_n_c5$cotas<-c(
 ) # cria coluna de todos os cotistas (convocados em modalidade de cotas)
 
 # } #fim do loop (?)
+
+# ==============================================================================
+# TESTANDO
+# Caso n aprovados diferente de n vagas, tornar tudo NA
+if (!nrow(aprovados) == sum(nvagas)){
+  analise_n_c5[] <- NA
+  analise_v_c5[] <- NA
+}
 
 # ==============================================================================
 # Guarda aprovados_c5
