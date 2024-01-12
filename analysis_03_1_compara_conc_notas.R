@@ -1,5 +1,5 @@
 # # ==============================================================================
-# Arquivo: analysis_03_1_compara_conc_notas.R ESCREVENDO
+# Arquivo: analysis_03_1_compara_conc_notas.R
 
 # Usa source analysis_03_0_compila_meta_n.R
 
@@ -22,8 +22,10 @@
 # Limitação:
 # Valores NA são exportados como células vazias
 
-# Modificado em 2024-01-03.
+# Modificado em 2024-01-11.
 # Autor: Mateus Silva Figueiredo
+
+# dif: cria vetor quero_imprimir_excel
 
 # ==============================================================================
 # Preparação
@@ -33,6 +35,9 @@ library(tidyverse)
 # Load the writexl package
 # install.packages("openxlsx")
 library(openxlsx)
+
+# padrão: este script analysis_03_1 não gera novo documento excel
+if (!exists ("quero_imprimir_excel")) {quero_imprimir_excel <- F}
 
 # ==============================================================================
 # Carregar dados a partir de analysis_03_0
@@ -178,7 +183,7 @@ writeData(wb, "hora", texto_hora, startCol = 1, startRow = 1)
 # ==============================================================================
 
 # Save the Excel workbook
-if(T){
+if(quero_imprimir_excel){
 save_path <- paste0("output_analysis_03_1_comp_notas_", tempo_atual, ".xlsx")
 saveWorkbook(wb, save_path, overwrite = TRUE)
 }

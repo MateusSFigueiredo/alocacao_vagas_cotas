@@ -2,13 +2,15 @@
 # Arquivo: analysis_01_todas_conc.R
 # Roda scripts de analysis_01 de formas de concorrência
 #
-#
 # Modificado em 2024-01-08
 # Autor: Mateus Silva Figueiredo
 
 # diff: documentação.
 # diff: consegue ler nvagas de 2018
 # diff: renomeador de analysis_01_todas_conc_teste.R para analysis_01_todas_conc.R
+
+# Comentário: parece que nenhum script chama este com source
+# Serve para análises pontuais detalhadas de determinados conjuntos
 # ==============================================================================
 # Dicionário
 # Inputs:
@@ -33,7 +35,7 @@
 #
 # Preparação
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
-getwd()
+# getwd()
 # list.files()
 # ==============================================================================
 # Carregar dados
@@ -56,6 +58,10 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 # cu <- "LICENCIATURA_EM_QUIMICA_FL" # pelo nome
 # cu <- lista_cursos_18_22[10]; # pelo número na lista
 
+# procurar número do curso
+which(df_so_concorridos$curso=="ENGENHARIA_CIVIL")
+df_so_concorridos[32,]
+
 # Escolher uma edição do SISU
 # edicao <- "SISU2018" # pelo nome
 
@@ -73,9 +79,9 @@ df_so_concorridos %>% nrow()
 if (exists ("concorrido")) rm(cu,concorrido,i,j) # não tem problema se der Warning messages
 
 # ==============================================================================
-# Iniciar alocação
-i<-1 # de 1 até 67, para os 67 conjuntos concorridos encontrados
-df_so_concorridos[i,1] # nome do curso curso i
+# Iniciar alocação para um conjunto
+i<-3 # de 1 até 67, para os 67 conjuntos concorridos encontrados
+paste(df_so_concorridos[i,1],df_so_concorridos[i,2]) # nome e ano do conjunto i
 
 # gerar conjunto candidatos a partir de número 1 a 67
 candidatos <- dados_ufv[Curso==df_so_concorridos[i,1]][Processo_Seletivo==df_so_concorridos[i,2]]
@@ -118,8 +124,128 @@ df_so_concorridos[i,1] # nome do curso i, usado no conjunto
 df_so_concorridos[i,2] # edição do sisu, usado no conjunto
 nvagas
 meta_v
+meta_n
 }
 # ==============================================================================
 
 print("Fim do arquivo")
 # Fim do arquivo
+
+# ======================================== Análises de conjuntos específicos
+
+# procurar número do curso
+which(df_so_concorridos$curso=="AGRONOMIA")
+which(df_so_concorridos$curso=="SERVICO_SOCIAL")
+df_so_concorridos[66,] # 8 = AGRONOMIA 2021 # 66 = S SOCIAL 2021
+
+# ------------------------------------------------------
+
+# Analisando AGRONOMIA 2021
+
+convocados_c1 %>% colnames()
+
+convocados_c1[mod_ins=="L06"]$nota %>% length()
+convocados_c3[mod_ins=="L06"]$nota %>% length()
+
+convocados_c1[mod_ins=="L06"]$id %in% convocados_c3[mod_ins=="L06"]$id
+convocados_c3[mod_ins=="L06"]$id %in% convocados_c1[mod_ins=="L06"]$id
+
+
+convocados_c1[mod_ins=="L06"][26]
+convocados_c3[mod_ins=="L06"][5]
+
+# ------------------------------------------------------
+# Analisando SERVICO_SOCIAL 2021
+
+convocados_c1 %>% colnames()
+candidatos %>% View()
+convocados_c1 %>% View()
+
+convocados_c1[mod_ins=="L01"] # 5 rows
+convocados_c2[mod_ins=="L01"] # 8 rows
+convocados_c3[mod_ins=="L01"] # 6 rows
+convocados_c4[mod_ins=="L01"] # 6 rows
+
+convocados_c1[mod_con=="L01"]$nota
+convocados_c2[mod_con=="L01"]$nota
+convocados_c3[mod_con=="L01"]$nota
+convocados_c4[mod_con=="L01"]$nota
+
+
+convocados_c1[mod_con=="A0"]$mod_ins %>% table()
+convocados_c2[mod_con=="A0"]$mod_ins %>% table()
+convocados_c3[mod_con=="A0"]$mod_ins %>% table()
+convocados_c4[mod_con=="A0"]$mod_ins %>% table()
+
+convocados_c1[mod_con=="A0"][mod_ins!="A0"] # vazio
+convocados_c2[mod_con=="A0"][mod_ins!="A0"]
+convocados_c3[mod_con=="A0"][mod_ins!="A0"]
+convocados_c4[mod_con=="A0"][mod_ins!="A0"]
+
+convocados_c1[mod_con=="A0"]$nota %>% min()
+convocados_c2[mod_con=="A0"]$nota %>% mean()
+convocados_c3[mod_con=="A0"]$nota %>% min()
+convocados_c4[mod_con=="A0"]$nota %>% min()
+
+convocados_c1[mod_con=="L02"]$nota %>% mean()
+convocados_c2[mod_con=="L02"]$nota %>% mean()
+convocados_c3[mod_con=="L02"]$nota %>% mean()
+convocados_c4[mod_con=="L02"]$nota %>% mean()
+
+
+all(convocados_c4$id %in% convocados_c3$id)
+all(convocados_c3$id %in% convocados_c4$id)
+
+which(!convocados_c4$id %in% convocados_c1$id)
+which(!convocados_c1$id %in% convocados_c4$id)
+
+convocados_c4[!id %in% convocados_c1$id] # convocados c4 que não foram convocados c1
+
+convocados_c1[!id %in% convocados_c4$id] # convocados c4 que não foram convocados c1
+
+convocados_c1[mod_con == "L05"]
+
+print("------------------------------------------------------------------------------------")
+# -------------------------------------------------
+# Analisando Engenharia Civil 2018
+which(df_so_concorridos$curso=="ENGENHARIA_CIVIL")
+df_so_concorridos[32,]
+
+candidatos[mod_ins=="L13"]$nota
+
+candidatos$mod_ins %>% table()
+nvagas_ENGENHARIA_CIVIL_2018
+
+convocados_c1 %>% nrow()
+convocados_c2 %>% nrow()
+convocados_c3 %>% nrow()
+convocados_c4 %>% nrow()
+convocados_c5 %>% nrow()
+
+convocados_c1[mod_con=="L13"]$nota
+convocados_c2[mod_con=="L13"]$nota
+convocados_c3[mod_con=="L13"]$nota
+convocados_c4[mod_con=="L13"]$nota
+convocados_c5[mod_con=="L13"]$nota
+
+convocados_c2[mod_con!=mod_ins]
+convocados_c3[mod_con!=mod_ins]
+convocados_c4[mod_con!=mod_ins]
+convocados_c5[mod_con!=mod_ins]
+
+convocados_c5[mod_ins=="L09"]$nota
+convocados_c5[mod_ins=="L10"]$nota
+convocados_c5[mod_ins=="L13"]$nota
+convocados_c5[mod_ins=="L14"]$nota
+
+convocados_c1[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c2[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c3[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c4[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c5[mod_ins %in% c("L09","L10","L13","L14")]$nota
+
+
+print("------------------------------------------------------------------------------------")
+
+
+
