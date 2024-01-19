@@ -1,14 +1,16 @@
 # # ==============================================================================
 # Arquivo: analysis_03_1_compara_conc_notas.R
 
+# Modificado em 2024-01-12.
+# Autor: Mateus Silva Figueiredo
+
+# dif: documentação. largura das colunas do excel.
+
+# -------------------------------------------------------------
+
 # Usa source analysis_03_0_compila_meta_n.R
 
-# Compara cinco modelos de concorrencia:
-# 1 = concorrencia separada (aka listas multiplas)
-# 2 = concorrencia concomitante, AC primeiro
-# 3 = concorrencia concomitante, cotas primeiro
-# 4 = concorrencia segundo Bó e Senkevics, 2023
-# 5 = concorrencia adaptado de Bó e Senkevics, 2023
+# Compara cinco modelos de concorrencia: c1 até c5
 
 # Input:
 # meta_n_ CURSO ANO
@@ -21,11 +23,6 @@
 
 # Limitação:
 # Valores NA são exportados como células vazias
-
-# Modificado em 2024-01-11.
-# Autor: Mateus Silva Figueiredo
-
-# dif: cria vetor quero_imprimir_excel
 
 # ==============================================================================
 # Preparação
@@ -169,6 +166,10 @@ conditionalFormatting(wb, sheet = titulo_planilha,
                       style = posStyle,
                       rows = 5:12, cols = 2:12)
 
+# define largura das colunas
+setColWidths(wb, sheet = titulo_planilha, cols = 1, widths = 30.27)
+setColWidths(wb, sheet = titulo_planilha, cols = 2:15, widths = 8.45)
+
 # ---------------------------------------------------------
 # anota data e hora atual
 # gera texto_hora ao mesmo tempo
@@ -186,6 +187,7 @@ writeData(wb, "hora", texto_hora, startCol = 1, startRow = 1)
 if(quero_imprimir_excel){
 save_path <- paste0("output_analysis_03_1_comp_notas_", tempo_atual, ".xlsx")
 saveWorkbook(wb, save_path, overwrite = TRUE)
+print ("arquivo Excel está criado")
 }
 
 # ==============================================================================

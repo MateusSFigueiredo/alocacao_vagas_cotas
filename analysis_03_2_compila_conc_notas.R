@@ -1,11 +1,11 @@
 # ==============================================================================
 # Arquivo: analysis_03_2_compila_conc_notas.R
 
-# Modificado em 2024-01-11.
+# Modificado em 2024-01-19
 # Autor: Mateus Silva Figueiredo
 
-# diff: documentação. ordem das planilhas exportadas p excel.
-# diff: formatação condicional.
+# diff: documentação
+# diff: cria quero_imprimir_03_2 <- F, para este script ser chamado por outro
 
 # -------------------
 
@@ -26,6 +26,9 @@
 # se F (padrão): script analysis_03_1 não gera novo documento excel
 quero_imprimir_excel <- F
 
+# se F (padrão): este script analysis_03_2 não gera novo documento excel
+if (!exists("quero_imprimir_03_2")) {quero_imprimir_03_2 <- F}
+
 # Carregar dados a partir de analysis_03_1
 if (!exists("dif_n_AGRONOMIA_SISU2018")) source("analysis_03_1_compara_conc_notas.R") 
 # cria muitos objetos
@@ -39,7 +42,7 @@ compila_concs <- as.data.frame(matrix(
   nrow=nrow(df_so_concorridos),
   ncol=ncol(dif_n_ADMINISTRACAO_FL_SISU2018)))
 
-compila_concs
+compila_concs # deve ter tudo NA porque acabou de criar
 
 # nomeia colunas
 colnames(compila_concs) <- colnames(dif_n_ADMINISTRACAO_FL_SISU2018)
@@ -138,6 +141,10 @@ conditionalFormatting(wb, sheet = titulo_planilha,
                       style = posStyle,
                       rows = 3:69, cols = 2:12)
 
+# define largura das colunas
+setColWidths(wb, sheet = titulo_planilha, cols = 1, widths = 30.27)
+setColWidths(wb, sheet = titulo_planilha, cols = 2:15, widths = 8.45)
+
 } # fecha loop medida
 
 # ----
@@ -151,7 +158,7 @@ addWorksheet(wb, "hora")
 writeData(wb, "hora", texto_hora, startCol = 1, startRow = 1)
 
 # Save the Excel workbook
-if(T){
+if(quero_imprimir_03_2){
   save_path <- paste0("output_analysis_03_2_compila_conc_notas_", tempo_atual, ".xlsx")
   saveWorkbook(wb, save_path, overwrite = TRUE)
   print("arquivo Excel salvo")

@@ -163,4 +163,5 @@ setColWidths(wb, sheet = titulo_planilha[t], cols = 2:15, widths = 8.45)
 if(T){
   save_path <- paste0("output_analysis_02_3_compila_vagas_", tempo_atual, ".xlsx")
   saveWorkbook(wb, save_path, overwrite = TRUE)
+  print("arquivo Excel está criado")
 }

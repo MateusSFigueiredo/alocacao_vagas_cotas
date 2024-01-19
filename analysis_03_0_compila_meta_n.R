@@ -2,10 +2,12 @@
 # Arquivo: analysis_03_0_compila_meta_n.R
 
 
-# Modificado em 2024-01-11.
+# Modificado em 2024-01-18
 # Autor: Mateus Silva Figueiredo
 
-# diff: trabalhar com termo de adesão 2018. documentação.
+# diff: apaguei loop que apagava linhas com Inf, NaN e -Inf
+# dessa forma, consertei DANCA 2018, LIC C BIO FL 2018, NUT RP 2018
+# não atrapalha conjuntos que deveriam ter NA na c5
 
 # --------
 
@@ -45,7 +47,7 @@ library(tidyverse)
 # definir inicio e fim, para depois rodar for loop
 
 # para um conjunto
-#i<-1
+#i<-54
 # ------------------------------------------------------------------------------
 
 # apenas alguns conjuntos
@@ -112,30 +114,15 @@ for (i in inicio:fim){ # abre loop i, um para cada conjunto
 
 # ==============================================================================
 
-# Se a linha tiver NaN, Inf ou -Inf, faça a linha inteira virar NA
+# Parece que aqui, onde deveria ter NA já tem NA
+meta_n_CIENCIA_DA_COMPUTACAO_SISU2019[15,]
 
-# ------------- ABRE FOR LOOP --------------------------------------------------
+# cursos com 0 vagas em alguma modalidade ficam com Inf, NaN e -Inf.
+# feio, mas não é um problema.
+meta_n_DANCA_SISU2018[,7]
 
-# para todos os conjuntos:
-inicio<-1; fim<-nrow(df_so_concorridos)
-
-for (i in inicio:fim){ # abre loop
-  
-# df <- df_meta_n_ CURSO ANO 
-eval(parse(text=(paste0(
-  "df <- meta_n_",df_so_concorridos[i,1],"_",df_so_concorridos[i,2]
-))))
-
-# colocar NA em df
-df[apply(df, 1, function(row) any(!is.finite(row))), ] <- NA
-
-# df -> df_meta_n CURSO ANO
-eval(parse(text=(paste0(
-  "df -> meta_n_",df_so_concorridos[i,1],"_",df_so_concorridos[i,2]
-))))
-} # fecha loop
-
-
+# ------------------------------------------------------------------------------
+print ("dataframes meta_n CURSO ANO estão criados")
 
 # ==============================================================================
 # Limpeza

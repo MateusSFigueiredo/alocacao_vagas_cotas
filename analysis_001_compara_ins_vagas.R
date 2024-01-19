@@ -3,19 +3,18 @@
 # Determina quais conjuntos de candidatos para um curso em um ano são concorridos
 # Ser concorrido = n. inscritos >= n. vagas para todas as modalidades
 #
-# Modificado em 2023-09-27
+# Modificado em 2024-01-12
+# diff: consegue usar Termo de Adesão 2018
 # Autor: Mateus Silva Figueiredo
 
 # Identifica os 63 conjuntos concorridos, listados em df_so_concorridos,
 # usar df_so_concorridos para gerar candidatos para as análises
 
-# Atualização 2023-09-27: calcula que há 32 cursos entre os conjuntos concorridos.
-
-# Aviso: se mudar de nome, mudar também em analysis_01_todas_conc.R, que usa source este
+# Aviso: se mudar de nome, dá problema, pois muitos scripts usam source este
 # ==============================================================================
 
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
-getwd()
+# getwd()
 # list.files()
 
 # ------------------------------------------------------------------------------
@@ -26,22 +25,22 @@ if (!exists("dados_ufv")) source("data_04_carregar_dados_UFV.R") # cria ~80 obje
 # data_04 faz setwd da pasta /privado
 
 # Criar vetores n_vagas para cada curso, com base no termo de adesão de 2022
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # redundante
+# setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # redundante
 if (!exists("nvagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
 # criar vetor mod, com a ordem das modalidades
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
 # ------------------------------------------------------------------------------
-setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # definir pasta
-getwd()                                                 # conferir pasta
+# setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas") # definir pasta
+# getwd()                                                 # conferir pasta
 
 
 # ------------------------------------------------------------------------------
 # Escolher apenas um curso
 # i<-1
 # # cu <- "LICENCIATURA_EM_QUIMICA_FL" # pelo nome
-  cu <- lista_cursos_estavel_18_22[1]; # pelo número na lista
+#  cu <- lista_cursos_estavel_18_22[1]; # pelo número na lista
 # 
 # # Escolher uma edição do SISU
 # edicao <- "SISU2018" # pelo nome
@@ -75,7 +74,11 @@ inscritos_curso_ano <- get(paste0("dados_",df_concorridos[cu,1])) %>%
   subset(Processo_Seletivo==colnames(df_concorridos)[j])
 
 # cria nvagas a partir de nvagas_ cu
- nvagas <- get(paste0("nvagas_",lista_cursos_estavel_18_22[cu]))
+# se j==2, então é SISU 2018, então pegar nvagas CURSO 2018
+# else então é 2019 até 2022, então pegar nvagas CURSO
+if (j==2) {
+ nvagas <- get(paste0("nvagas_",lista_cursos_estavel_18_22[cu],"_2018"))} else
+   {nvagas <- get(paste0("nvagas_",lista_cursos_estavel_18_22[cu]))}
 
 # ----------------------
 # cria vetor ninscritos e preenche
