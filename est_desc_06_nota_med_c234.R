@@ -1,8 +1,10 @@
 # ==============================================================================
 # Arquivo: est_desc_06_nota_med_c234.R
 #
-# Modificado em: 2024-01-19
+# Modificado em: 2024-01-19 12h
 # Autor: Mateus Silva Figueiredo
+
+# diff: separa "diminuiu pouco" e "diminuiu muito"
 
 # Cria gráfico comparando c2, c3 e c4
 # expondo variação de nota média para geral, A0 e cotas
@@ -10,6 +12,9 @@
 # ==============================================================================
 # Preparação
 library(dplyr)
+
+# definir limite entre "diminuiu pouco" e "diminuiu muito"
+muito <- -10
 
 # se F (padrão): script analysis_03_2 não gera novo documento excel
 quero_imprimir_03_2 <- F
@@ -24,9 +29,9 @@ if (!exists("compila_concs_dif_med_c2")) source("analysis_03_2_compila_conc_nota
 # coluna efeito com aumentou, igual, diminuiu
 # valores a serem preenchidos com base em compila_concs_
 
-data <- data.frame(facet = rep(c("c2","c3","c4"), each = 9),
-                   grupo = rep(c("geral", "A0","cotas"),each = 3),
-                   efeito = c("aumentou","igual","diminuiu"),
+data <- data.frame(facet = rep(c("c2","c3","c4"), each = 12),
+                   grupo = rep(c("geral", "A0","cotas"),each = 4),
+                   efeito = c("aumentou","igual","diminuiu pouco","diminuiu muito"),
                    n_conjuntos = NA)
 #                    n_conjuntos = round(abs(rnorm(27)), 2)) # dados fictíticos
 
@@ -125,17 +130,18 @@ data <- data %>%
   ungroup()
 
 # --------------------------------------------------
-# ----- diminuiu
+# ----- diminuiu pouco
 # para cada linha
-# quando for c2, c3, c4; efeito aumentou
-# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos maior que 0
+# quando for c2, c3, c4; efeito diminuiu pouco
+# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos entre 0 e -10
 # grupo = geral
 data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "geral" & efeito == "diminuiu" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$geral < 0),
+      facet %in% c("c2", "c3", "c4") & grupo == "geral" & efeito == "diminuiu pouco" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$geral > muito 
+            & get(paste0("compila_concs_dif_med_", facet))$geral < 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -147,8 +153,9 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "A0" & efeito == "diminuiu" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$A0 < 0),
+      facet %in% c("c2", "c3", "c4") & grupo == "A0" & efeito == "diminuiu pouco" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$A0 > muito & 
+              get(paste0("compila_concs_dif_med_", facet))$A0 < 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -160,14 +167,58 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "cotas" & efeito == "diminuiu" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$cotas < 0),
+      facet %in% c("c2", "c3", "c4") & grupo == "cotas" & efeito == "diminuiu pouco" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$cotas > muito & 
+              get(paste0("compila_concs_dif_med_", facet))$cotas < 0),
+      TRUE ~ n_conjuntos
+    )
+  ) %>%
+  ungroup()
+
+# --------------------------------------------------
+# ----- diminuiu muito
+# para cada linha
+# quando for c2, c3, c4; efeito diminuiu muito
+# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos entre 0 e -10
+# grupo = geral
+data <- data %>%
+  rowwise() %>%
+  mutate(
+    n_conjuntos = case_when(
+      facet %in% c("c2", "c3", "c4") & grupo == "geral" & efeito == "diminuiu muito" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$geral < muito),
       TRUE ~ n_conjuntos
     )
   ) %>%
   ungroup()
 
 # ----
+# grupo = A0
+data <- data %>%
+  rowwise() %>%
+  mutate(
+    n_conjuntos = case_when(
+      facet %in% c("c2", "c3", "c4") & grupo == "A0" & efeito == "diminuiu muito" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$A0 < muito),
+      TRUE ~ n_conjuntos
+    )
+  ) %>%
+  ungroup()
+
+# ----
+# grupo = cotas
+data <- data %>%
+  rowwise() %>%
+  mutate(
+    n_conjuntos = case_when(
+      facet %in% c("c2", "c3", "c4") & grupo == "cotas" & efeito == "diminuiu muito" ~
+        sum(get(paste0("compila_concs_dif_med_", facet))$cotas < muito),
+      TRUE ~ n_conjuntos
+    )
+  ) %>%
+  ungroup()
+
+# ---
 data
 print ("data está preenchida")
 
@@ -175,19 +226,28 @@ print ("data está preenchida")
 # Cria gráfico com base em data
 
 # Reorder the levels of the 'efeito' factor
-data$efeito <- factor(data$efeito, levels = c("aumentou", "igual", "diminuiu"))
+data$efeito <- factor(data$efeito,
+                      levels = c("aumentou", "igual",
+                                 "diminuiu pouco","diminuiu muito"))
 
 # Reorder the levels of the 'grupo' factor
 data$grupo <- factor(data$grupo, levels = c("geral", "A0", "cotas"))
 
 # Specify colors for each level
-colors <- c("aumentou" = "#00BA38", "igual" = "#619CFF", "diminuiu" = "#F8766D")
+colors <- c("aumentou" = "#00BA38", "igual" = "#619CFF", "diminuiu pouco" = "#F8766D",
+            "diminuiu muito"="red")
 
+# Labels na legenda lateral
+## informando o valor entre "diminuiu pouco" e "diminuiu muito" com base em 'muito'
+efeitos <- c("aumentou","igual",
+             paste("diminuiu <", abs(muito)),paste("diminuiu >", abs(muito)))
+## Com termos genéricos "diminuiu pouco" e "diminuiu muito
+# efeitos <- c("aumentou","igual","diminuiu pouco","diminuiu muito")
 
 # Plotting
 grafico_c234_med <- ggplot(data, aes(x = grupo, y = n_conjuntos, fill = efeito)) +
   geom_bar(stat = "identity", position = "stack") +
-  scale_fill_manual(values = colors) +  # Assign colors manually
+  scale_fill_manual(values = colors, labels = efeitos) +  # Assign colors manually
   facet_grid(~ facet) +
   ggtitle("Efeito das sistemáticas c2, c3 e c4 na nota média por grupo") +
   ylab("Número de conjuntos") +
