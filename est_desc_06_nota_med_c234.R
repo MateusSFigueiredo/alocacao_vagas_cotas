@@ -1,12 +1,12 @@
 # ==============================================================================
 # Arquivo: est_desc_06_nota_med_c234.R
 #
-# Modificado em: 2024-01-19 18h
+# Modificado em: 2024-07-22
 # Autor: Mateus Silva Figueiredo
 
-# diff: acrescenta c5
+# diff: mudar nome de c2 c3 c4 c5 para CC-A CC-C CC-CT CC-AT
 
-# Cria gráfico comparando c2, c3 e c4
+# Cria gráfico comparando CC-A CC-C CC-CT CC-AT
 # expondo variação de nota média para geral, A0 e cotas
 # Em quantos conjuntos aumentou, manteve igual ou diminuiu
 # ==============================================================================
@@ -233,6 +233,18 @@ print ("data está preenchida")
 # ==============================================================================
 # Cria gráfico com base em data
 
+# Mudar de c2 c3 c4 c5 para CC-A CC-C CC-CT CC-AT
+data
+# data$facet
+data <- data %>%  mutate(facet = ifelse(facet == "c2", "CC-A", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c3", "CC-C", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c4", "CC-CT", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c5", "CC-AT", facet))
+# data
+
+# Reorder the levels of the 'facet' factor
+data$facet <- factor(data$facet, levels = c("CC-C","CC-CT","CC-A","CC-AT"))
+
 # Reorder the levels of the 'efeito' factor
 data$efeito <- factor(data$efeito,
                       levels = c("aumentou", "igual",
@@ -257,7 +269,7 @@ grafico_c2345_med <- ggplot(data, aes(x = grupo, y = n_conjuntos, fill = efeito)
   geom_bar(stat = "identity", position = "stack") +
   scale_fill_manual(values = colors, labels = efeitos) +  # Assign colors manually
   facet_grid(~ facet) +
-  ggtitle("Efeito das sistemáticas c2 a c5 na nota média por grupo") +
+  ggtitle("Efeito da sistemática na nota média por grupo") +
   ylab("Número de conjuntos") +
   xlab("Modalidade de convocação") +
   labs(fill = "Efeito na

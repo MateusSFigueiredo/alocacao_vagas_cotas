@@ -1,17 +1,20 @@
 # ==============================================================================
 # Arquivo: est_desc_07_vagas_por_grupo_c234.R
 #
-# Modificado em: 2024-01-19
+# Modificado em: 2024-07-22
 # Autor: Mateus Silva Figueiredo
 
-# Cria gráfico comparando c2, c3 e c4
+# diff: mudar nome de c2 c3 c4 c5 para CC-A CC-C CC-CT CC-AT
+
+# Cria gráfico comparando CC-A CC-C CC-CT CC-AT
 # expondo variação de ingresso de pub, bxa, ppi, pcd
 # Em quantos conjuntos aumentou, manteve igual ou diminuiu
 
-# ESCREVENDO
 # ==============================================================================
 # Preparação
 library(dplyr)
+library(ggplot2)
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # se F (padrão): script analysis_02_3_compila_concs.R não gera novo documento
 quero_imprimir <- F
@@ -27,6 +30,14 @@ sum(compila_concs_c2$pub>0)  # 60 aumentou pub
 sum(compila_concs_c2$pub==0) #  5 mantem pub
 sum(compila_concs_c2$pub<0)  #  0 diminuiu pub
 
+compila_concs_c5
+sum(compila_concs_c5$pub>0)  # 60 aumentou pub
+
+# ==============================================================================
+# omitir linhas NA de c5
+# talvez não precise
+compila_concs_c5 <- na.omit(compila_concs_c5)
+
 # ==============================================================================
 # Cria dataframe para receber valores
 # coluna facet com as sistemáticas c2, c3, c4
@@ -34,7 +45,7 @@ sum(compila_concs_c2$pub<0)  #  0 diminuiu pub
 # coluna efeito com aumentou, igual, diminuiu
 # valores a serem preenchidos com base em compila_concs_
 
-data <- data.frame(facet = rep(c("c2","c3","c4"), each = 12),
+data <- data.frame(facet = rep(c("c2","c3","c4","c5"), each = 12),
                    grupo = rep(c("pub", "bxa","ppi","pcd"),each = 3),
                    efeito = c("aumentou","igual","diminuiu"),
                    n_conjuntos = NA)
@@ -58,7 +69,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pub" & efeito == "aumentou" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pub" & efeito == "aumentou" ~
         sum(get(paste0("compila_concs_", facet))$pub > 0),
       TRUE ~ n_conjuntos
     )
@@ -71,7 +82,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "bxa" & efeito == "aumentou" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "bxa" & efeito == "aumentou" ~
         sum(get(paste0("compila_concs_", facet))$bxa > 0),
       TRUE ~ n_conjuntos
     )
@@ -84,7 +95,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "ppi" & efeito == "aumentou" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "ppi" & efeito == "aumentou" ~
         sum(get(paste0("compila_concs_", facet))$ppi > 0),
       TRUE ~ n_conjuntos
     )
@@ -97,7 +108,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pcd" & efeito == "aumentou" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pcd" & efeito == "aumentou" ~
         sum(get(paste0("compila_concs_", facet))$pcd > 0),
       TRUE ~ n_conjuntos
     )
@@ -116,7 +127,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pub" & efeito == "igual" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pub" & efeito == "igual" ~
         sum(get(paste0("compila_concs_", facet))$pub == 0),
       TRUE ~ n_conjuntos
     )
@@ -129,7 +140,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "bxa" & efeito == "igual" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "bxa" & efeito == "igual" ~
         sum(get(paste0("compila_concs_", facet))$bxa == 0),
       TRUE ~ n_conjuntos
     )
@@ -142,7 +153,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "ppi" & efeito == "igual" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "ppi" & efeito == "igual" ~
         sum(get(paste0("compila_concs_", facet))$ppi == 0),
       TRUE ~ n_conjuntos
     )
@@ -155,7 +166,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pcd" & efeito == "igual" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pcd" & efeito == "igual" ~
         sum(get(paste0("compila_concs_", facet))$pcd == 0),
       TRUE ~ n_conjuntos
     )
@@ -174,7 +185,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pub" & efeito == "diminuiu" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pub" & efeito == "diminuiu" ~
         sum(get(paste0("compila_concs_", facet))$pub < 0),
       TRUE ~ n_conjuntos
     )
@@ -187,7 +198,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "bxa" & efeito == "diminuiu" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "bxa" & efeito == "diminuiu" ~
         sum(get(paste0("compila_concs_", facet))$bxa < 0),
       TRUE ~ n_conjuntos
     )
@@ -200,7 +211,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "ppi" & efeito == "diminuiu" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "ppi" & efeito == "diminuiu" ~
         sum(get(paste0("compila_concs_", facet))$ppi < 0),
       TRUE ~ n_conjuntos
     )
@@ -213,7 +224,7 @@ data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
-      facet %in% c("c2", "c3", "c4") & grupo == "pcd" & efeito == "diminuiu" ~
+      facet %in% c("c2","c3","c4","c5") & grupo == "pcd" & efeito == "diminuiu" ~
         sum(get(paste0("compila_concs_", facet))$pcd < 0),
       TRUE ~ n_conjuntos
     )
@@ -229,6 +240,18 @@ data_backup <- data
 # ==============================================================================
 # Cria gráfico com base em data
 
+# Mudar de c2 c3 c4 c5 para CC-A CC-C CC-CT CC-AT
+data
+# data$facet
+data <- data %>%  mutate(facet = ifelse(facet == "c2", "CC-A", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c3", "CC-C", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c4", "CC-CT", facet))
+data <- data %>%  mutate(facet = ifelse(facet == "c5", "CC-AT", facet))
+# data
+
+# Reorder the levels of the 'facet' factor
+data$facet <- factor(data$facet, levels = c("CC-C","CC-CT","CC-A","CC-AT"))
+
 # Reorder the levels of the 'efeito' factor
 data$efeito <- factor(data$efeito, levels = c("aumentou", "igual", "diminuiu"))
 
@@ -237,7 +260,6 @@ data$grupo <- factor(data$grupo, levels = c("pub","bxa","ppi","pcd"))
 
 # Specify colors for each level
 colors <- c("aumentou" = "#00BA38", "igual" = "#619CFF", "diminuiu" = "#F8766D")
-
 
 # Plotting
 grafico_c234_vagas <- ggplot(data, aes(x = grupo, y = n_conjuntos, fill = efeito)) +
@@ -258,11 +280,11 @@ if(T){
   tempo_atual <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S"); texto_hora<-paste0("Documento gerado em ",format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
   
   ggsave(
-    filename = paste0("grafico_c234_vagas_",tempo_atual,".png"),
+    filename = paste0("grafico_c2345_vagas_",tempo_atual,".png"),
     plot = grafico_c234_vagas,
     path = NULL,
     scale = 1,
-    width = 6,
+    width = 7,
     height = 6*0.75,
     dpi = 300,
     limitsize = TRUE,
