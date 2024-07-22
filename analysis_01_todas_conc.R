@@ -50,6 +50,9 @@ setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 carrega_2018 <- T # deseja carregar nvagas do termo de 2018?
 if (!exists("vagas_MEDICINA")) source("data_05_carregar_termo_adesao.R") # cria ~70 objetos
 
+# Carregar df_so_concorridos
+if (!exists ("df_so_concorridos")) source("analysis_001_compara_ins_vagas.R")
+
 # criar vetor mod, com a ordem das modalidades de nvagas
 mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 
@@ -59,8 +62,8 @@ mod <- c("A0","L01","L02","L05","L06", "L09", "L10", "L13", "L14")
 # cu <- lista_cursos_18_22[10]; # pelo número na lista
 
 # procurar número do curso
-which(df_so_concorridos$curso=="ENGENHARIA_CIVIL")
-df_so_concorridos[32,]
+which(df_so_concorridos$curso=="FISICA")
+df_so_concorridos[36,] # conferir curso
 
 # Escolher uma edição do SISU
 # edicao <- "SISU2018" # pelo nome
@@ -79,8 +82,11 @@ df_so_concorridos %>% nrow()
 if (exists ("concorrido")) rm(cu,concorrido,i,j) # não tem problema se der Warning messages
 
 # ==============================================================================
+# ========================= ESCOLHER i AQUI ==============================
+# ==============================================================================
+
 # Iniciar alocação para um conjunto
-i<-3 # de 1 até 67, para os 67 conjuntos concorridos encontrados
+i<-36 # de 1 até 67, para os 67 conjuntos concorridos encontrados
 paste(df_so_concorridos[i,1],df_so_concorridos[i,2]) # nome e ano do conjunto i
 
 # gerar conjunto candidatos a partir de número 1 a 67
@@ -105,7 +111,7 @@ source("analysis_01_1_conc_separada.R") # parece ok
 source("analysis_01_2_conc_c_ac.R")     # parece ok 
 source("analysis_01_3_conc_c_cotas.R")  # parece ok           
 source("analysis_01_4_conc_bo.R")       # parece ok             
-source("analysis_01_5_conc_ob.R")       # precisa ser checado
+source("analysis_01_5_conc_ob.R")       # parece ok
 
 # ==============================================================================
 #
@@ -244,8 +250,64 @@ convocados_c3[mod_ins %in% c("L09","L10","L13","L14")]$nota
 convocados_c4[mod_ins %in% c("L09","L10","L13","L14")]$nota
 convocados_c5[mod_ins %in% c("L09","L10","L13","L14")]$nota
 
-
+# -------------------------------------------------------------------------------
 print("------------------------------------------------------------------------------------")
 
+# Analisando Medicina 2018
+which(df_so_concorridos$curso=="MEDICINA")
+df_so_concorridos[51,]
 
+convocados_c5[mod_con!=mod_ins]
+convocados_c5$nota
 
+convocados_c5[order(convocados_c5$nota, decreasing = TRUE), ]$nota
+# menores notas: 732.90 726.34 710.62 703.62 600.46
+
+convocados_c5$nota %>% tail()
+?min
+
+convocados_c5[nota==600.46]
+convocados_c5[mod_ins=="L10"]
+
+convocados_c1[mod_con=="L10"]
+convocados_c2[mod_con=="L10"]
+convocados_c3[mod_con=="L10"]
+convocados_c4[mod_con=="L10"]
+convocados_c5[mod_con=="L10"]
+
+convocados_c1[mod_con=="L14"]
+convocados_c2[mod_con=="L14"]
+convocados_c3[mod_con=="L14"]
+convocados_c4[mod_con=="L14"]
+convocados_c5[mod_con=="L14"]
+
+convocados_c1[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c2[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c3[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c4[mod_ins %in% c("L09","L10","L13","L14")]$nota
+convocados_c5[mod_ins %in% c("L09","L10","L13","L14")]$nota
+
+candidatos[mod_ins %in% c("L09","L10","L13","L14")]$nota
+
+# ------------------------------------------------------------------------------
+
+# Física 2018
+nvagas
+candidatos$mod_ins %>% table()
+
+df_so_concorridos[36,]
+
+convocados_c2[mod_con!=mod_ins]
+convocados_c3[mod_con!=mod_ins]
+convocados_c4[mod_con!=mod_ins]
+convocados_c5[mod_con!=mod_ins]
+
+which(!convocados_c2$id %in% convocados_c1$id) # 30 38 39
+convocados_c2[30]$nota
+convocados_c2[nota==641.98]
+convocados_c1[nota==641.98]
+
+which(!convocados_c1$id %in% convocados_c2$id) # 23 24 25
+
+convocados_c2[c(30,38,39),]#$nota # 641.98 652.62 651.30
+convocados_c1[23:25,]#$nota       # 664.70 663.00 662.56

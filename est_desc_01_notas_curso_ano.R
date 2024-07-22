@@ -1,10 +1,10 @@
 # ==============================================================================
 # Arquivo: est_desc_01_notas_curso_ano.R
 #
-# Modificado em: 2024-01-02
+# Modificado em: 2024-05-14
 
 # Autor: Mateus Silva Figueiredo
-# diff 2023-02-01: documentação. Cancela tentativa de anotação no boxplot.
+# diff 2024-05-14: boxplot.stats no finalzinho, para análises
 #
 # Utiliza dados_ufv carregado por data_04_carregar_dados_ufv
 
@@ -187,10 +187,20 @@ altura <- n_anos*2/9+7/9 # ajusta altura de cada barra do boxplot
 ggsave(file.path(pasta_imagens, image_filename), plot = grafico, width = 8, height = altura, dpi = 300)
 } # fim da parte de salvar imagem
 
-} # fim do loop de lista_cursos após salvar imagens de gráficos
+# } # fim do loop de lista_cursos após salvar imagens de gráficos
+
+# ==============================================================================
+# Analisar dados de cada boxplot
+# boxplot.stats
+
+dados_curso[group=="2014 AC"]$nota |> sort() # notas de determinado grupo, crescente
+dados_curso[group=="2014 AC"]$nota |> boxplot.stats()
 
 # ==============================================================================
 # Referências
 
 # Boxplot in Base R # Boxplot no base R
 # https://statisticsglobe.com/boxplot-in-r
+
+# boxplot.stats: Box Plot Statistics
+# https://rdrr.io/r/grDevices/boxplot.stats.html

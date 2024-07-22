@@ -1,5 +1,5 @@
 # ==============================================================================
-# Arquivo: est_desc_06_nota_med_c234.R
+# Arquivo: est_desc_06_1_nota_min_c234.R
 #
 # Modificado em: 2024-01-19 18h
 # Autor: Mateus Silva Figueiredo
@@ -21,7 +21,7 @@ muito <- -5
 quero_imprimir_03_2 <- F
 
 # se não tiver todado analysis_03_2, rodar
-if (!exists("compila_concs_dif_med_c2")) source("analysis_03_2_compila_conc_notas.R")
+if (!exists("compila_concs_dif_min_c2")) source("analysis_03_2_compila_conc_notas.R")
 
 # ==============================================================================
 # Cria dataframe para receber valores
@@ -42,7 +42,7 @@ data
 # se a coluna "geral" for NA, remover
 # objetivo: manter linhas que tem NaN em subcota L13
 
-compila_concs_dif_med_c5 <- subset(compila_concs_dif_med_c5, !is.na(geral))
+compila_concs_dif_min_c5 <- subset(compila_concs_dif_min_c5, !is.na(geral))
 compila_concs_dif_min_c5 <- subset(compila_concs_dif_min_c5, !is.na(geral))
 
 # ==============================================================================
@@ -55,14 +55,14 @@ compila_concs_dif_min_c5 <- subset(compila_concs_dif_min_c5, !is.na(geral))
 # ----- aumentou
 # para cada linha
 # quando for c2, c3, c4; efeito aumentou
-# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos maior que 0
+# preencher com compila_concs_dif_min c2 c3 ou c4 número de conjuntos maior que 0
 # grupo = geral
 data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "geral" & efeito == "aumentou" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$geral > 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$geral > 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -75,7 +75,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "A0" & efeito == "aumentou" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$A0 > 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$A0 > 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -88,7 +88,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "cotas" & efeito == "aumentou" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$cotas > 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$cotas > 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -98,14 +98,14 @@ data <- data %>%
 # ----- igual
 # para cada linha
 # quando for c2, c3, c4; efeito igual
-# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos maior que 0
+# preencher com compila_concs_dif_min c2 c3 ou c4 número de conjuntos maior que 0
 # grupo = geral
 data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "geral" & efeito == "igual" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$geral == 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$geral == 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -118,7 +118,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "A0" & efeito == "igual" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$A0 == 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$A0 == 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -131,7 +131,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "cotas" & efeito == "igual" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$cotas == 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$cotas == 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -141,15 +141,15 @@ data <- data %>%
 # ----- diminuiu pouco
 # para cada linha
 # quando for c2, c3, c4; efeito diminuiu pouco
-# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos entre 0 e -10
+# preencher com compila_concs_dif_min c2 c3 ou c4 número de conjuntos entre 0 e -10
 # grupo = geral
 data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "geral" & efeito == "diminuiu pouco" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$geral > muito 
-            & get(paste0("compila_concs_dif_med_", facet))$geral < 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$geral > muito 
+            & get(paste0("compila_concs_dif_min_", facet))$geral < 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -162,8 +162,8 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "A0" & efeito == "diminuiu pouco" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$A0 > muito & 
-              get(paste0("compila_concs_dif_med_", facet))$A0 < 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$A0 > muito & 
+              get(paste0("compila_concs_dif_min_", facet))$A0 < 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -176,8 +176,8 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "cotas" & efeito == "diminuiu pouco" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$cotas > muito & 
-              get(paste0("compila_concs_dif_med_", facet))$cotas < 0),
+        sum(get(paste0("compila_concs_dif_min_", facet))$cotas > muito & 
+              get(paste0("compila_concs_dif_min_", facet))$cotas < 0),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -187,14 +187,14 @@ data <- data %>%
 # ----- diminuiu muito
 # para cada linha
 # quando for c2, c3, c4; efeito diminuiu muito
-# preencher com compila_concs_dif_med c2 c3 ou c4 número de conjuntos entre 0 e -10
+# preencher com compila_concs_dif_min c2 c3 ou c4 número de conjuntos entre 0 e -10
 # grupo = geral
 data <- data %>%
   rowwise() %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "geral" & efeito == "diminuiu muito" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$geral < muito),
+        sum(get(paste0("compila_concs_dif_min_", facet))$geral < muito),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -207,7 +207,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "A0" & efeito == "diminuiu muito" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$A0 < muito),
+        sum(get(paste0("compila_concs_dif_min_", facet))$A0 < muito),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -220,7 +220,7 @@ data <- data %>%
   mutate(
     n_conjuntos = case_when(
       facet %in% c("c2", "c3", "c4","c5") & grupo == "cotas" & efeito == "diminuiu muito" ~
-        sum(get(paste0("compila_concs_dif_med_", facet))$cotas < muito),
+        sum(get(paste0("compila_concs_dif_min_", facet))$cotas < muito),
       TRUE ~ n_conjuntos
     )
   ) %>%
@@ -253,35 +253,35 @@ efeitos <- c("aumentou","igual",
 # efeitos <- c("aumentou","igual","diminuiu pouco","diminuiu muito")
 
 # Plotting
-grafico_c2345_med <- ggplot(data, aes(x = grupo, y = n_conjuntos, fill = efeito)) +
+grafico_c2345_min <- ggplot(data, aes(x = grupo, y = n_conjuntos, fill = efeito)) +
   geom_bar(stat = "identity", position = "stack") +
   scale_fill_manual(values = colors, labels = efeitos) +  # Assign colors manually
   facet_grid(~ facet) +
-  ggtitle("Efeito das sistemáticas c2 a c5 na nota média por grupo") +
+  ggtitle("Efeito das sistemáticas c2 a c5 na nota mínima por grupo") +
   ylab("Número de conjuntos") +
   xlab("Modalidade de convocação") +
   labs(fill = "Efeito na
-nota média")
+nota mínima")
 
-grafico_c2345_med
+grafico_c2345_min
 
 # ------------------------------------------------------------------------------
 # Exportar gráfico
 if(T){
-tempo_atual <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S"); texto_hora<-paste0("Documento gerado em ",format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
-
-ggsave(
-  filename = paste0("grafico_c2345_med_",tempo_atual,".png"),
-  plot = grafico_c2345_med,
-  path = NULL,
-  scale = 1,
-  width = 6,
-  height = 6*0.75,
-  dpi = 300,
-  limitsize = TRUE,
-  bg = NULL)
-
-print("imagem está salva")
+  tempo_atual <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S"); texto_hora<-paste0("Documento gerado em ",format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
+  
+  ggsave(
+    filename = paste0("grafico_c2345_min_",tempo_atual,".png"),
+    plot = grafico_c2345_min,
+    path = NULL,
+    scale = 1,
+    width = 6,
+    height = 6*0.75,
+    dpi = 300,
+    limitsize = TRUE,
+    bg = NULL)
+  
+  print("imagem está salva")
 }
 # ==============================================================================
 # Referências
@@ -291,3 +291,4 @@ print("imagem está salva")
 
 # Save a ggplot (or other grid object) with sensible defaults
 # https://ggplot2.tidyverse.org/reference/ggsave.html
+

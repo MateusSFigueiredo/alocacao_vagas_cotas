@@ -1,16 +1,14 @@
 # ==============================================================================
 # Arquivo: data_04_carregar_dados_UFV.R
-
 #
-# Modificado em: 2024-01-08.
+# Modificado em: 2024-05-14.
 # Autor: Mateus Silva Figueiredo
 #
 # Carrega dados da UFV
-# Separa em data.frames por ano
-# Separa em data.frames por curso
+# Separa em data.frames por ano caso por_ano == T
+# Separa em data.frames por curso caso por_curso == T
 
-# diff 2024-01-08: remove Servico Social de lista_cursos_mudou2
-# diff: correção grande em Regra para SISU 2018 a 2022
+# diff 2024-05-14: if por_curso na linha 275
 
 # ==============================================================================
 #
@@ -268,9 +266,12 @@ if (por_curso){
   rm(cu,filtro) # remove desnecessários
   
   print("Dados por curso estão carregados")
+  
 } # fim do if (por_curso) # obrigado Chat GPT 
 
 # ==============================================================================
+if (por_curso){
+
 # Cursos que abriram, fecharam ou mudaram de nome
 
 # # Alguns cursos abriram, fecharam, ou mudaram de nome. Ver um exemplo:
@@ -358,6 +359,7 @@ lista_cursos_mudou2 <- c("CIENCIA_E_TECNOLOGIA_DE_ALIMENTOS_RP")
 # Cursos que ofereceram mesma quantidade de vagas entre 2018 e 2022
 lista_cursos_estavel_18_22 <- setdiff(lista_cursos_18_22,lista_cursos_mudou2)
 
+} # fim do segundo if (por_curso)
 # ------------------------------------------------------------------------------
 
 # como descobrir numero a partir do curso

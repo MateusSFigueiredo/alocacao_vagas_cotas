@@ -1,13 +1,12 @@
 # ==============================================================================
 # Arquivo: data_05_carregar_termo_adesao.R
 #
-# Carrega dados do termo de adesão 2022.
+# Carrega dados do termo de adesão 2018 e 2022.
 #
-# Modificado em: 2024-01-08.
+# Modificado em: 2024-05-14.
 # Autor: Mateus Silva Figueiredo
 #
-# diff: atualiza nome das modalidades, de L1 para L01
-# diff: carrega termo de adesão de 2018 também
+# diff: documentação.
 
 # ==============================================================================
 #
@@ -30,8 +29,8 @@ belch3 <- function(x, y, z) { eval(parse(text=(paste0(x, y, z, sep=""))))}
 setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
 # Carregar dados com data_04_carregar_dados_UFV.R
-por_curso <- F   # deseja separar candidatos por curso? obrigatório
-por_ano   <- F  # deseja separar candidatos por ano? opcional
+por_curso <- F   # deseja separar candidatos por curso? 
+por_ano   <- F  # deseja separar candidatos por ano? 
 source("data_04_carregar_dados_UFV.R") # F,F => cria ~10 objetos
 
 # deseja carregar dados de 2018? se não existir, padrão é sim (T)
