@@ -1,7 +1,7 @@
 # ==============================================================================
 # Arquivo: est_desc_08_ordena_cursos.R
 #
-# Modificado em: 2024-03-31
+# Modificado em: 2024-07-24
 # Autor: Mateus Silva Figueiredo
 
 # Ordenar cursos por preenchimento extra de pub bxa ppi pcd 
@@ -12,8 +12,9 @@
 library(dplyr) # talvez desnecessario
 library(tidyr)
 library(ggplot2)
+setwd("C:/Users/Mateus/Desktop/R/alocacao_vagas_cotas")
 
-getwd()
+# getwd()
 list.files("produtos")
 
 # Carregar dados
@@ -21,6 +22,9 @@ vagas_c2 <- read.csv2("produtos/Compila vagas ord por curso c2.csv")
 vagas_c3 <- read.csv2("produtos/Compila vagas ord por curso c3.csv")
 vagas_c4 <- read.csv2("produtos/Compila vagas ord por curso c4.csv")
 vagas_c5 <- read.csv2("produtos/Compila vagas ord por curso c5.csv")
+
+# omitir linhas NA de c5
+vagas_c5 <- na.omit(vagas_c5)
 
 # Remover (n=40) etc. entre parêntesis
 vagas_c2$conjunto <- gsub("\\(.*?\\)", "", vagas_c2$conjunto)
@@ -41,35 +45,50 @@ vagas_c4$soma <- sum(vagas_c4$pub,vagas_c4$ppi,vagas_c4$bxa)
 vagas_c5$soma <- sum(vagas_c5$pub,vagas_c5$ppi,vagas_c5$bxa)
 
 # ==============================================================================
-# omitir linhas NA de c5
-# talvez não precise
-vagas_c5 <- na.omit(vagas_c5)
-
-# ==============================================================================
 
 # Sample data
 # data <- vagas_c2
-concorrencia <- "c3"
+concorrencia <- "c4" # mudar de acordo com grafico desejado
+
+{ # produzir e salvar gráfico
+
 eval(parse(text=(paste0("data <- vagas_",concorrencia))))
 data
 
 # Reshape data into long format
 data_long <- pivot_longer(data, cols = c(pub, bxa, ppi, pcd, soma), names_to = "type", values_to = "value")
 
-# Reorder the factor levels based on "soma" values
-data_long$conjunto <- factor(data_long$conjunto, levels = data[order(data$soma), "conjunto"])
+# Reorder the factor levels based on "soma" values in the opposite order
+data_long$conjunto <- factor(data_long$conjunto, levels = rev(data[order(data$soma), "conjunto"]))
 
 # Remove coluna soma
 data_long <- data_long[data_long$type != "soma", ]
 
+# Set the order of 'type' factor levels
+data_long$type <- factor(data_long$type, levels = c("pcd", "ppi", "bxa", "pub"))
+# data_long$type <- factor(data_long$type, levels = c("pub", "bxa", "ppi", "pcd"))
+
+# Substituir concorrencia pelo nome descritivo
+if (concorrencia == "c2") {(concorrencia <- "CC-A")}
+if (concorrencia == "c3") {(concorrencia <- "CC-C")}
+if (concorrencia == "c4") {(concorrencia <- "CC-CT")}
+if (concorrencia == "c5") {(concorrencia <- "CC-AT")}
+
 # Título
 titulo <- paste0("Ingressantes a mais sob ",concorrencia); titulo
 
-# Create scatter plot - conjunto on y-axis - 4 types without jitter
-grafico <- ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
-  geom_point(size = 1.5) +  # Set point size to 1.5
-  labs(title = titulo, x = "Vagas", y = "Conjunto", color = "Grupo") +
-  theme(axis.text.y = element_text(size = 5)); grafico
+# Create bar plot - conjunto on y-axis - 4 tipos
+grafico <- ggplot(data_long, aes(x = value, y = conjunto, fill = type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = titulo, x = "Vagas", y = "Conjunto") +
+  # by 2 = CC-C e CC-CT
+  scale_x_continuous(breaks = seq(0, max(data_long$value), by = 2)) + # grid line by 2
+  # by 4 = CC-A e CC-AT
+#  scale_x_continuous(breaks = seq(0, max(data_long$value), by = 4)) + # grid line by 4
+  theme(axis.text.y = element_text(size = 10)) +
+  labs(fill = "Grupo social")
+
+grafico
 
   # ------------------------------------------------------------------------------
   # Exportar gráfico
@@ -81,17 +100,33 @@ grafico <- ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
       plot = grafico,
       path = NULL,
       scale = 1,
-      width = 7,
-      height = 6*0.75,
+      width = 8.27,
+      height = 11.69, # para CC-C, CC-CT-, CC-A
+#      height = 8.69,   # para CC-AT
       dpi = 300,
       limitsize = TRUE,
       bg = NULL)
     
+    
     print("imagem está salva")
   }
 
+} # fim de produzir e salvar gráfico
+
 # ==============================================================================
 # # Rascunho abaixo
+
+# ---
+# Versão anterior do grafico:
+
+# Create scatter plot - conjunto on y-axis - 4 types without jitter
+# grafico <- ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
+#   geom_point(size = 1.5) +  # Set point size to 1.5
+#   labs(title = titulo, x = "Vagas", y = "Conjunto", color = "Grupo") +
+#   theme(axis.text.y = element_text(size = 5)); grafico
+
+# ---
+
 # 
 # # Carrega data a partir de vagas_c2 até c5
 # data <- vagas_c2
@@ -132,6 +167,8 @@ grafico <- ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
 # 
 # 
 # # ====
+
+
 # 
 #   # Create bar plot - conjunto no x
 # ggplot(data, aes(y = pub, x = conjunto)) +
@@ -147,12 +184,8 @@ grafico <- ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
 #   labs(title = "Bar Plot", x = "Category", y = "Value") +
 #   theme(axis.text.y = element_text(size=5)
 #   )
-# 
-# # Create bar plot - conjunto on y-axis - 4 tipos
-# ggplot(data_long, aes(x = value, y = conjunto, fill = type)) +
-#   geom_bar(stat = "identity", position = "dodge") +
-#   labs(title = "Bar Plot", x = "Value", y = "Conjunto") +
-#   theme(axis.text.y = element_text(size = 5))
+
+
 # 
 # # Create scatter plot - conjunto on y-axis - 4 tipos
 # ggplot(data_long, aes(x = value, y = conjunto, color = type)) +
